@@ -40,9 +40,15 @@ android {
 dependencies {
     val nav_version = "2.9.8"
 
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.serialization.json)
+
+
     // Jetpack Compose integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
-
     // Views/Fragments integration
     implementation("androidx.navigation:navigation-fragment:$nav_version")
     implementation("androidx.navigation:navigation-ui:$nav_version")

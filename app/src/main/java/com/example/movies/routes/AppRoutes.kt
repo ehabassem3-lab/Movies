@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 sealed class AppRoutes {
     @Serializable
-    object Home : AppRoutes()
+    object MainScreen : AppRoutes()
 }

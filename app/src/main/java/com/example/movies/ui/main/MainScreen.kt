@@ -1,11 +1,5 @@
 package com.example.movies.ui.main
 
-import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.Icon
-import android.media.Image
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,68 +10,95 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.movies.R
+import com.example.movies.network.createHttpClient
+import com.example.movies.ui.main.tabs.home.HomeView
+import com.example.movies.ui.main.tabs.profile.ProfileView
+import com.example.movies.ui.main.tabs.saved.SavedView
+import com.example.movies.ui.main.tabs.trending.TrendingView
 import com.example.movies.ui.theme.Black
 import com.example.movies.ui.theme.White
-import com.google.android.material.bottomnavigation.BottomNavigationItemView
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import io.ktor.client.request.get
+import io.ktor.http.isSuccess
 
 @Composable
-fun HomeView(navController: NavController){
+fun MainScreen(navController: NavController){
+
+//    LaunchedEffect(Unit) {
+//        val request = createHttpClient().get("authentication/guest_session/new"){}
+//        val response = request.status.value
+//        print(response)
+//
+//    }
+    val colorScheme = MaterialTheme.colorScheme
     data class navigationItem (val index : Int , val icon : Int )
     var selectedIndex  by  remember { mutableIntStateOf(0) }
+    val colors = NavigationBarItemColors(
+        selectedIconColor = colorScheme.background,
+        selectedTextColor = Color.Transparent,
+        selectedIndicatorColor = colorScheme.onBackground,
+        unselectedIconColor = colorScheme.onBackground,
+        unselectedTextColor = Color.Transparent,
+        disabledIconColor = Color.Transparent,
+        disabledTextColor = Color.Transparent ,
+    )
     val navigationItems = listOf(
-        navigationItem(0 , R.drawable.ic_video) ,
-        navigationItem(1 , R.drawable.ic_video) ,
-        navigationItem( 2,R.drawable.ic_video) ,
-        navigationItem( 3,R.drawable.ic_video) ,
+        navigationItem(0 , R.drawable.ic_home) ,
+        navigationItem(1 , R.drawable.ic_trending) ,
+        navigationItem( 2,R.drawable.ic_saved) ,
+        navigationItem( 3,R.drawable.ic_profile) ,
 
     )
     Scaffold(
         bottomBar = {
             NavigationBar(
-                modifier = Modifier.background(Black, RoundedCornerShape(25.dp))
+
+                modifier = Modifier.background( colorScheme.background, RoundedCornerShape(25.dp))
             ) {
                 for (item in navigationItems ){
                     val isSelected = item.index == selectedIndex
                     NavigationBarItem(
+                        colors = colors,
                         selected =  isSelected ,
                         icon = {
                             Row(
                                 modifier = Modifier
-                                    .width(60.dp)
+                                    .padding( top =  if (!isSelected) 20.dp  else 0.dp)
+                                    .width(50.dp)
                                     .height(40.dp)
                                     .background(
-                                        color = if (isSelected) White else Black,
+                                        color = if (isSelected) colorScheme.onBackground else Color.Transparent,
                                         shape = RoundedCornerShape(26.dp)
                                     ),
+
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Icon(
                                     painter = painterResource(item.icon),
                                     modifier = Modifier
-                                        .size(if (isSelected) 26.dp else 22.dp),
+                                        .size(if (isSelected) 30.dp else 23.dp),
                                     contentDescription = "" ,
-                                    tint = if (isSelected) Black else White
+                                    tint = if (isSelected) colorScheme.background else colorScheme.onBackground
                                 )
                             }
                         } ,
@@ -93,6 +114,13 @@ fun HomeView(navController: NavController){
     {
         innerPadding->
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            when(selectedIndex){
+                0 -> HomeView()
+                1 -> TrendingView()
+                2 -> SavedView()
+                3 -> ProfileView()
+
+            }
 
         }
 
