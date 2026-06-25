@@ -38,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.compose.foundation)
     val nav_version = "2.9.8"
 
     implementation(libs.ktor.client.core)

@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.MainScreen
+import com.example.movies.ui.main.SearchView
 import com.example.movies.ui.theme.MoviesTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,11 +39,14 @@ fun App() {
     val navController = rememberNavController()
     NavHost(
         navController ,
-        startDestination = AppRoutes.MainScreen
+        startDestination = AppRoutes.MainRoute
     ){
-     composable<AppRoutes.MainScreen>{
+     composable<AppRoutes.MainRoute>{
          MainScreen(navController)
      }
+        composable <AppRoutes.SearchRoute>{
+            SearchView(navController)
+        }
     }
 
 }
