@@ -1,5 +1,7 @@
 package com.example.movies.ui.main
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -36,7 +39,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.movies.R
@@ -53,16 +58,17 @@ import io.ktor.http.isSuccess
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
+@SuppressLint("LocalContextConfigurationRead")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavController){
 
 //    LaunchedEffect(Unit) {
-//        val request = createHttpClient().get("authentication/guest_session/new"){}
+//        val request = createHttpClient().get("trending/all/day"){}
 //        val response = request.status.value
 //        print(response)
-//
 //    }
+
     var drawerState = rememberDrawerState(DrawerValue.Closed)
     val colorScheme = MaterialTheme.colorScheme
     val scope = rememberCoroutineScope()
@@ -93,7 +99,7 @@ fun MainScreen(navController: NavController){
             topBar = {
                 if(selectedIndex != 3) {
                    TobBar(
-                       title = "Movies",
+                       title = stringResource(R.string.app_name),
                        onMenuClick = {
                            scope.launch {
                                drawerState.open()
@@ -127,11 +133,11 @@ fun MainScreen(navController: NavController){
                                 Row(
                                     modifier = Modifier
                                         .padding( top =  if (!isSelected) 20.dp  else 0.dp)
-                                        .width(50.dp)
+                                        .width(40.dp)
                                         .height(40.dp)
                                         .background(
                                             color = if (isSelected) colorScheme.onBackground else Color.Transparent,
-                                            shape = RoundedCornerShape(26.dp)
+                                            shape = RoundedCornerShape(35.dp)
                                         ),
 
                                     verticalAlignment = Alignment.CenterVertically,
@@ -140,7 +146,7 @@ fun MainScreen(navController: NavController){
                                     Icon(
                                         painter = painterResource(item.icon),
                                         modifier = Modifier
-                                            .size(if (isSelected) 30.dp else 23.dp),
+                                            .size(if (isSelected) 24.dp else 18.dp),
                                         contentDescription = "" ,
                                         tint = if (isSelected) colorScheme.background else colorScheme.onBackground
                                     )

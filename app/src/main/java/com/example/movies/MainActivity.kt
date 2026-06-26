@@ -1,34 +1,40 @@
 package com.example.movies
 
+import android.app.LocaleManager
+import android.os.Build
 import android.os.Bundle
+import android.os.LocaleList
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHost
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.MainScreen
-import com.example.movies.ui.main.SearchView
+import com.example.movies.ui.main.search.SearchView
 import com.example.movies.ui.theme.MoviesTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : ComponentActivity() {
+@AndroidEntryPoint
+
+class MainActivity : ComponentActivity() {  // ← keep ComponentActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
 
-            MoviesTheme (){
-                    App()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getSystemService(LocaleManager::class.java).applicationLocales =
+                LocaleList.forLanguageTags("en")
+        }
+
+        setContent {
+            MoviesTheme {
+                App()
             }
         }
     }
