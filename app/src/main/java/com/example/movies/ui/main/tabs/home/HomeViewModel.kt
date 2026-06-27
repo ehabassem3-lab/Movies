@@ -25,7 +25,9 @@ class HomeViewModel @Inject constructor(
     }
 
 
-    fun getDiscoverTv(){
+
+
+    private  fun getDiscoverTv(){
         viewModelScope.launch {
             state.value = state.value.copy(apiState = Resources.Loading)
             val response = repository.getDiscoveryTv()

@@ -1,5 +1,8 @@
 package com.example.movies.network.response.search
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ResultsItem(
 	val overview: String? = null,
 	val originalLanguage: String? = null,
@@ -10,8 +13,8 @@ data class ResultsItem(
 	val posterPath: String? = null,
 	val backdropPath: String? = null,
 	val releaseDate: String? = null,
-	val popularity: Any? = null,
-	val voteAverage: Any? = null,
+	val popularity: Double? = null,
+	val voteAverage: Double? = null,
 	val id: Int? = null,
 	val adult: Boolean? = null,
 	val voteCount: Int? = null

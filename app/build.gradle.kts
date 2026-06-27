@@ -51,6 +51,8 @@ buildscript {
 dependencies {
     implementation(libs.play.services.location)
     implementation(libs.androidx.foundation)
+    implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
     val room_version = "2.8.4"
     val lifecycle_version = "2.10.0"
     val ktorVersion = "3.1.3" // or whatever version you're using

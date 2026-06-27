@@ -1,5 +1,8 @@
 package com.example.movies.network.response.discover
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
 
+@Serializable
 data class DiscoverItem(
 	val firstAirDate: String? = null,
 	val overview: String? = null,
@@ -9,7 +12,7 @@ data class DiscoverItem(
 	val originCountry: List<String?>? = null,
 	val backdropPath: String? = null,
 	val originalName: String? = null,
-	val popularity: Any? = null,
+	val popularity: Double? = null,
 	val voteAverage: Int? = null,
 	val name: String? = null,
 	val id: Int? = null,
