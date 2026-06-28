@@ -12,10 +12,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.os.LocaleListCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.movies.routes.AppRoutes
+import com.example.movies.ui.SplashScreen
 import com.example.movies.ui.main.MainScreen
 import com.example.movies.ui.main.search.SearchView
 import com.example.movies.ui.theme.MoviesTheme
@@ -23,10 +25,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 
-class MainActivity : ComponentActivity() {  // ← keep ComponentActivity
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getSystemService(LocaleManager::class.java).applicationLocales =
                 LocaleList.forLanguageTags("en")
@@ -47,6 +49,7 @@ fun App() {
         navController ,
         startDestination = AppRoutes.MainRoute
     ){
+
      composable<AppRoutes.MainRoute>{
          MainScreen(navController)
      }

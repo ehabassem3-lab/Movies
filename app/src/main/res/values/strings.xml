@@ -2,5 +2,8 @@
 <resources>
     <string name="app_name">Cine Vault</string>
     <string name="side_menu_header">Cine Vault</string>
+    <string name="empty_view">"Search Through Thouthunds of Movies "</string>
+    <string name="movies_side_drawer_header">"Cine Vault"</string>
+    <string name="search_hint">Search Throw Hundres of Movies</string>
 
 </resources>

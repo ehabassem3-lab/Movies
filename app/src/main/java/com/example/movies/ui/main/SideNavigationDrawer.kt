@@ -15,15 +15,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.movies.R
 import com.example.movies.ui.theme.AppTypography
 
 @Composable
 fun SideNavigationDrawer(){
     val colorScheme = MaterialTheme.colorScheme
     Column (
-        modifier = Modifier.fillMaxHeight().width(250.dp).background(colorScheme.onBackground)
+        modifier = Modifier
+            .fillMaxHeight()
+            .width(250.dp)
+            .background(colorScheme.onBackground)
     ) {
         Box(
             modifier = Modifier
@@ -33,7 +38,7 @@ fun SideNavigationDrawer(){
             contentAlignment = Alignment.Center
         ) {
             Text(
-                "Movies App " ,
+                stringResource(R.string.movies_side_drawer_header),
                 color =  colorScheme.onBackground ,
                 textAlign = TextAlign.Center ,
                 style = AppTypography.titleLarge

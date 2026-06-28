@@ -2,5 +2,9 @@
 <resources>
     <string name="app_name">مستودع الافلام </string>
     <string name="side_menu_header">مستودع الافلام</string>
+    <string name="empty_view">"ابحث في الاف من الافلام"</string>
+    <string name="movies_side_drawer_header">"مستودع الافلام"</string>
+    <string name="search_hint">ايحث في مئات من الافلام</string>
+
 
 </resources>
