@@ -16,10 +16,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.SplashScreen
 import com.example.movies.ui.main.MainScreen
 import com.example.movies.ui.main.search.SearchView
+import com.example.movies.ui.main.tv.TvFullView
 import com.example.movies.ui.theme.MoviesTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,6 +51,14 @@ fun App() {
         navController ,
         startDestination = AppRoutes.MainRoute
     ){
+        composable <AppRoutes.TvFullRoute>{backStackEntry ->
+            val route = backStackEntry.toRoute<AppRoutes.TvFullRoute>()
+            TvFullView(
+                title =route.header,
+                genre = route.genre,
+                navController = navController
+            )
+        }
 
      composable<AppRoutes.MainRoute>{
          MainScreen(navController)

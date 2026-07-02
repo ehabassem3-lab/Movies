@@ -2,6 +2,7 @@ package com.example.movies.data.datasource.home
 
 import com.example.movies.network.createHttpClient
 import com.example.movies.network.response.discover.DiscoverResponse
+import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.network.response.search.SearchResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -14,11 +15,11 @@ import jakarta.inject.Inject
 class RemoteDataSourceImp  @Inject constructor(
     private val client: HttpClient
 ): RemoteDataSource{
-    override suspend fun getDiscover(): Result<DiscoverResponse> {
+    override suspend fun getDiscover(page: Int?, genre: Int?): Result<DiscoverResponse> {
         try {
             val request = createHttpClient().get("discover/tv"){
-               parameter("page" , "2")
-
+               parameter("page" , page)
+                  parameter("with_genres",genre)
             }
 
              if (request.status.isSuccess()){
@@ -32,6 +33,29 @@ class RemoteDataSourceImp  @Inject constructor(
             return Result.failure(e)
         }
 
+    }
+
+    override suspend fun getDiscoverMovies(
+        page: Int?,
+        genre: Int?
+    ): Result<MoviesResponse> {
+        try {
+
+            val request = createHttpClient().get("discover/movie"){
+                parameter("page" , page)
+                parameter("with_genres",genre)
+            }
+
+            if (request.status.isSuccess()){
+                val response = request.body<MoviesResponse>()
+                return Result.success(response)
+            }else{
+                return Result.failure(Throwable(request.body<Throwable>().message))
+            }
+
+        }catch (e : Throwable){
+             return Result.failure(e)
+        }
     }
 
     override suspend fun searchMovies(search: String): Result<SearchResponse> {

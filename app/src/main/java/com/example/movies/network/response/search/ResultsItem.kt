@@ -16,7 +16,7 @@ data class ResultsItem(
 
 	val video: Boolean? = null,
 
-	val title: String? = null,
+	val name: String? = null,
 
 	@SerialName("genre_ids")
 	val genreIds: List<Int>? = null,

@@ -6,9 +6,6 @@ import com.example.movies.network.response.search.ResultsItem
 
 @Composable
 fun SearchIdleView(navController: NavController , searchApiState : List<ResultsItem?>){
-    RecommendationRow(
-        onSeeAllClick = {} ,
-        moviesList =searchApiState
-    )
+
 
 }

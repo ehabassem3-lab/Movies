@@ -118,10 +118,7 @@ fun SearchView(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         items(data){
-                            RecommendationRow(
-                                onSeeAllClick = {},
-                                moviesList = data
-                            )
+
                             println(data)
 
 

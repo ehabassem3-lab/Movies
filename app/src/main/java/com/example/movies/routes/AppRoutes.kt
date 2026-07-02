@@ -1,8 +1,15 @@
 package com.example.movies.routes
 
+import com.example.movies.network.response.discover.DiscoverItem
 import kotlinx.serialization.Serializable
 
 sealed class AppRoutes {
+    @Serializable
+    data class  TvFullRoute (
+        val header : String ,
+        val genre : Int? ,
+
+    )
     @Serializable
     data object SplashRoute : AppRoutes()
     @Serializable
