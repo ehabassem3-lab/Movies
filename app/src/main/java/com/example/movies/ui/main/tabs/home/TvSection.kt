@@ -103,13 +103,13 @@ fun TvSection(
             if (tvList == null){
                 items(movies!!){
                     MovieItem( movieItem = it) {
-
+                          navController.navigate(AppRoutes.TvDetailsRoute(it?.id?:0,it?.type!!))
                     }
                 }
             }else{
                 items(tvList){
                     MovieItem(tvItem =  it) {
-
+                        navController.navigate(AppRoutes.TvDetailsRoute(it?.id?:0 , it?.type!!))
                     }
                 }
             }

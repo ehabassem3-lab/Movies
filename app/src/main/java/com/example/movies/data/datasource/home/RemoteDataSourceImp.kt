@@ -1,7 +1,9 @@
 package com.example.movies.data.datasource.home
 
 import com.example.movies.network.createHttpClient
+import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
+import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.network.response.search.SearchResponse
 import io.ktor.client.HttpClient
@@ -55,6 +57,40 @@ class RemoteDataSourceImp  @Inject constructor(
 
         }catch (e : Throwable){
              return Result.failure(e)
+        }
+    }
+
+    override suspend fun getMovieById(id: Int): Result<MoviesItem> {
+      try {
+          val request = createHttpClient().get("movie/$id")
+          if (request.status.isSuccess()){
+              val response = request.body<MoviesItem>()
+              return Result.success(response)
+          }else{
+              return Result.failure(Throwable(request.body<Throwable>().message))
+          }
+
+
+      }catch (e : Throwable){
+          return Result.failure(e)
+
+      }
+    }
+
+    override suspend fun getTvById(id: Int): Result<DiscoverItem> {
+        try {
+            val request = createHttpClient().get("tv/$id")
+            if (request.status.isSuccess()){
+                val response = request.body<DiscoverItem>()
+                return Result.success(response)
+            }else{
+                return Result.failure(Throwable(request.body<Throwable>().message))
+            }
+
+
+        }catch (e : Throwable){
+            return Result.failure(e)
+
         }
     }
 

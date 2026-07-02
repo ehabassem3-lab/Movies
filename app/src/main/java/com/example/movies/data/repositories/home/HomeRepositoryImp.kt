@@ -2,7 +2,9 @@ package com.example.movies.data.repositories.home
 
 import com.example.movies.data.datasource.home.RemoteDataSource
 import com.example.movies.domain.repositories.home.HomeRepository
+import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
+import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.network.response.search.SearchResponse
 import jakarta.inject.Inject
@@ -27,6 +29,24 @@ class HomeRepositoryImp  @Inject constructor(
         val request = dataSource.getDiscoverMovies(page,genre)
         return if (request.isSuccess){
             Result.success( request.getOrNull())
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+    }
+
+    override suspend fun getMovieById(id: Int): Result<MoviesItem> {
+        val request = dataSource.getMovieById(id)
+        return if (request.isSuccess){
+            Result.success( request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+    }
+
+    override suspend fun getTvById(id: Int): Result<DiscoverItem> {
+        val request = dataSource.getTvById(id)
+        return if (request.isSuccess){
+            Result.success( request.getOrNull()!!)
         }else{
             Result.failure(Throwable(request.exceptionOrNull()))
         }

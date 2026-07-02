@@ -5,6 +5,11 @@ import kotlinx.serialization.Serializable
 
 sealed class AppRoutes {
     @Serializable
+    data class TvDetailsRoute(
+       val  id : Int ,
+        val type : String
+    ) : AppRoutes()
+    @Serializable
     data class  TvFullRoute (
         val header : String ,
         val genre : Int? ,

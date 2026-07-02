@@ -22,6 +22,8 @@ data class MoviesItem (
     val name: String? = null,
     val id: Int? = null,
     @SerialName("vote_count")
-    val voteCount: Double? = null
+    val voteCount: Double? = null ,
+    val type : String = "Movie"
+
 )
 

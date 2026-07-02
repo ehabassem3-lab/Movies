@@ -21,6 +21,7 @@ import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.SplashScreen
 import com.example.movies.ui.main.MainScreen
 import com.example.movies.ui.main.search.SearchView
+import com.example.movies.ui.main.tabs.home.TvDetailsView
 import com.example.movies.ui.main.tv.TvFullView
 import com.example.movies.ui.theme.MoviesTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,6 +52,10 @@ fun App() {
         navController ,
         startDestination = AppRoutes.MainRoute
     ){
+        composable <AppRoutes.TvDetailsRoute>{
+            val data = it.toRoute<AppRoutes.TvDetailsRoute>()
+            TvDetailsView(data.id , data.type)
+        }
         composable <AppRoutes.TvFullRoute>{backStackEntry ->
             val route = backStackEntry.toRoute<AppRoutes.TvFullRoute>()
             TvFullView(

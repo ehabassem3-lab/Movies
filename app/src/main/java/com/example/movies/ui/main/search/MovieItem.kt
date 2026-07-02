@@ -46,8 +46,8 @@ fun MovieItem(
             .width(200.dp)
             .height(350.dp)
             .clickable {
-                // Navigate to The Moview Deatails
-            } ,
+                onMovieClick()
+                       } ,
         verticalArrangement = Arrangement.Center ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
