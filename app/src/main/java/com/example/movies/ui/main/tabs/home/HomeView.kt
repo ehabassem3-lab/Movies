@@ -1,5 +1,6 @@
 package com.example.movies.ui.main.tabs.home
 
+import androidx.compose.foundation.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,9 +44,9 @@ fun HomeView(
    val state = viewModel.state.collectAsState().value
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val genres = listOf<String>(
-        "Movies" ,
+        stringResource(com.example.movies.R.string.movies),
         "",
-        "Tv Shows " ,
+        stringResource(com.example.movies.R.string.tv_shows),
 
 
     )
@@ -114,12 +116,12 @@ fun HomeView(
                                 .orEmpty()
                             TvSection(
                                 genre = sectionsMovies.genreId ,
-                                title = sectionsMovies.title,
+                                title = stringResource(sectionsMovies.title),
                                 movies = tvList,
                                 navController = navController,
                                 onViewAll = {
                                     navController.navigate(
-                                        AppRoutes.TvFullRoute(sectionsMovies.title, sectionsMovies.genreId)
+                                        AppRoutes.TvFullRoute(sectionsMovies.genreId)
                                     )
                                 }
                             )
@@ -137,12 +139,12 @@ fun HomeView(
 
                             TvSection(
                                 genre = section.genreId ,
-                                title = section.title,
+                                title = stringResource(section.title),
                                 tvList = tvList,
                                 navController = navController,
                                 onViewAll = {
                                     navController.navigate(
-                                        AppRoutes.TvFullRoute(section.title, section.genreId)
+                                        AppRoutes.TvFullRoute( section.genreId)
                                     )
                                 }
                             )

@@ -1,12 +1,14 @@
 package com.example.movies.ui.main.tv
 
+import com.example.movies.network.response.details.DetailsItemResponse
+import com.example.movies.network.response.details.TvDetails
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.ui.main.Resources
 
 data class TvStates (
-    val moviesApi : Resources<MoviesItem> = Resources.idle ,
-    val tvApi : Resources<DiscoverItem> = Resources.idle
+    val moviesApi : Resources<DetailsItemResponse> = Resources.idle ,
+    val tvApi : Resources<TvDetails> = Resources.idle
 
 )
 

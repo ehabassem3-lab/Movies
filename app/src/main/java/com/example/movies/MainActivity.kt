@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.auth.ui.CreateSession
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.SplashScreen
 import com.example.movies.ui.main.MainScreen
@@ -34,7 +35,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getSystemService(LocaleManager::class.java).applicationLocales =
-                LocaleList.forLanguageTags("en")
+                LocaleList.forLanguageTags("ar")
         }
 
         setContent {
@@ -50,16 +51,19 @@ fun App() {
     val navController = rememberNavController()
     NavHost(
         navController ,
-        startDestination = AppRoutes.MainRoute
+        startDestination = AppRoutes.CreateSessionRoute
     ){
+        composable <AppRoutes.CreateSessionRoute>{
+            CreateSession(navController)
+        }
         composable <AppRoutes.TvDetailsRoute>{
             val data = it.toRoute<AppRoutes.TvDetailsRoute>()
-            TvDetailsView(data.id , data.type)
+            TvDetailsView(data.id , data.type , navController)
         }
         composable <AppRoutes.TvFullRoute>{backStackEntry ->
             val route = backStackEntry.toRoute<AppRoutes.TvFullRoute>()
             TvFullView(
-                title =route.header,
+
                 genre = route.genre,
                 navController = navController
             )

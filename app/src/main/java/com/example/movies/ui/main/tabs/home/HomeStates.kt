@@ -1,5 +1,6 @@
 package com.example.movies.ui.main.tabs.home
 
+import androidx.annotation.StringRes
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesResponse
@@ -12,12 +13,12 @@ data class HomeStates(
 
 )
 data class TvSectionUiState(
-    val title: String,
+    @StringRes val title: Int,
     val genreId: Int?,
     val state: Resources<DiscoverResponse> = Resources.idle
 )
 data class MovieSectionUiState(
-    val title: String,
+    @StringRes   val title: Int,
     val genreId: Int?,
     val state: Resources<MoviesResponse> = Resources.idle
 )

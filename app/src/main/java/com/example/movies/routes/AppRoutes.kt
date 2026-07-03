@@ -1,9 +1,12 @@
 package com.example.movies.routes
 
+import androidx.annotation.StringRes
 import com.example.movies.network.response.discover.DiscoverItem
 import kotlinx.serialization.Serializable
 
 sealed class AppRoutes {
+    @Serializable
+    object CreateSessionRoute : AppRoutes()
     @Serializable
     data class TvDetailsRoute(
        val  id : Int ,
@@ -11,10 +14,9 @@ sealed class AppRoutes {
     ) : AppRoutes()
     @Serializable
     data class  TvFullRoute (
-        val header : String ,
-        val genre : Int? ,
+        val genre : Int?,
 
-    )
+        )
     @Serializable
     data object SplashRoute : AppRoutes()
     @Serializable

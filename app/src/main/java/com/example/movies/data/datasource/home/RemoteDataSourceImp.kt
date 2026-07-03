@@ -1,6 +1,8 @@
 package com.example.movies.data.datasource.home
 
 import com.example.movies.network.createHttpClient
+import com.example.movies.network.response.details.DetailsItemResponse
+import com.example.movies.network.response.details.TvDetails
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesItem
@@ -60,11 +62,16 @@ class RemoteDataSourceImp  @Inject constructor(
         }
     }
 
-    override suspend fun getMovieById(id: Int): Result<MoviesItem> {
+    override suspend fun getMovieById(id: Int): Result<DetailsItemResponse> {
       try {
-          val request = createHttpClient().get("movie/$id")
+          val request = createHttpClient().get("movie/$id"){
+              parameter("append_to_response", "videos")
+              parameter("include_video_language", "en,null")
+
+          }
+
           if (request.status.isSuccess()){
-              val response = request.body<MoviesItem>()
+              val response = request.body<DetailsItemResponse>()
               return Result.success(response)
           }else{
               return Result.failure(Throwable(request.body<Throwable>().message))
@@ -77,11 +84,16 @@ class RemoteDataSourceImp  @Inject constructor(
       }
     }
 
-    override suspend fun getTvById(id: Int): Result<DiscoverItem> {
+    override suspend fun getTvById(id: Int): Result<TvDetails> {
         try {
-            val request = createHttpClient().get("tv/$id")
+            val request = createHttpClient().get("tv/$id"){
+                parameter("append_to_response", "videos")
+                parameter("include_video_language", "en,null")
+
+            }
+
             if (request.status.isSuccess()){
-                val response = request.body<DiscoverItem>()
+                val response = request.body<TvDetails>()
                 return Result.success(response)
             }else{
                 return Result.failure(Throwable(request.body<Throwable>().message))

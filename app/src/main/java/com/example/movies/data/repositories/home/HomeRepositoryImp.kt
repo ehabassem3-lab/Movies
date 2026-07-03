@@ -2,6 +2,8 @@ package com.example.movies.data.repositories.home
 
 import com.example.movies.data.datasource.home.RemoteDataSource
 import com.example.movies.domain.repositories.home.HomeRepository
+import com.example.movies.network.response.details.DetailsItemResponse
+import com.example.movies.network.response.details.TvDetails
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesItem
@@ -34,7 +36,7 @@ class HomeRepositoryImp  @Inject constructor(
         }
     }
 
-    override suspend fun getMovieById(id: Int): Result<MoviesItem> {
+    override suspend fun getMovieById(id: Int): Result<DetailsItemResponse> {
         val request = dataSource.getMovieById(id)
         return if (request.isSuccess){
             Result.success( request.getOrNull()!!)
@@ -43,7 +45,7 @@ class HomeRepositoryImp  @Inject constructor(
         }
     }
 
-    override suspend fun getTvById(id: Int): Result<DiscoverItem> {
+    override suspend fun getTvById(id: Int): Result<TvDetails> {
         val request = dataSource.getTvById(id)
         return if (request.isSuccess){
             Result.success( request.getOrNull()!!)

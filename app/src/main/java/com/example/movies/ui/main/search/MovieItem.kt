@@ -44,7 +44,7 @@ fun MovieItem(
 
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .width(200.dp)
-            .height(350.dp)
+            .height(380.dp)
             .clickable {
                 onMovieClick()
                        } ,

@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">مستودع الافلام </string>
+    <string name="app_auth_descreption">ابحث خلال ملايين من الاقلام و المسلسلات</string>
+    <string name="continue_with_tmdb"> متابعه مع TMDB</string>
+
     <string name="side_menu_header">مستودع الافلام</string>
     <string name="empty_view">"ابحث في الاف من الافلام"</string>
     <string name="movies_side_drawer_header">"مستودع الافلام"</string>
     <string name="search_hint">ايحث في مئات من الافلام</string>
+    <string name="recommendations">التوصيات</string>
+    <string name="adventure">مغامرة</string>
+    <string name="animation">رسوم متحركة</string>
+    <string name="comedy">كوميديا</string>
+    <string name="crime">جريمة</string>
+    <string name="drama">دراما</string>
+    <string name="family">عائلي</string>
+    <string name="fantasy">فانتازيا</string>
+    <string name="history">تاريخي</string>
+    <string name="horror">رعب</string>
+    <string name="music">موسيقى</string>
+    <string name="mystery">غموض</string>
+    <string name="romance">رومانسي</string>
+    <string name="sciencefiction">خيال علمي</string>
+    <string name="thriller">إثارة</string>
+    <string name="war">حربي</string>
+    <string name="western">ويسترن</string>
+    <string name="action">اكشن</string>
+    <string name="war_politics">سياسه&amp; حرب</string>
+    <string name="action_adventure">كغامرات &amp; اكشن </string>
+    <string name="kids">اطفال</string>
+    <string name="view_all">  عرض المزيد </string>
+    <string name="movies">الافلام </string>
+    <string name="tv_shows"> المسلسلات</string>
 
 
 </resources>

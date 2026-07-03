@@ -23,11 +23,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.movies.R
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.routes.AppRoutes
@@ -49,7 +51,7 @@ fun TvSection(
         modifier = Modifier
             .padding(vertical = 10.dp)
             .fillMaxWidth(.95f)
-            .height(400.dp) ,
+            .height(410.dp) ,
         verticalArrangement = Arrangement.Center ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -74,7 +76,7 @@ fun TvSection(
             Text("")
 
             Text(
-                "View ALL ",
+                stringResource(R.string.view_all),
                 textAlign = TextAlign.End ,
                 style = AppTypography.titleLarge.copy
                     (
@@ -121,8 +123,8 @@ fun TvSection(
                         Modifier
                             .size(40.dp)
                             .background(colorScheme.onBackground, shape = CircleShape)
-                            .clickable{
-                                navController.navigate(AppRoutes.TvFullRoute(title, genre))
+                            .clickable {
+                                navController.navigate(AppRoutes.TvFullRoute(genre))
                             } ,
                     contentAlignment = Alignment.Center
                 ){

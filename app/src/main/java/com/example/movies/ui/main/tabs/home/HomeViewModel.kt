@@ -1,8 +1,11 @@
 package com.example.movies.ui.main.tabs.home
 
+import android.provider.Settings.Global.getString
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.movies.R
 import com.example.movies.domain.repositories.home.HomeRepository
 import com.example.movies.ui.main.Resources
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,37 +14,38 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 private val sections = listOf(
-    TvSectionUiState("Recommendations", null, Resources.idle),
-    TvSectionUiState("Comedy", 35, Resources.idle),
-    TvSectionUiState("Drama", 18, Resources.idle),
-    TvSectionUiState("Animation", 16, Resources.idle),
-    TvSectionUiState("Crime", 80, Resources.idle),
-    TvSectionUiState("Action & Adventure", 10759, Resources.idle),
-    TvSectionUiState("Family ", 10751, Resources.idle),
-    TvSectionUiState("Mystery  ", 9648, Resources.idle),
-    TvSectionUiState("Kids ", 10762, Resources.idle),
-    TvSectionUiState("War & Politics", 10768, Resources.idle)
+    TvSectionUiState(R.string.recommendations, null, Resources.idle),
+    TvSectionUiState(R.string.comedy, 35, Resources.idle),
+    TvSectionUiState(R.string.drama, 18, Resources.idle),
+    TvSectionUiState(R.string.animation, 16, Resources.idle),
+    TvSectionUiState(R.string.crime, 80, Resources.idle),
+    TvSectionUiState(R.string.action_adventure, 10759, Resources.idle),
+    TvSectionUiState(R.string.family, 10751, Resources.idle),
+    TvSectionUiState(R.string.mystery, 9648, Resources.idle),
+    TvSectionUiState(R.string.kids, 10762, Resources.idle),
+    TvSectionUiState(R.string.war_politics, 10768, Resources.idle)
+
 
 )
 private val movieSections = listOf(
-    MovieSectionUiState("Recommendations", null, Resources.idle),
-    MovieSectionUiState("Action", 28, Resources.idle),
-    MovieSectionUiState("Adventure", 12, Resources.idle),
-    MovieSectionUiState("Animation", 16, Resources.idle),
-    MovieSectionUiState("Comedy", 35, Resources.idle),
-    MovieSectionUiState("Crime", 80, Resources.idle),
-    MovieSectionUiState("Drama", 18, Resources.idle),
-    MovieSectionUiState("Family", 10751, Resources.idle),
-    MovieSectionUiState("Fantasy", 14, Resources.idle),
-    MovieSectionUiState("History", 36, Resources.idle),
-    MovieSectionUiState("Horror", 27, Resources.idle),
-    MovieSectionUiState("Music", 10402, Resources.idle),
-    MovieSectionUiState("Mystery", 9648, Resources.idle),
-    MovieSectionUiState("Romance", 10749, Resources.idle),
-    MovieSectionUiState("Science Fiction", 878, Resources.idle),
-    MovieSectionUiState("Thriller", 53, Resources.idle),
-    MovieSectionUiState("War", 10752, Resources.idle),
-    MovieSectionUiState("Western", 37, Resources.idle)
+    MovieSectionUiState(R.string.recommendations, null, Resources.idle),
+    MovieSectionUiState(R.string.action, 28, Resources.idle),
+    MovieSectionUiState(R.string.adventure, 12, Resources.idle),
+    MovieSectionUiState(R.string.animation, 16, Resources.idle),
+    MovieSectionUiState(R.string.comedy, 35, Resources.idle),
+    MovieSectionUiState(R.string.crime, 80, Resources.idle),
+    MovieSectionUiState(R.string.drama, 18, Resources.idle),
+    MovieSectionUiState(R.string.family, 10751, Resources.idle),
+    MovieSectionUiState(R.string.fantasy, 14, Resources.idle),
+    MovieSectionUiState(R.string.history, 36, Resources.idle),
+    MovieSectionUiState(R.string.horror, 27, Resources.idle),
+    MovieSectionUiState(R.string.music, 10402, Resources.idle),
+    MovieSectionUiState(R.string.mystery, 9648, Resources.idle),
+    MovieSectionUiState(R.string.romance, 10749, Resources.idle),
+    MovieSectionUiState(R.string.sciencefiction, 878, Resources.idle),
+    MovieSectionUiState(R.string.thriller, 53, Resources.idle),
+    MovieSectionUiState(R.string.war, 10752, Resources.idle),
+    MovieSectionUiState(R.string.western, 37, Resources.idle)
 )
 @HiltViewModel
 class HomeViewModel @Inject constructor(
