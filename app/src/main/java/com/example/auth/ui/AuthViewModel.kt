@@ -18,8 +18,44 @@ class AuthViewModel @Inject constructor(
     fun doAction(events: AuthEvents){
         when(events){
             AuthEvents.OnCreateRequest -> createRequest()
+            is AuthEvents.OnCreateSession -> onCreateSession(events.requestToken)
+            is AuthEvents.OnGetAccount -> onGetAccount(events.sessionId)
         }
 
+    }
+
+    private fun onGetAccount(sessionId: String) {
+        viewModelScope.launch {
+            state.value = state.value.copy(  uiState = AuthUiState.LoadingAccount, getAccount = Resources.Loading)
+            val request = repository.getAccount(sessionId)
+            if (request.isSuccess){
+                val response = request.getOrNull()
+                println(response)
+                state.value = state.value.copy(    uiState = AuthUiState.Success,getAccount = Resources.Success(response))
+            }else{
+                state.value = state.value.copy(getAccount = Resources.Error(Throwable(request.exceptionOrNull())))
+            }
+        }
+
+
+    }
+
+    private fun onCreateSession(requestToken: String) {
+        viewModelScope.launch {
+            state.value = state.value.copy(
+                uiState = AuthUiState.CreatingSession,
+                createSession = Resources.Loading
+            )
+            val request = repository.createSession(requestToken)
+            if(request.isSuccess){
+                val response = request.getOrNull()
+                state.value = state.value.copy(createSession = Resources.Success(response))
+
+            }else{
+                state.value = state.value.copy(createSession = Resources.Error(Throwable(request.exceptionOrNull())))
+            }
+
+        }
     }
 
     private fun createRequest() {
@@ -29,7 +65,10 @@ class AuthViewModel @Inject constructor(
             if (request.isSuccess){
                 val response =request.getOrNull()
                 println(response)
-                state.value =  state.value.copy(createRequest = Resources.Success(response))
+                state.value =  state.value.copy(
+                    createRequest = Resources.Success(response) ,
+                    uiState = AuthUiState.WaitingForApproval
+                )
             }else{
                 state.value =  state.value.copy(createRequest = Resources.Error(Throwable(request.exceptionOrNull())))
             }

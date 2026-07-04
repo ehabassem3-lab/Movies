@@ -11,6 +11,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.isSuccess
+import kotlinx.io.files.Path
 import javax.inject.Inject
 import kotlin.jvm.Throws
 
@@ -37,22 +38,33 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     override suspend fun createSession(
         requestToken: String
     ): Result<SessionResponse >{
+       return try {
+           val  request  =  client.post("authentication/session/new") { setBody(mapOf("request_token" to requestToken)) }
+             if (request.status.isSuccess()) {
+                 Result.success(request.body())
+             }else{
+                 Result.failure(Throwable(request.status.description))
+             }
+        }catch (e : Throwable){
+           Result.failure(e)
+        }
 
-        return client.post("authentication/session/new") {
-            setBody(
-                mapOf(
-                    "request_token" to requestToken
-                )
-            )
-        }.body()
     }
 
     override suspend fun getAccount(
         sessionId: String
     ): Result<AccountResponse> {
+           return  try {
+              val request = client.get("account") { parameter("session_id", sessionId) }
+                if (request.status.isSuccess()){
+                    Result.success(request.body())
+                }else{
+                    Result.failure(Throwable(request.status.description))
+                }
+          }catch (e : Throwable){
+               Result.failure(e)
 
-        return client.get("account") {
-            parameter("session_id", sessionId)
-        }.body()
+          }
+
     }
 }

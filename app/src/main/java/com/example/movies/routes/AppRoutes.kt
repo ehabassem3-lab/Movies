@@ -6,6 +6,11 @@ import kotlinx.serialization.Serializable
 
 sealed class AppRoutes {
     @Serializable
+    data class AuthCallbackRoute(
+        val requestToken: String,
+        val approved: Boolean
+    )
+    @Serializable
     object CreateSessionRoute : AppRoutes()
     @Serializable
     data class TvDetailsRoute(
