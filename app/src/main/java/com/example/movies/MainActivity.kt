@@ -27,6 +27,7 @@ import com.example.movies.ui.main.search.SearchView
 import com.example.movies.ui.main.tabs.home.TvDetailsView
 import com.example.movies.ui.main.tv.TvFullView
 import com.example.movies.ui.theme.MoviesTheme
+import com.example.splash.SplashView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -60,6 +61,9 @@ fun App(    deepLink: Uri?) {
         navController ,
         startDestination = AppRoutes.CreateSessionRoute
     ){
+        composable <AppRoutes.SplashRoute>{
+            SplashView(navController)
+        }
         composable<AppRoutes.AuthCallbackRoute>(
             deepLinks = listOf(
                 navDeepLink<AppRoutes.AuthCallbackRoute>(
