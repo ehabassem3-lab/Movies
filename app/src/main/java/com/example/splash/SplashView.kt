@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.movies.App
 import com.example.movies.R
@@ -39,7 +40,8 @@ fun SplashView(navController: NavController) {
 
     val logoScale = remember { Animatable(1f) }
     val textScale = remember { Animatable(0f) }
-
+    val viewModel = hiltViewModel<SplashViewModel>()
+    val isLoggedIn by viewModel.isLoggedIn.collectAsState(initial = false)
     var moveLogo by remember { mutableStateOf(false) }
     var showText by remember { mutableStateOf(false) }
 
@@ -65,9 +67,13 @@ fun SplashView(navController: NavController) {
             )
         )
 
-        delay(1500)
+        delay(3000)
 
-       navController.navigate(AppRoutes.CreateSessionRoute)
+        if (isLoggedIn) {
+            navController.navigate(AppRoutes.MainRoute)
+        } else {
+            navController.navigate(AppRoutes.CreateSessionRoute)
+        }
     }
 
     val logoOffset by animateDpAsState(

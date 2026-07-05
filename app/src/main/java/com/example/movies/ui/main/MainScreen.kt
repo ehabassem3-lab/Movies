@@ -169,7 +169,7 @@ fun MainScreen(navController: NavController){
                     0 -> HomeView(navController)
                     1 -> TrendingView()
                     2 -> SavedView()
-                    3 -> ProfileView()
+                    3 -> ProfileView(navController)
 
                 }
 
