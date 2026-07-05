@@ -59,7 +59,7 @@ fun App(    deepLink: Uri?) {
     val navController = rememberNavController()
     NavHost(
         navController ,
-        startDestination = AppRoutes.CreateSessionRoute
+        startDestination = AppRoutes.SplashRoute
     ){
         composable <AppRoutes.SplashRoute>{
             SplashView(navController)
