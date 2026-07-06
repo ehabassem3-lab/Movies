@@ -3,7 +3,7 @@
     <string name="app_name">مستودع الافلام </string>
     <string name="app_auth_descreption">ابحث خلال ملايين من الاقلام و المسلسلات</string>
     <string name="continue_with_tmdb"> متابعه مع TMDB</string>
-
+    <string name="profile">الملف الشخصي </string>
     <string name="side_menu_header">مستودع الافلام</string>
     <string name="empty_view">"ابحث في الاف من الافلام"</string>
     <string name="movies_side_drawer_header">"مستودع الافلام"</string>
@@ -35,6 +35,8 @@
     <string name="approve_browser">الرجاء قبول طلب الوصول علي المتصفح</string>
     <string name="we_are_creating_your_session">اعداد الحساب ....</string>
     <string name="loading_account">نحميل الحساب </string>
+    <string name="search_idle">افضل افلامنا في  ٢٠٢٦  </string>
+
 
 
 </resources>

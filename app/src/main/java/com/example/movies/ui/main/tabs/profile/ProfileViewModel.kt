@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private  val authRepository: AuthRepository
+    private  val authRepository: AuthRepository ,
 ) : ViewModel() {
     val state : MutableStateFlow<ProfileStates> = MutableStateFlow(ProfileStates())
 
@@ -21,8 +21,26 @@ class ProfileViewModel @Inject constructor(
     fun doAction( events  : ProfileEvents){
         when(events){
             ProfileEvents.OnLogOutClick -> logOut()
+            ProfileEvents.OnDismissRequest -> {state.value = state.value.copy(openAlertDialog = false)}
+            ProfileEvents.OnOpenRequest -> {state.value = state.value.copy(openAlertDialog = true)}
+            ProfileEvents.OnGetUserData -> getUserData()
+
+
         }
 
+    }
+
+    private fun getUserData() {
+        viewModelScope.launch {
+            state.value =state.value.copy(localState = Resources.Loading)
+            val data = authRepository.getUser()
+            if(data.isSuccess){
+              state.value = state.value.copy(localState = Resources.Success(data.getOrNull()!!))
+            }else{
+             state.value = state.value.copy(localState = Resources.Error(Throwable(data.exceptionOrNull())))
+            }
+
+        }
     }
 
     private fun logOut() {

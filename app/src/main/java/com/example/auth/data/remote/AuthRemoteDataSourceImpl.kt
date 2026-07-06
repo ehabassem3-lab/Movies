@@ -1,8 +1,7 @@
-package com.example.auth.data
+package com.example.auth.data.remote
 
 import com.example.auth.network.response.AccountResponse
 import com.example.auth.network.response.RequestTokenResponse
-import com.example.auth.network.response.SessionRequestBody
 import com.example.auth.network.response.SessionResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -11,13 +10,11 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.isSuccess
-import kotlinx.io.files.Path
 import javax.inject.Inject
-import kotlin.jvm.Throws
 
 class AuthRemoteDataSourceImpl @Inject constructor(
     private val client: HttpClient
-) : com.example.auth.data.AuthRemoteDataSource {
+) : AuthRemoteDataSource {
 
     override suspend fun createRequestToken(): Result<RequestTokenResponse >{
         try {

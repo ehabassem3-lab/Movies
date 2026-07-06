@@ -26,27 +26,30 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.movies.App
 import com.example.movies.R
 import com.example.movies.routes.AppRoutes
+import com.example.movies.ui.main.Resources
+import com.example.movies.ui.main.tabs.home.HomeEvents
+import com.example.movies.ui.main.tabs.home.HomeViewModel
+import com.example.movies.ui.main.tabs.home.TvSectionUiState
 import kotlinx.coroutines.delay
+import java.util.prefs.Preferences
 
 @Composable
-fun SplashView(navController: NavController) {
-
+fun SplashView  (navController: NavController) {
     val colorScheme = MaterialTheme.colorScheme
-
     val logoScale = remember { Animatable(1f) }
     val textScale = remember { Animatable(0f) }
     val viewModel = hiltViewModel<SplashViewModel>()
-    val isLoggedIn by viewModel.isLoggedIn.collectAsState(initial = false)
+    val state = viewModel.state.collectAsState().value
     var moveLogo by remember { mutableStateOf(false) }
     var showText by remember { mutableStateOf(false) }
-
     LaunchedEffect(Unit) {
-
+        viewModel.doAction(SplashEvents.checkIsLoggedIn)
         logoScale.animateTo(
             targetValue = 2f,
             animationSpec = tween(
@@ -68,11 +71,15 @@ fun SplashView(navController: NavController) {
         )
 
         delay(3000)
-
-        if (isLoggedIn) {
-            navController.navigate(AppRoutes.MainRoute)
-        } else {
-            navController.navigate(AppRoutes.CreateSessionRoute)
+    }
+    LaunchedEffect(state.isLoading) {
+        if (!state.isLoading) {
+            if (state.isLoggedIn ) {
+                delay(2000)
+                navController.navigate(AppRoutes.MainRoute)
+            } else {
+                navController.navigate(AppRoutes.CreateSessionRoute)
+            }
         }
     }
 

@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
         Log.d("DeepLink", "Approved = $approved")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getSystemService(LocaleManager::class.java).applicationLocales =
-                LocaleList.forLanguageTags("ar")
+                LocaleList.forLanguageTags("en")
         }
 
         setContent {

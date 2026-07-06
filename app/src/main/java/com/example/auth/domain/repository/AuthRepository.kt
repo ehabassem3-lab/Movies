@@ -3,6 +3,7 @@ package com.example.auth.domain.repository
 import com.example.auth.network.response.AccountResponse
 import com.example.auth.network.response.RequestTokenResponse
 import com.example.auth.network.response.SessionResponse
+import com.example.movies.ui.main.tabs.profile.UserData
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
@@ -10,6 +11,8 @@ interface AuthRepository {
     suspend fun createSession(requestToken: String): Result<SessionResponse>
     suspend fun getAccount(sessionId: String): Result<AccountResponse>
     suspend fun  LogOut () : Result<Unit>
-    val isLoggedIn: Flow<Boolean>
+    suspend fun isLoggedIn() : Result<Unit>
+    suspend fun getUser() : Result<UserData>
+
 
 }

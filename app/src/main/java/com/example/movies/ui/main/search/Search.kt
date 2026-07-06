@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -44,6 +45,8 @@ import com.example.movies.ui.main.CustomTextField
 import com.example.movies.ui.main.EmptyView
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.tabs.home.MovieItem
+import com.example.movies.ui.main.tabs.home.TvSection
+import kotlin.collections.orEmpty
 
 @Composable
 fun SearchView(
@@ -54,6 +57,9 @@ fun SearchView(
     val state = viewModel.state.collectAsState().value
     val colorScheme = MaterialTheme.colorScheme
 
+    LaunchedEffect(Unit) {
+      viewModel.doAction(SearchEvent.loadData)
+ }
 
     Column(
         modifier = Modifier
@@ -127,11 +133,32 @@ fun SearchView(
                 }
                 }
                 Resources.idle ->{
-                         EmptyView(stringResource(R.string.empty_view),R.drawable.ic_empty_search
-                         )
+                    val tv = (state.tvRecommendation as? Resources.Success)?.data?.results
+                    when (state.tvRecommendation) {
+                        Resources.Loading -> {
+                            CircularProgressIndicator()
+                        }
 
+                        is Resources.Success -> {
+                            TvSection(
+                                title = stringResource(R.string.search_idle),
+                                genre = null,
+                                tvList =  tv,
+                                navController = navController
+                            ) {}
+                        }
 
-                }
+                        is Resources.Error -> {
+                            // Show error
+                        }
+
+                        Resources.idle, null -> {
+                            // Show nothing for now
+                        }
+                    }
+
+                    }
+
 
             }
 

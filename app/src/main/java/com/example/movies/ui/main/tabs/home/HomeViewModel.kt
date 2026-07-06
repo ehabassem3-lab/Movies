@@ -13,7 +13,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-private val sections = listOf(
+ val sections = listOf(
     TvSectionUiState(R.string.recommendations, null, Resources.idle),
     TvSectionUiState(R.string.comedy, 35, Resources.idle),
     TvSectionUiState(R.string.drama, 18, Resources.idle),
@@ -27,7 +27,7 @@ private val sections = listOf(
 
 
 )
-private val movieSections = listOf(
+ val movieSections = listOf(
     MovieSectionUiState(R.string.recommendations, null, Resources.idle),
     MovieSectionUiState(R.string.action, 28, Resources.idle),
     MovieSectionUiState(R.string.adventure, 12, Resources.idle),

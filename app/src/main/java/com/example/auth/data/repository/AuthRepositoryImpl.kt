@@ -3,25 +3,24 @@ package com.example.auth.data.repository
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.example.auth.data.AuthRemoteDataSource
+import com.example.auth.data.local.AuthLocalDataSource
+import com.example.auth.data.remote.AuthRemoteDataSource
 import com.example.auth.domain.repository.AuthRepository
 import com.example.auth.ds.PreferencesKeys
 import com.example.auth.network.response.AccountResponse
 import com.example.auth.network.response.RequestTokenResponse
 import com.example.auth.network.response.SessionResponse
-import com.example.movies.data.datasource.home.RemoteDataSource
-import kotlinx.coroutines.flow.Flow
+import com.example.movies.ui.main.tabs.profile.UserData
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val dataSource: AuthRemoteDataSource,
+    private val localData: AuthLocalDataSource ,
     private  val dataStore : DataStore<Preferences>,
   )  : AuthRepository{
-    override val isLoggedIn: Flow<Boolean> =
-        dataStore.data.map { preferences ->
-            preferences[PreferencesKeys.IS_LOGGED_IN] ?: false
-        }
+
 
     override suspend fun createRequestToken(): Result<RequestTokenResponse >{
      val request = dataSource.createRequestToken()
@@ -86,5 +85,23 @@ class AuthRepositoryImpl @Inject constructor(
            preferences.clear()
         }
         return Result.success(Unit)
+    }
+
+    override suspend fun isLoggedIn(): Result<Unit> {
+      val status =  dataStore.data.map { it[PreferencesKeys.IS_LOGGED_IN] ?: false }.first()
+        return if (status){
+             Result.success(Unit)
+        }else{
+            Result.failure(Throwable("Some Thing Went Wrong"))
+        }
+    }
+
+    override suspend fun getUser(): Result<UserData> {
+       val data = localData.getUser()
+      if (data.isSuccess){
+          return Result.success(data.getOrNull()!!)
+      }else{
+          return Result.failure(Throwable(data.exceptionOrNull()))
+      }
     }
 }

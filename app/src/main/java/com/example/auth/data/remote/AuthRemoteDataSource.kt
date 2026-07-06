@@ -1,8 +1,7 @@
-package com.example.auth.data
+package com.example.auth.data.remote
 
 import com.example.auth.network.response.AccountResponse
 import com.example.auth.network.response.RequestTokenResponse
-import com.example.auth.network.response.SessionRequestBody
 import com.example.auth.network.response.SessionResponse
 
 interface AuthRemoteDataSource {
