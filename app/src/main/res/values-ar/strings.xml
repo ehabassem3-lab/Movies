@@ -36,7 +36,8 @@
     <string name="we_are_creating_your_session">اعداد الحساب ....</string>
     <string name="loading_account">نحميل الحساب </string>
     <string name="search_idle">افضل افلامنا في  ٢٠٢٦  </string>
-
+    <string name="error_header">حدث  خطأ ! </string>
+    <string name="retry">اعد المحاوله </string>
 
 
 </resources>

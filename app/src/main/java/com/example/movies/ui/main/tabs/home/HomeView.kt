@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -30,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.theme.AppTypography
@@ -45,7 +48,7 @@ fun HomeView(
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val genres = listOf<String>(
         stringResource(com.example.movies.R.string.movies),
-        "",
+
         stringResource(com.example.movies.R.string.tv_shows),
 
 
@@ -64,8 +67,10 @@ fun HomeView(
             indicator = { tabPositons ->
                 Box(
                     modifier = Modifier
+                        .padding(vertical = 5.dp)
                         .tabIndicatorOffset(tabPositons[selectedTabIndex])
-                        .height(2.dp)
+                        .width(10.dp)
+                        .height(1.dp)
                         .background(colorScheme.onBackground)
                 )
 
@@ -80,7 +85,7 @@ fun HomeView(
             for (i in 0 until (genres.size)) {
                 val isSelected = selectedTabIndex == i
                 Tab(
-                    modifier = Modifier.padding(horizontal = 10.dp),
+                    modifier = Modifier.padding(horizontal = 30.dp , vertical = 10.dp),
                     selected = selectedTabIndex == i,
                     onClick = {
                         selectedTabIndex = i
@@ -107,53 +112,10 @@ fun HomeView(
             println("Movies first item = ${(state.sectionsMovies.firstOrNull()?.state as? Resources.Success)?.data?.results?.firstOrNull()}")
             println("TV first item = ${(state.sections.firstOrNull()?.state as? Resources.Success)?.data?.results?.firstOrNull()}")
             when(selectedTabIndex){
-                0-> {
-                    LazyColumn {
-                        items(state.sectionsMovies) { sectionsMovies ->
-                            val tvList = (sectionsMovies.state as? Resources.Success)
-                                ?.data
-                                ?.results
-                                .orEmpty()
-                            TvSection(
-                                genre = sectionsMovies.genreId ,
-                                title = stringResource(sectionsMovies.title),
-                                movies = tvList,
-                                navController = navController,
-                                onViewAll = {
-                                    navController.navigate(
-                                        AppRoutes.TvFullRoute(sectionsMovies.genreId)
-                                    )
-                                }
-                            )
-                        }
-                    }
+                0-> MoviesView(state,navController){
+                    viewModel.doAction(HomeEvents.LoadMovies)
                 }
-                2->{
-                    LazyColumn {
-                        items(state.sections) { section ->
-
-                            val tvList = (section.state as? Resources.Success)
-                                ?.data
-                                ?.results
-                                .orEmpty()
-
-                            TvSection(
-                                genre = section.genreId ,
-                                title = stringResource(section.title),
-                                tvList = tvList,
-                                navController = navController,
-                                onViewAll = {
-                                    navController.navigate(
-                                        AppRoutes.TvFullRoute( section.genreId)
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }
-
-
-
+                1->  TvView(state ,navController){  viewModel.doAction(HomeEvents.LoadHomeSections)}
 
 
 

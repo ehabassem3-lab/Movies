@@ -59,6 +59,7 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-compose:3.0.4")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
     implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation("io.github.suwasto:kmp-shimmer-compose:1.0.0")
 
     val room_version = "2.8.4"
     val lifecycle_version = "2.10.0"

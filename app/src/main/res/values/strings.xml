@@ -38,6 +38,8 @@
     <string name="loading_account">Loading The Account </string>
     <string name="profile">Profile</string>
     <string name="search_idle">BEST OF OUR OF 2026 MOVIES  </string>
+    <string name="error_header"> Ops Something Went Wrong !</string>
+    <string name="retry">"Retry "</string>
 
 
 </resources>
