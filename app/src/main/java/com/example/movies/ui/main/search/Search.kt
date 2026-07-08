@@ -132,34 +132,7 @@ fun SearchView(
 
                 }
                 }
-                Resources.idle ->{
-                    val tv = (state.tvRecommendation as? Resources.Success)?.data?.results
-                    when (state.tvRecommendation) {
-                        Resources.Loading -> {
-                            CircularProgressIndicator()
-                        }
-
-                        is Resources.Success -> {
-                            TvSection(
-                                title = stringResource(R.string.search_idle),
-                                genre = null,
-                                tvList =  tv,
-                                navController = navController
-                            ) {}
-                        }
-
-                        is Resources.Error -> {
-                            // Show error
-                        }
-
-                        Resources.idle, null -> {
-                            // Show nothing for now
-                        }
-                    }
-
-                    }
-
-
+                Resources.idle -> SearchIdleView(state,navController)
             }
 
         }

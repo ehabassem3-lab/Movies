@@ -82,7 +82,7 @@ fun TvDetailsView(
                     contentDescription = "" ,
                      tint = colorScheme.onBackground ,
                     modifier = Modifier.size(24.dp).clickable{
-                         navController.navigate(AppRoutes.MainRoute)
+                         navController.popBackStack()
                     }
                 )
                 Text(

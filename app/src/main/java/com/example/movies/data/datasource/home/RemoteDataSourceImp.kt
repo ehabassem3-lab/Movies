@@ -20,6 +20,7 @@ class RemoteDataSourceImp  @Inject constructor(
     private val client: HttpClient
 ): RemoteDataSource{
     override suspend fun getDiscover(page: Int?, genre: Int?): Result<DiscoverResponse> {
+
         try {
             val request = createHttpClient().get("discover/tv"){
                parameter("page" , page)

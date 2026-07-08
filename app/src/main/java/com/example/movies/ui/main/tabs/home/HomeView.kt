@@ -31,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.routes.AppRoutes
@@ -39,26 +40,19 @@ import com.example.movies.ui.theme.AppTypography
 
 @Composable
 fun HomeView(
-    navController: NavController
+    navController: NavController ,
+    viewModel: HomeViewModel = hiltViewModel()
 ){
 
     val colorScheme = MaterialTheme.colorScheme
-   val viewModel = hiltViewModel<HomeViewModel>()
-   val state = viewModel.state.collectAsState().value
+    val state by viewModel.state.collectAsStateWithLifecycle()
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
-    val genres = listOf<String>(
+    val genres = listOf(
         stringResource(com.example.movies.R.string.movies),
 
         stringResource(com.example.movies.R.string.tv_shows),
-
-
     )
 
-    LaunchedEffect(Unit){
-        viewModel.doAction(HomeEvents.LoadHomeSections)
-        viewModel.doAction(HomeEvents.LoadMovies)
-
-    }
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -109,13 +103,9 @@ fun HomeView(
         }
         Spacer(modifier = Modifier.size(10.dp))
         Column(modifier = Modifier.fillMaxSize()) {
-            println("Movies first item = ${(state.sectionsMovies.firstOrNull()?.state as? Resources.Success)?.data?.results?.firstOrNull()}")
-            println("TV first item = ${(state.sections.firstOrNull()?.state as? Resources.Success)?.data?.results?.firstOrNull()}")
-            when(selectedTabIndex){
-                0-> MoviesView(state,navController){
-                    viewModel.doAction(HomeEvents.LoadMovies)
-                }
-                1->  TvView(state ,navController){  viewModel.doAction(HomeEvents.LoadHomeSections)}
+            when(selectedTabIndex) {
+                0->  MoviesView(state,navController){viewModel.doAction(HomeEvents.LoadMovies)}
+                1->TvView(state ,navController){viewModel.doAction(HomeEvents.LoadHomeSections)}
 
 
 

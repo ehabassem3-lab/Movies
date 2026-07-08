@@ -1,5 +1,6 @@
 package com.example.movies.data.repositories.home
 
+import com.example.movies.data.datasource.home.LocalDataSource
 import com.example.movies.data.datasource.home.RemoteDataSource
 import com.example.movies.domain.repositories.home.HomeRepository
 import com.example.movies.network.response.details.DetailsItemResponse
@@ -12,7 +13,8 @@ import com.example.movies.network.response.search.SearchResponse
 import jakarta.inject.Inject
 
 class HomeRepositoryImp  @Inject constructor(
-    private val dataSource: RemoteDataSource
+    private val dataSource: RemoteDataSource ,
+    private val local : LocalDataSource
 ) : HomeRepository {
 
     override suspend fun getDiscoveryTv(page: Int?, genre: Int?): Result<DiscoverResponse?> {

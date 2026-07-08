@@ -40,6 +40,7 @@
     <string name="search_idle">BEST OF OUR OF 2026 MOVIES  </string>
     <string name="error_header"> Ops Something Went Wrong !</string>
     <string name="retry">"Retry "</string>
+    <string name="best_of_our_2026_tv_show">BEST OF OUR 2026 TV Show</string>
 
 
 </resources>

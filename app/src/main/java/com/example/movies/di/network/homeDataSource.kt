@@ -1,5 +1,7 @@
 package com.example.movies.di.network
 
+import com.example.movies.data.datasource.home.LocalDataSource
+import com.example.movies.data.datasource.home.LocalDataSourceImpl
 import com.example.movies.data.datasource.home.RemoteDataSource
 import com.example.movies.data.datasource.home.RemoteDataSourceImp
 import dagger.Binds
@@ -15,4 +17,14 @@ abstract class DataSourceModule {
     abstract fun bindRemoteDataSource(
         impl: RemoteDataSourceImp
     ): RemoteDataSource
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class LocalDataSourceModule {
+
+    @Binds
+    abstract fun bindLocalDataSource(
+        impl: LocalDataSourceImpl
+    ): LocalDataSource
 }

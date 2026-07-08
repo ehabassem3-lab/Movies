@@ -104,7 +104,7 @@ fun TvFullView(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack ,
                     contentDescription = "" ,
                     tint = colorScheme.onBackground ,
-                    modifier = Modifier.size(24.dp).clickable{ navController.navigate(AppRoutes.MainRoute) })
+                    modifier = Modifier.size(24.dp).clickable{ navController.popBackStack()})
                 Text( text = stringResource(genreTitleRes(genre))  , style = AppTypography.titleLarge.copy(color = colorScheme.onBackground),)
                 Text("")
 

@@ -11,6 +11,7 @@ import com.example.movies.ui.main.Resources
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
  val sections = listOf(
@@ -61,6 +62,10 @@ class HomeViewModel @Inject constructor(
             HomeEvents.LoadMovies -> loadMovies()
         }
 
+    }
+    init {
+        doAction(HomeEvents.LoadHomeSections)
+        doAction(HomeEvents.LoadMovies)
     }
 
     private fun loadMovies() {
