@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -48,7 +49,7 @@ import com.google.gson.annotations.Until
 fun TvDetailsView(
     id : Int ,
     type : String ,
-    navController: NavController
+    navController: NavController ,
 ){
     val colorScheme = MaterialTheme.colorScheme
     val viewModel = hiltViewModel<TvViewModel>()
@@ -64,13 +65,13 @@ fun TvDetailsView(
         }
 
     }
-    val item = itemTv ?: itemMovie
     Scaffold (
         modifier = Modifier.fillMaxSize().background(colorScheme.background)
     ) {
-        println(item)
+
         Column (
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(it) ,
+
         ){
             Row(
                 modifier = Modifier.fillMaxWidth().height(60.dp) ,
@@ -94,13 +95,18 @@ fun TvDetailsView(
 
             }
             Column(
-                modifier = Modifier.fillMaxSize()  ,
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.padding(horizontal = 10.dp).fillMaxSize()  ,
+                horizontalAlignment = Alignment.Start
 
             ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().height(400.dp)
+                ) {
+
+
                 Box(
-                    modifier = Modifier.fillMaxWidth(.95f).height(500.dp).clip(RoundedCornerShape(10.dp)) ,
-//                    contentAlignment = Alignment.Center
+                    modifier = Modifier.fillMaxWidth(.5f).height(400.dp).clip(RoundedCornerShape(10.dp)) ,
+                    contentAlignment = Alignment.BottomEnd
 
                 ) {
                     GlideImage(
@@ -111,14 +117,15 @@ fun TvDetailsView(
                         alignment = Alignment.Center
 
                     )
-//                    Icon(
-//                        painter = painterResource()
-//                    )
-
-
+                }
+                    Text(
+                        itemTv?.overview?: itemMovie?.overview ?:"" ,
+                        modifier = Modifier.padding(horizontal = 5.dp)
+                    )
                 }
 
             }
+
 
 
 

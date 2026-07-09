@@ -12,8 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -46,20 +50,18 @@ import com.example.movies.ui.main.EmptyView
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.tabs.home.MovieItem
 import com.example.movies.ui.main.tabs.home.TvSection
+import com.example.utilities.ErrorView
+import io.github.suwasto.kmmcomposeshimmer.ShimmerContainer
+import kotlinx.coroutines.delay
 import kotlin.collections.orEmpty
 
 @Composable
 fun SearchView(
     navController: NavController ,
-
+   viewModel: SearchViewModel = hiltViewModel()
 ){
-    val viewModel  = hiltViewModel<SearchViewModel>()
     val state = viewModel.state.collectAsState().value
     val colorScheme = MaterialTheme.colorScheme
-
-    LaunchedEffect(Unit) {
-      viewModel.doAction(SearchEvent.loadData)
- }
 
     Column(
         modifier = Modifier
@@ -115,22 +117,46 @@ fun SearchView(
             modifier = Modifier.fillMaxSize()
         ) {
             when(state.apiState){
-                is Resources.Error -> {}
-                Resources.Loading -> CircularProgressIndicator()
-                is Resources.Success<SearchResponse> -> {
-                    val data = state.apiState.data?.results ?: emptyList()
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp) ,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        items(data){
+                is Resources.Error -> ErrorView { viewModel.doAction(SearchEvent.onSearchClick(state.search?:"")) }
+                Resources.Loading -> {
+                    LazyVerticalGrid (
+                        columns = GridCells.Fixed(2)  ,
+                        verticalArrangement = Arrangement.spacedBy(10.dp) ,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
 
-                            println(data)
+                    ) {
+
+                        items(10){
+                            ShimmerContainer(
+                                modifier = Modifier.height(350.dp).width(250.dp).background( Color.White, RoundedCornerShape(15.dp))
+                            ) {
+                                Box(modifier = Modifier.height(300.dp).width(200.dp).background(Color.Gray  ,  RoundedCornerShape(15.dp)))
+                            }
 
 
                         }
-
+                    }
                 }
+                is Resources.Success<SearchResponse> -> {
+                    val data = state.apiState.data?.results ?: emptyList()
+                    LazyVerticalGrid (
+                        columns = GridCells.Fixed(2)  ,
+                        verticalArrangement = Arrangement.spacedBy(10.dp) ,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+
+                    ) {
+
+                        items(data){
+                            SearchItem(
+                                item = it,
+
+                            ) {
+
+                            }
+
+
+                        }
+                    }
                 }
                 Resources.idle -> SearchIdleView(state,navController)
             }

@@ -14,6 +14,7 @@ import com.example.movies.ui.main.tabs.home.TvSectionUiState
 import com.example.movies.ui.main.tabs.home.sections
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.internal.wait
@@ -36,6 +37,9 @@ class SearchViewModel @Inject constructor(
             SearchEvent.loadData -> loadData()
         }
 
+    }
+    init {
+        doAction(SearchEvent.loadData)
     }
 
     private fun loadData() {
@@ -61,6 +65,7 @@ class SearchViewModel @Inject constructor(
             state.value = state.value.copy(apiState = Resources.Loading)
             val response = repository.searchMovies(search)
             if (response.isSuccess){
+                delay(3000)
                 val data = response.getOrNull()
                 state.value = state.value.copy( apiState = Resources.Success(data))
             }else{

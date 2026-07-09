@@ -53,7 +53,7 @@ fun ProfileView(navController: NavController){
             is Resources.Error -> {}
             Resources.Loading -> {}
             is Resources.Success<*> -> navController.navigate(AppRoutes.CreateSessionRoute)
-            Resources.idle -> {}
+            Resources.idle -> { }
         }
 
     }
