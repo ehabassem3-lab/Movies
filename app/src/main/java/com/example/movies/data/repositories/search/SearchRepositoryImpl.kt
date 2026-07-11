@@ -8,8 +8,8 @@ import jakarta.inject.Inject
 class SearchRepositoryImpl  @Inject constructor(
     private val dataSource: RemoteDataSource
 ) : SearchRepository {
-    override suspend fun searchMovies(search: String): Result<SearchResponse?> {
-        val request = dataSource.searchMovies(search)
+    override suspend fun searchMovies(search: String, page : Int?  ): Result<SearchResponse?> {
+        val request = dataSource.searchMovies(search , page)
         if (request.isSuccess){
             return Result.success( request.getOrNull())
         }else{

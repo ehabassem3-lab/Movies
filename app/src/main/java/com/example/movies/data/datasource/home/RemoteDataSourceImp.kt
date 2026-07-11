@@ -107,9 +107,10 @@ class RemoteDataSourceImp  @Inject constructor(
         }
     }
 
-    override suspend fun searchMovies(search: String): Result<SearchResponse> {
+    override suspend fun searchMovies(search: String , page: Int?): Result<SearchResponse> {
         try {
-            val request = createHttpClient().get("search/movie"){
+            val request = createHttpClient().get("search/multi"){
+                parameter("page" , page)
                 parameter("query" , search)
 
             }

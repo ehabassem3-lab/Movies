@@ -25,12 +25,15 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +53,7 @@ import com.example.movies.ui.main.EmptyView
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.tabs.home.MovieItem
 import com.example.movies.ui.main.tabs.home.TvSection
+import com.example.movies.ui.theme.AppTypography
 import com.example.utilities.ErrorView
 import io.github.suwasto.kmmcomposeshimmer.ShimmerContainer
 import kotlinx.coroutines.delay
@@ -62,6 +66,15 @@ fun SearchView(
 ){
     val state = viewModel.state.collectAsState().value
     val colorScheme = MaterialTheme.colorScheme
+    var page by rememberSaveable() {  mutableIntStateOf(1)}
+//    LaunchedEffect(page) {
+//        viewModel.doAction(
+//            SearchEvent.onSearchClick(
+//                state.search ?: "",
+//                page
+//            )
+//        )
+//    }
 
     Column(
         modifier = Modifier
@@ -104,7 +117,7 @@ fun SearchView(
                     width = 400.dp,
                     isSearchBar = true,
                     onSearchClick = {
-                        viewModel.doAction(SearchEvent.onSearchClick(state.search?:""))
+                        viewModel.doAction(SearchEvent.onSearchClick(state.search?:"" , page))
                     },
                     isPassword = false,
                     isEdit = false
@@ -117,7 +130,7 @@ fun SearchView(
             modifier = Modifier.fillMaxSize()
         ) {
             when(state.apiState){
-                is Resources.Error -> ErrorView { viewModel.doAction(SearchEvent.onSearchClick(state.search?:"")) }
+                is Resources.Error -> ErrorView { viewModel.doAction(SearchEvent.onSearchClick(state.search?:"", page)) }
                 Resources.Loading -> {
                     LazyVerticalGrid (
                         columns = GridCells.Fixed(2)  ,
@@ -149,14 +162,40 @@ fun SearchView(
                         items(data){
                             SearchItem(
                                 item = it,
-
                             ) {
+                                navController.navigate(
+                                    AppRoutes.TvDetailsRoute(it.id?: 0,
+                                        if (it.mediaType.equals("tv")) "TV" else "Movie")
+                                )
 
                             }
 
+                        }
+                        item {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .height(50.dp)
+                                    .width(200.dp)
+                                    .background(colorScheme.onBackground , RoundedCornerShape(12.dp))
+                                    .clickable{
+                                        page += 1
+                                        viewModel.doAction(SearchEvent.onSearchClick(state.search?:"" , page))
+
+                                    }
+                            ){
+
+                                Text(
+                                    "Load More" ,
+                                    style = AppTypography.titleLarge.copy(color = colorScheme.background)
+                                )
+                            }
+                        }
+
 
                         }
-                    }
+
+
                 }
                 Resources.idle -> SearchIdleView(state,navController)
             }

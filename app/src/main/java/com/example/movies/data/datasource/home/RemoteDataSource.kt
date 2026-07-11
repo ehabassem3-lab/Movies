@@ -15,5 +15,5 @@ interface RemoteDataSource{
    suspend fun getTvById(id : Int ) : Result<TvDetails>
 
 
-   suspend fun searchMovies(search : String ) : Result<SearchResponse>
+   suspend fun searchMovies(search : String  , page : Int? = 1  ) : Result<SearchResponse>
 }

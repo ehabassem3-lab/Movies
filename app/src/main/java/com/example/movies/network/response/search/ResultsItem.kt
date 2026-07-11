@@ -31,7 +31,8 @@ data class ResultsItem(
 	val releaseDate: String? = null,
 
 	val popularity: Double? = null,
-
+	@SerialName("media_type")
+	val mediaType: String? = null,
 	@SerialName("vote_average")
 	val voteAverage: Double? = null,
 

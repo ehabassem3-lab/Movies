@@ -1,23 +1,14 @@
 package com.example.movies.ui.main.search
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movies.R
 import com.example.movies.domain.repositories.home.HomeRepository
 import com.example.movies.domain.repositories.search.SearchRepository
 import com.example.movies.ui.main.Resources
-import com.example.movies.ui.main.tabs.home.HomeEvents
-import com.example.movies.ui.main.tabs.home.HomeStates
-import com.example.movies.ui.main.tabs.home.MovieSectionUiState
-import com.example.movies.ui.main.tabs.home.TvSectionUiState
-import com.example.movies.ui.main.tabs.home.sections
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,7 +22,7 @@ class SearchViewModel @Inject constructor(
 
     fun doAction(events: SearchEvent){
         when(events){
-            is   SearchEvent.onSearchClick -> searchMovies(events.search)
+            is   SearchEvent.onSearchClick -> searchMovies(events.search , events.page )
          is   SearchEvent.onSearchChangeing -> { state.value = state.value.copy(search =  events.search) }
 
             SearchEvent.loadData -> loadData()
@@ -60,10 +51,10 @@ class SearchViewModel @Inject constructor(
     }
 
 
-    private fun searchMovies(search : String) {
+    private fun searchMovies(search: String, page: Int) {
         viewModelScope.launch {
             state.value = state.value.copy(apiState = Resources.Loading)
-            val response = repository.searchMovies(search)
+            val response = repository.searchMovies(search, page)
             if (response.isSuccess){
                 delay(3000)
                 val data = response.getOrNull()

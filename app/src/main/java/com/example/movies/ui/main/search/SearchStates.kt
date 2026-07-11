@@ -16,7 +16,7 @@ data class SearchStates (
 
 )
 sealed class SearchEvent{
-    data class onSearchClick(val search : String)  : SearchEvent()
+    data class onSearchClick(val search : String , val page : Int)  : SearchEvent()
     data class onSearchChangeing(val search : String) : SearchEvent()
     object  loadData : SearchEvent()
 }

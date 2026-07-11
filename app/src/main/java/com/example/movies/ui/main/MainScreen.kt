@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -119,7 +120,6 @@ fun MainScreen(navController: NavController){
 
             bottomBar = {
                 NavigationBar(
-
                     modifier = Modifier
                         .background( colorScheme.background, RoundedCornerShape(25.dp) ) ,
                     containerColor = Color.Transparent
@@ -130,28 +130,33 @@ fun MainScreen(navController: NavController){
                         NavigationBarItem(
                             colors = colors,
                             selected =  isSelected ,
-                            icon = {
-                                Row(
-                                    modifier = Modifier
-                                        .padding( top =  if (!isSelected) 20.dp  else 0.dp)
-                                        .width(40.dp)
-                                        .height(40.dp)
-                                        .background(
-                                            color = if (isSelected) colorScheme.onBackground else Color.Transparent,
-                                            shape = RoundedCornerShape(35.dp)
-                                        ),
 
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    Icon(
-                                        painter = painterResource(item.icon),
+                            icon = {
+
+                                    Row(
                                         modifier = Modifier
-                                            .size(if (isSelected) 24.dp else 18.dp),
-                                        contentDescription = "" ,
-                                        tint = if (isSelected) colorScheme.background else colorScheme.onBackground
-                                    )
-                                }
+                                            .padding( top =  if (!isSelected) 22.dp  else 0.dp)
+                                            .width(26.dp)
+                                            .height(26.dp)
+                                            .background(
+                                                color = if (isSelected) colorScheme.onBackground else Color.Transparent,
+                                                shape = RoundedCornerShape(10.dp)
+                                            ),
+
+                                        verticalAlignment = Alignment.Top,
+                                        horizontalArrangement = Arrangement.Center
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(item.icon),
+                                            modifier = Modifier
+                                                .size(if (isSelected) 20.dp else 16.dp),
+                                            contentDescription = "" ,
+                                            tint = if (isSelected) colorScheme.background else colorScheme.onBackground
+                                        )
+                                    }
+
+
+
                             } ,
                             onClick = {
                                 selectedIndex  = item.index
