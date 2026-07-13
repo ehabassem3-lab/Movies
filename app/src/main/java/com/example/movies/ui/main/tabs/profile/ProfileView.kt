@@ -1,12 +1,14 @@
 package com.example.movies.ui.main.tabs.profile
 
 import android.app.AlertDialog
- import androidx.compose.material3.AlertDialog
+import android.util.Log
+import androidx.compose.material3.AlertDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,16 +40,17 @@ import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.AlertDialogExample
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.theme.AppTypography
+import io.ktor.sse.SPACE
 
 @Composable
-fun ProfileView(navController: NavController){
+fun ProfileView(
+    navController: NavController ,
+){
+    Log.d("ProfileView", "Composed")
     val colorScheme = MaterialTheme.colorScheme
     val viewModel = hiltViewModel<ProfileViewModel>()
+
     val state = viewModel.state.collectAsState().value
-    val user = (state.localState as? Resources.Success)?.data
-    LaunchedEffect(Unit) {
-        viewModel.doAction(ProfileEvents.OnGetUserData)
-    }
     LaunchedEffect(state.apiState) {
         when(state.apiState){
             is Resources.Error -> {}
@@ -57,20 +60,19 @@ fun ProfileView(navController: NavController){
         }
 
     }
-    Scaffold() { innerPadding->
+
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(top = 20.dp)
                 .fillMaxSize()
                 .background(colorScheme.background) ,
         ) {
-            println("user =  ${user}")
             when{
                 state.openAlertDialog -> AlertDialogExample(
                     onDismissRequest = { viewModel.doAction(ProfileEvents.OnDismissRequest) },
                     onConfirmation = {  viewModel.doAction(ProfileEvents.OnLogOutClick) },
-                    dialogTitle = "LOG OUT ",
-                    dialogText = " Are you Sure of Login Out ",
+                    dialogTitle = stringResource(R.string.log_out),
+                    dialogText = stringResource(R.string.are_you_sure_of_login_out),
                     icon = painterResource(R.drawable.ic_profile)
                 )
             }
@@ -97,15 +99,18 @@ fun ProfileView(navController: NavController){
                 Text(
                     stringResource(R.string.profile),
                     modifier = Modifier.padding(start = 120.dp),
-                    style = AppTypography.titleLarge.copy(fontSize = 30.sp )
+                    style = AppTypography.titleLarge.copy(fontSize = 30.sp , fontWeight = FontWeight.Normal)
                 )
 
             }
+            Spacer(modifier = Modifier.size(20.dp))
 
 
 
 
-        }
+
+
+
 
     }
 

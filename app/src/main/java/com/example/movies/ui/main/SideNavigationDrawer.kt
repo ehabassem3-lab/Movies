@@ -18,11 +18,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import com.example.movies.R
+import com.example.movies.ui.main.tabs.profile.ProfileViewModel
 import com.example.movies.ui.theme.AppTypography
 
 @Composable
-fun SideNavigationDrawer(){
+fun SideNavigationDrawer(
+    viewModel: ProfileViewModel = hiltViewModel()
+){
     val colorScheme = MaterialTheme.colorScheme
     Column (
         modifier = Modifier
@@ -45,6 +50,8 @@ fun SideNavigationDrawer(){
             )
 
         }
+
+
 
     }
 }

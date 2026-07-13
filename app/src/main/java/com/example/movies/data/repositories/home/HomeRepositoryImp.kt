@@ -1,5 +1,8 @@
 package com.example.movies.data.repositories.home
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import com.example.auth.ds.PreferencesKeys
 import com.example.movies.data.datasource.home.LocalDataSource
 import com.example.movies.data.datasource.home.RemoteDataSource
 import com.example.movies.domain.repositories.home.HomeRepository
@@ -11,11 +14,15 @@ import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.network.response.search.SearchResponse
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 class HomeRepositoryImp  @Inject constructor(
     private val dataSource: RemoteDataSource ,
-    private val local : LocalDataSource
+    private val local : LocalDataSource ,
+    private  val dataStore : DataStore<Preferences>,
 ) : HomeRepository {
+
 
     override suspend fun getDiscoveryTv(page: Int?, genre: Int?): Result<DiscoverResponse?> {
       val request = dataSource.getDiscover(page,genre)
@@ -36,6 +43,34 @@ class HomeRepositoryImp  @Inject constructor(
         }else{
             Result.failure(Throwable(request.exceptionOrNull()))
         }
+    }
+
+    override suspend fun addToFavorite(
+        mediaId: Int,
+        mediaType: String,
+        favorite: Boolean
+    ): Result<Unit> {
+        val preferences = dataStore.data.first()
+
+        val accountId = preferences[PreferencesKeys.ACCOUNT_ID]
+            ?: return Result.failure(Exception("Account ID not found"))
+
+        val sessionId = preferences[PreferencesKeys.SESSION_ID]
+            ?: return Result.failure(Exception("Session ID not found"))
+
+        val request = dataSource.addToFavorite(
+            accountId = accountId,
+            sessionId = sessionId,
+            mediaId = mediaId,
+            mediaType = mediaType,
+            favorite = favorite
+        )
+         return if (request.isSuccess){
+             Result.success(request.getOrNull()!!)
+        }else{
+             Result.failure(Throwable(request.exceptionOrNull()))
+         }
+
     }
 
     override suspend fun getMovieById(id: Int): Result<DetailsItemResponse> {

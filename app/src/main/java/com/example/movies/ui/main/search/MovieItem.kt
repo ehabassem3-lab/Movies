@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,18 +26,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.example.movies.R
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.search.ResultsItem
+import com.example.movies.ui.main.tabs.home.HomeEvents
+import com.example.movies.ui.main.tabs.home.HomeViewModel
 import com.example.movies.ui.theme.AppTypography
 
 @Composable
 fun MovieItem(
     movieItem : MoviesItem? = null ,
     tvItem : DiscoverItem? = null ,
-    onMovieClick : () -> Unit ,
+    viewModel: HomeViewModel = hiltViewModel() ,
+            onMovieClick : () -> Unit
 ){
     val colorScheme = MaterialTheme.colorScheme
     Column(
@@ -57,7 +62,7 @@ fun MovieItem(
                     .fillMaxWidth()
                     .height(280.dp)
                     .clip(RoundedCornerShape(10.dp)) ,
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.BottomEnd
             ) {
                 AsyncImage(
                     model =if (movieItem != null) "https://image.tmdb.org/t/p/w500${movieItem?.posterPath}"
@@ -69,6 +74,21 @@ fun MovieItem(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(RoundedCornerShape(10.dp))
+                )
+                Icon(
+                    painterResource(R.drawable.ic_fav) ,
+                    contentDescription =  "" ,
+                    tint =  colorScheme.onBackground ,
+                    modifier = Modifier.padding(20.dp).size(20.dp).clickable{
+                        if (tvItem == null){
+                            viewModel.doAction(HomeEvents.addToFavoutire(mediaId = movieItem?.id!! , mediaType = "movie" , favorite = true))
+
+                        }else{
+                            viewModel.doAction(HomeEvents.addToFavoutire(mediaId = tvItem?.id!! , mediaType = "tv" , favorite = true))
+
+                        }
+
+                    }
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))

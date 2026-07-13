@@ -3,8 +3,11 @@ package com.example.auth.data.remote
 import com.example.auth.network.response.AccountResponse
 import com.example.auth.network.response.RequestTokenResponse
 import com.example.auth.network.response.SessionResponse
+import com.example.movies.network.response.discover.DiscoverResponse
+import com.example.movies.network.response.discover.MoviesResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.isSaved
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -63,5 +66,41 @@ class AuthRemoteDataSourceImpl @Inject constructor(
 
           }
 
+    }
+
+    override suspend fun getFavouriteMovies(    sessionId: String,accountId: Int ): Result<MoviesResponse> {
+
+         return  try {
+                    val request = client.get ("account/${accountId}/favorite/movies"){
+                        parameter("session_id", sessionId)
+
+                    }
+                        if (request.status.isSuccess()){
+                            Result.success(request.body())
+                        }else{
+                            Result.failure(Throwable(request.status.description))
+                        }
+        }catch ( e : Throwable){
+             Result.failure(e)
+
+        }
+    }
+
+    override suspend fun getFavouriteTv(    sessionId: String,accountId: Int): Result<DiscoverResponse> {
+        return try {
+            val request = client.get("account/${accountId}/favorite/tv"){
+                parameter("session_id", sessionId)
+
+            }
+            if(request.status.isSuccess()){
+                Result.success(request.body())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+
+        }catch ( e : Throwable){
+            Result.failure(e)
+
+        }
     }
 }

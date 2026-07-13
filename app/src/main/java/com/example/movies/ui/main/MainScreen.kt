@@ -65,11 +65,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainScreen(navController: NavController){
 
-//    LaunchedEffect(Unit) {
-//        val request = createHttpClient().get("trending/all/day"){}
-//        val response = request.status.value
-//        print(response)
-//    }
 
     var drawerState = rememberDrawerState(DrawerValue.Closed)
     val colorScheme = MaterialTheme.colorScheme

@@ -1,6 +1,7 @@
 package com.example.movies.data.datasource.home
 
 import com.example.movies.network.createHttpClient
+import com.example.movies.network.request.FavoriteRequest
 import com.example.movies.network.response.details.DetailsItemResponse
 import com.example.movies.network.response.details.TvDetails
 import com.example.movies.network.response.discover.DiscoverItem
@@ -12,6 +13,9 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.put
+import io.ktor.client.request.setBody
 import io.ktor.http.isSuccess
 import io.ktor.http.parameters
 import jakarta.inject.Inject
@@ -106,6 +110,31 @@ class RemoteDataSourceImp  @Inject constructor(
 
         }
     }
+
+    override suspend fun addToFavorite(
+        accountId: Int,
+        sessionId: String,
+        mediaId: Int,
+        mediaType: String,
+        favorite: Boolean
+    ): Result<Unit> {
+         return try {
+             val request = createHttpClient().post ("account/${accountId}/favorite"){
+                 parameter("session_id", sessionId)
+                 setBody(FavoriteRequest(mediaType,mediaId,favorite))
+             }
+             if (request.status.isSuccess()){
+                 val response = request.body<Unit>()
+                 Result.success(response)
+             }else{
+                 Result.failure(Throwable(request.status.description))
+             }
+
+        }catch (e : Throwable){
+             Result.failure(e)
+        }
+    }
+
 
     override suspend fun searchMovies(search: String , page: Int?): Result<SearchResponse> {
         try {

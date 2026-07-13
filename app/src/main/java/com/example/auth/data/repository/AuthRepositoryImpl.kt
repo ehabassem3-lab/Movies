@@ -10,6 +10,9 @@ import com.example.auth.ds.PreferencesKeys
 import com.example.auth.network.response.AccountResponse
 import com.example.auth.network.response.RequestTokenResponse
 import com.example.auth.network.response.SessionResponse
+import com.example.movies.network.createHttpClient
+import com.example.movies.network.response.discover.DiscoverResponse
+import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.ui.main.tabs.profile.UserData
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -71,7 +74,7 @@ class AuthRepositoryImpl @Inject constructor(
                  Result.success(session)
 
              }else{
-                 Result.failure(Throwable(request.exceptionOrNull()))
+                 Result.failure(request.exceptionOrNull()!!)
              }
         }catch (e  : Throwable){
              Result.failure(e)
@@ -98,10 +101,35 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(): Result<UserData> {
        val data = localData.getUser()
-      if (data.isSuccess){
-          return Result.success(data.getOrNull()!!)
+        return if (data.isSuccess){
+           Result.success(data.getOrNull()!!)
       }else{
-          return Result.failure(Throwable(data.exceptionOrNull()))
+           Result.failure(Throwable(data.exceptionOrNull()))
       }
+    }
+
+    override suspend fun getFavouriteMovies(): Result<MoviesResponse> {
+            val request = dataSource.getFavouriteMovies(
+                accountId = dataStore.data.map { it[PreferencesKeys.ACCOUNT_ID] }.first()!! ,
+                sessionId = dataStore.data.map { it[PreferencesKeys.SESSION_ID] }.first()!!
+            )
+              return  if (request.isSuccess){
+                  Result.success(request.getOrNull()!!)
+              }else{
+                  Result.failure(Throwable(request.exceptionOrNull()))
+              }
+    }
+
+    override suspend fun getFavouriteTv(): Result<DiscoverResponse> {
+        val request = dataSource.getFavouriteTv(
+            accountId = dataStore.data.map { it[PreferencesKeys.ACCOUNT_ID] }.first()!! ,
+            sessionId = dataStore.data.map { it[PreferencesKeys.SESSION_ID] }.first()!!
+
+        )
+        return  if (request.isSuccess){
+            Result.success(request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
     }
 }

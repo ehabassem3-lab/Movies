@@ -13,7 +13,8 @@ interface RemoteDataSource{
    suspend fun getDiscoverMovies(page : Int? = 1 , genre : Int? = null) : Result<MoviesResponse>
    suspend fun getMovieById(id : Int ) : Result<DetailsItemResponse>
    suspend fun getTvById(id : Int ) : Result<TvDetails>
-
+//   suspend fun getUserFavourite() : Result
+   suspend fun addToFavorite(accountId: Int, sessionId: String, mediaId: Int, mediaType: String, favorite: Boolean): Result<Unit>
 
    suspend fun searchMovies(search : String  , page : Int? = 1  ) : Result<SearchResponse>
 }

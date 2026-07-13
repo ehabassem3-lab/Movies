@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -37,13 +38,14 @@ import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.theme.AppTypography
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeView(
     navController: NavController ,
     viewModel: HomeViewModel = hiltViewModel()
 ){
-
+    val scope = rememberCoroutineScope()
     val colorScheme = MaterialTheme.colorScheme
     val state by viewModel.state.collectAsStateWithLifecycle()
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -104,7 +106,7 @@ fun HomeView(
         Spacer(modifier = Modifier.size(10.dp))
         Column(modifier = Modifier.fillMaxSize()) {
             when(selectedTabIndex) {
-                0->  MoviesView(state,navController){viewModel.doAction(HomeEvents.LoadMovies)}
+                0->  MoviesView(state,navController){ viewModel.doAction(HomeEvents.LoadMovies) }
                 1->TvView(state ,navController){viewModel.doAction(HomeEvents.LoadHomeSections)}
 
 

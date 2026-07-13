@@ -9,7 +9,8 @@ import com.example.movies.ui.main.Resources
 
 data class HomeStates(
     val sections: List<TvSectionUiState> = emptyList() ,
-    val sectionsMovies: List<MovieSectionUiState> = emptyList()
+    val sectionsMovies: List<MovieSectionUiState> = emptyList() ,
+    val favApiState : Resources<Unit> = Resources.idle
 
 )
 data class TvSectionUiState(
@@ -26,5 +27,6 @@ sealed class HomeEvents{
     data class  getDiscoverTv (val page : Int? = 1 , val genre : Int?): HomeEvents()
     data object LoadHomeSections : HomeEvents()
     data object  LoadMovies : HomeEvents()
+    data class  addToFavoutire(   val mediaId: Int, val  mediaType: String, val favorite: Boolean ) : HomeEvents()
 
 }

@@ -1,18 +1,14 @@
 package com.example.movies.ui.main.tabs.home
 
-import android.provider.Settings.Global.getString
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.movies.R
 import com.example.movies.domain.repositories.home.HomeRepository
 import com.example.movies.ui.main.Resources
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
  val sections = listOf(
     TvSectionUiState(R.string.recommendations, null, Resources.idle),
@@ -60,9 +56,26 @@ class HomeViewModel @Inject constructor(
          is    HomeEvents.getDiscoverTv -> getDiscoverTv(events.page , events.genre)
             HomeEvents.LoadHomeSections -> loadHomeSections()
             HomeEvents.LoadMovies -> loadMovies()
+            is HomeEvents.addToFavoutire -> addFavourite(events.mediaId , events.mediaType , events.favorite)
         }
 
     }
+
+    private fun addFavourite(mediaId: Int, mediaType: String, favorite: Boolean) {
+        viewModelScope.launch {
+             state.value = state.value.copy(favApiState = Resources.Loading)
+            val request = repository.addToFavorite(mediaId , mediaType , favorite)
+             if (request.isSuccess){
+                 state.value = state.value.copy( favApiState = Resources.Success(request.getOrNull()))
+            }else{
+                state.value = state.value.copy(favApiState = Resources.Error(Throwable(request.exceptionOrNull())))
+             }
+
+
+        }
+
+    }
+
     init {
         doAction(HomeEvents.LoadHomeSections)
         doAction(HomeEvents.LoadMovies)
@@ -107,9 +120,9 @@ class HomeViewModel @Inject constructor(
 
             val response = repository.getDiscoveryMovies(page, genre)
             if (response.isSuccess) {
+                delay(2000)
                 val data = response.getOrNull()
                 val newResults = data?.results.orEmpty()
-
                 val mergedData = if (page != null && page > 1) {
                     data?.copy(results = previousResults + newResults)
                 } else {
@@ -126,6 +139,7 @@ class HomeViewModel @Inject constructor(
                     }
                 )
             } else {
+                delay(2000)
                 state.value = state.value.copy(
                     sectionsMovies = state.value.sectionsMovies.map { section ->
                         if (section.genreId == genre) {
@@ -161,6 +175,8 @@ class HomeViewModel @Inject constructor(
 
             val response = repository.getDiscoveryTv(page, genre)
             if (response.isSuccess) {
+                delay(2000)
+
                 val data = response.getOrNull()
                 val newResults = data?.results.orEmpty()
 
@@ -180,6 +196,8 @@ class HomeViewModel @Inject constructor(
                     }
                 )
             } else {
+                delay(2000)
+
                 state.value = state.value.copy(
                     sections = state.value.sections.map { section ->
                         if (section.genreId == genre) {

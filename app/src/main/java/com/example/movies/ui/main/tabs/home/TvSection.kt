@@ -43,7 +43,8 @@ fun TvSection(
     tvList: List<DiscoverItem?>? = null,
     movies : List<MoviesItem?>? = null ,
     navController: NavController,
-    onViewAll: () -> Unit
+
+    onViewAll: () -> Unit ,
 ) {
     val  colorScheme = MaterialTheme.colorScheme
 
@@ -104,13 +105,13 @@ fun TvSection(
         ) {
             if (tvList == null){
                 items(movies!!){
-                    MovieItem( movieItem = it) {
+                    MovieItem( movieItem = it   ) {
                           navController.navigate(AppRoutes.TvDetailsRoute(it?.id?:0,it?.type!!))
                     }
                 }
             }else{
                 items(tvList){
-                    MovieItem(tvItem =  it) {
+                    MovieItem(tvItem =  it  ) {
                         navController.navigate(AppRoutes.TvDetailsRoute(it?.id?:0 , it?.type!!))
                     }
                 }
