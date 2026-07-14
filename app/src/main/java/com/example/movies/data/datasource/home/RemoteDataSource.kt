@@ -11,8 +11,8 @@ import com.example.movies.network.response.search.SearchResponse
 interface RemoteDataSource{
    suspend fun getDiscover(page : Int? = 1 , genre : Int? = null) : Result<DiscoverResponse>
    suspend fun getDiscoverMovies(page : Int? = 1 , genre : Int? = null) : Result<MoviesResponse>
-   suspend fun getMovieById(id : Int ) : Result<DetailsItemResponse>
-   suspend fun getTvById(id : Int ) : Result<TvDetails>
+   suspend fun getMovieById(id : Int ) : Result<MoviesItem>
+   suspend fun getTvById(id : Int ) : Result<DiscoverItem>
 //   suspend fun getUserFavourite() : Result
    suspend fun addToFavorite(accountId: Int, sessionId: String, mediaId: Int, mediaType: String, favorite: Boolean): Result<Unit>
 

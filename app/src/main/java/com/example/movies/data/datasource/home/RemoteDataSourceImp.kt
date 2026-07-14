@@ -67,7 +67,7 @@ class RemoteDataSourceImp  @Inject constructor(
         }
     }
 
-    override suspend fun getMovieById(id: Int): Result<DetailsItemResponse> {
+    override suspend fun getMovieById(id: Int): Result<MoviesItem> {
       try {
           val request = createHttpClient().get("movie/$id"){
               parameter("append_to_response", "videos")
@@ -76,7 +76,7 @@ class RemoteDataSourceImp  @Inject constructor(
           }
 
           if (request.status.isSuccess()){
-              val response = request.body<DetailsItemResponse>()
+              val response = request.body<MoviesItem>()
               return Result.success(response)
           }else{
               return Result.failure(Throwable(request.body<Throwable>().message))
@@ -89,7 +89,7 @@ class RemoteDataSourceImp  @Inject constructor(
       }
     }
 
-    override suspend fun getTvById(id: Int): Result<TvDetails> {
+    override suspend fun getTvById(id: Int): Result<DiscoverItem> {
         try {
             val request = createHttpClient().get("tv/$id"){
                 parameter("append_to_response", "videos")
@@ -98,7 +98,7 @@ class RemoteDataSourceImp  @Inject constructor(
             }
 
             if (request.status.isSuccess()){
-                val response = request.body<TvDetails>()
+                val response = request.body<DiscoverItem>()
                 return Result.success(response)
             }else{
                 return Result.failure(Throwable(request.body<Throwable>().message))

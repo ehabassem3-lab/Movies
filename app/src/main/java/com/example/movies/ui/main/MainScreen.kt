@@ -168,7 +168,7 @@ fun MainScreen(navController: NavController){
                 when(selectedIndex){
                     0 -> HomeView(navController)
                     1 -> TrendingView()
-                    2 -> SavedView()
+                    2 -> SavedView(navController)
                     3 -> ProfileView(navController)
 
                 }

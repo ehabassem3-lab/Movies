@@ -17,9 +17,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,8 +34,10 @@ import com.example.movies.R
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.search.ResultsItem
+import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.tabs.home.HomeEvents
 import com.example.movies.ui.main.tabs.home.HomeViewModel
+import com.example.movies.ui.main.tabs.saved.SavedViewModel
 import com.example.movies.ui.theme.AppTypography
 
 @Composable
@@ -43,6 +47,17 @@ fun MovieItem(
     viewModel: HomeViewModel = hiltViewModel() ,
             onMovieClick : () -> Unit
 ){
+
+    val savedViewModel = hiltViewModel<SavedViewModel>()
+        val  favorites    = (savedViewModel.state.collectAsState().value.allFavState as?  Resources.Success)?.data
+
+    val isFavorite = favorites?.any {
+        if (tvItem == null) {
+            it.id == movieItem?.id && it.mediaType == "movie"
+        } else {
+            it.id == tvItem?.id && it.mediaType == "tv"
+        }
+    } ?: false
     val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = Modifier
@@ -52,7 +67,7 @@ fun MovieItem(
             .height(380.dp)
             .clickable {
                 onMovieClick()
-                       } ,
+            } ,
         verticalArrangement = Arrangement.Center ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -76,19 +91,41 @@ fun MovieItem(
                         .clip(RoundedCornerShape(10.dp))
                 )
                 Icon(
-                    painterResource(R.drawable.ic_fav) ,
+                    painter = painterResource(
+                        if (isFavorite) R.drawable.ic_fav_filled
+                        else R.drawable.ic_fav
+                    ),
                     contentDescription =  "" ,
-                    tint =  colorScheme.onBackground ,
-                    modifier = Modifier.padding(20.dp).size(20.dp).clickable{
-                        if (tvItem == null){
-                            viewModel.doAction(HomeEvents.addToFavoutire(mediaId = movieItem?.id!! , mediaType = "movie" , favorite = true))
+                    tint = Color.White
+                    ,
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .size(20.dp)
+                        .clickable {
 
-                        }else{
-                            viewModel.doAction(HomeEvents.addToFavoutire(mediaId = tvItem?.id!! , mediaType = "tv" , favorite = true))
+                                if (tvItem == null) {
+                                    viewModel.doAction(
+                                        HomeEvents.addToFavoutire(
+                                            mediaId = movieItem?.id!!,
+                                            mediaType = "movie",
+                                            favorite = if (!isFavorite) true else false
+                                        )
+                                    )
+
+                                } else {
+                                    viewModel.doAction(
+                                        HomeEvents.addToFavoutire(
+                                            mediaId = tvItem?.id!!,
+                                            mediaType = "tv",
+                                            favorite =  if (!isFavorite) true else false
+                                        )
+                                    )
+
+                                }
+
+
 
                         }
-
-                    }
                 )
             }
             Spacer(modifier = Modifier.size(8.dp))

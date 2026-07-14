@@ -73,7 +73,7 @@ class HomeRepositoryImp  @Inject constructor(
 
     }
 
-    override suspend fun getMovieById(id: Int): Result<DetailsItemResponse> {
+    override suspend fun getMovieById(id: Int): Result<MoviesItem> {
         val request = dataSource.getMovieById(id)
         return if (request.isSuccess){
             Result.success( request.getOrNull()!!)
@@ -82,7 +82,7 @@ class HomeRepositoryImp  @Inject constructor(
         }
     }
 
-    override suspend fun getTvById(id: Int): Result<TvDetails> {
+    override suspend fun getTvById(id: Int): Result<DiscoverItem> {
         val request = dataSource.getTvById(id)
         return if (request.isSuccess){
             Result.success( request.getOrNull()!!)

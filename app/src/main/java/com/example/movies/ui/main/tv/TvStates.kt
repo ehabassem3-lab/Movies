@@ -7,8 +7,8 @@ import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.ui.main.Resources
 
 data class TvStates (
-    val moviesApi : Resources<DetailsItemResponse> = Resources.idle ,
-    val tvApi : Resources<TvDetails> = Resources.idle
+    val moviesApi : Resources<MoviesItem> = Resources.idle,
+    val tvApi : Resources<DiscoverItem> = Resources.idle
 
 )
 

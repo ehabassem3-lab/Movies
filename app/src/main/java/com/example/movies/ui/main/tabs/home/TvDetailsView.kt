@@ -87,7 +87,7 @@ fun TvDetailsView(
                     }
                 )
                 Text(
-                     itemTv?.name?: itemMovie?.title ?:"" ,
+                     itemTv?.name?: itemMovie?.name ?:"" ,
                     style = AppTypography.titleLarge
                 )
                 Text("")
