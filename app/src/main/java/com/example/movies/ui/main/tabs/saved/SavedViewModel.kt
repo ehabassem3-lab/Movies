@@ -3,6 +3,8 @@ package com.example.movies.ui.main.tabs.saved
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.auth.domain.repository.AuthRepository
+import com.example.movies.domain.repositories.home.HomeRepository
+import com.example.movies.network.response.FavItem
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.tabs.profile.FavouriteItem
 import com.example.movies.ui.main.tabs.profile.ProfileEvents
@@ -15,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SavedViewModel @Inject constructor(
-    val repository: AuthRepository
+    val repository: AuthRepository ,
 ) : ViewModel (){
     val state : MutableStateFlow<FavStates> = MutableStateFlow(FavStates())
     init {
@@ -41,20 +43,41 @@ class SavedViewModel @Inject constructor(
             val tvResult = tvCall.await()
             if (movieResult.isSuccess && tvResult.isSuccess){
                 val movies = movieResult.getOrNull()?.results?.map {
-                    FavouriteItem(
+                    FavItem(
                         id = it?.id ?: 0,
-                        title = it?.name ?:"",
-                        poster = it?.posterPath ,
-                        mediaType = "movie"
+                        title = it?.name ?: "",
+                        posterPath = it?.posterPath,
+                        mediaType = "movie",
+                        overview = it?.overview,
+                        backdropPath = it?.backdropPath,
+                        genreIds = it?.genreIds,
+                        voteAverage = it?.voteAverage,
+                        voteCount = it?.voteCount,
+                        popularity = it?.popularity,
+                        originalLanguage = it?.originalLanguage,
+                        originalTitle = it?.originalName,
+                        firstAirDate = it?.firstAirDate,
+                        originCountry = it?.originCountry as List<String>?,
                     )
                 } ?: emptyList()
 
                 val tv = tvResult.getOrNull()?.results?.map {
-                    FavouriteItem(
+                    FavItem(
                         id = it?.id ?: 0,
-                        title = it?.name ?:"",
-                        poster = it?.posterPath ,
-                        mediaType = "tv"
+                        title = it?.name ?: "",
+                        posterPath = it?.posterPath,
+                        mediaType = "tv",
+                        overview = it?.overview,
+                        backdropPath = it?.backdropPath,
+                        genreIds = it?.genreIds,
+                        voteAverage = it?.voteAverage,
+                        voteCount = it?.voteCount,
+                        popularity = it?.popularity,
+                        originalLanguage = it?.originalLanguage,
+                        originalTitle = it?.originalName,
+                        firstAirDate = it?.firstAirDate,
+                        originCountry = it?.originCountry as List<String>?,
+
                     )
                 } ?: emptyList()
                 val favourites = (movies + tv)

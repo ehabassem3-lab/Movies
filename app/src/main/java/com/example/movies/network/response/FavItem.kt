@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MediaItem(
+data class FavItem(
 
     val id: Int? = null,
 
@@ -23,7 +23,7 @@ data class MediaItem(
     val voteAverage: Double? = null,
 
     @SerialName("vote_count")
-    val voteCount: Int? = null,
+    val voteCount: Double? = null,
 
     val popularity: Double? = null,
 
@@ -40,20 +40,13 @@ data class MediaItem(
     val releaseDate: String? = null,
 
     // TV
-    val name: String? = null,
 
-    @SerialName("original_name")
-    val originalName: String? = null,
 
     @SerialName("first_air_date")
     val firstAirDate: String? = null,
 
     @SerialName("origin_country")
     val originCountry: List<String>? = null,
-
-    val adult: Boolean? = null,
-
-    val video: Boolean? = null,
 
     val mediaType: String? = null
 )
