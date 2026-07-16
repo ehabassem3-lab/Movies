@@ -15,6 +15,7 @@ import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.search.MovieItem
 import com.example.utilities.ErrorView
+import com.example.utilities.LoadingView
 
 @Composable
 fun MoviesFav(
@@ -24,12 +25,11 @@ fun MoviesFav(
     when(state){
         is Resources.Error -> { ErrorView{onRetry()} }
         Resources.Loading -> {
-            LazyVerticalGrid (
+            LazyVerticalGrid(
                 columns = GridCells.Fixed(2)
-            ){
-                item{
-
-
+            ) {
+                item(10){
+                    LoadingView()
                 }
             }
 

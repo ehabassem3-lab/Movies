@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
 import com.example.utilities.ErrorView
+import com.example.utilities.LoadingView
 import io.github.suwasto.kmmcomposeshimmer.ShimmerContainer
 import kotlin.collections.orEmpty
 
@@ -69,58 +70,7 @@ fun TvView(state : HomeStates , navController: NavController , onRetry : () -> U
                     items(10) {
                         LazyRow() {
                             items(10){
-                                ShimmerContainer(
-                                    modifier = Modifier
-                                        .padding(horizontal = 8.dp, vertical = 8.dp)
-                                        .width(150.dp)
-                                        .height(250.dp)
-                                        .background(Color.White)
-                                        .shadow(1.dp, shape = RoundedCornerShape(10.dp))
-                                        .clip(RoundedCornerShape(10.dp))
-                                ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .padding(horizontal = 8.dp, vertical = 8.dp)
-                                            .width(200.dp)
-                                            .height(300.dp)
-                                            .background(Color.Gray)
-                                        ,
-                                        verticalArrangement = Arrangement.Center ,
-                                        horizontalAlignment = Alignment.CenterHorizontally
-                                    ) {
-
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(280.dp)
-                                                .background(Color.Gray)
-                                                .clip(RoundedCornerShape(26.dp)),
-
-                                            )
-
-                                        Spacer(modifier = Modifier.size(8.dp))
-                                        Box(
-
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .background(Color.Gray)
-                                                .height(20.dp),
-                                        )
-                                        Spacer(modifier = Modifier.size(8.dp))
-
-                                        Box(
-
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .background(Color.Gray)
-                                                .height(20.dp),
-                                        )
-
-
-
-
-                                    }
-                                }
+                                LoadingView()
 
                             }
                         }

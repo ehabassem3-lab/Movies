@@ -31,12 +31,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.example.movies.R
+import com.example.movies.mapper.toDiscoverItem
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.search.ResultsItem
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.tabs.home.HomeEvents
 import com.example.movies.ui.main.tabs.home.HomeViewModel
+import com.example.movies.ui.main.tabs.saved.FavEvents
 import com.example.movies.ui.main.tabs.saved.SavedViewModel
 import com.example.movies.ui.theme.AppTypography
 
@@ -44,7 +46,6 @@ import com.example.movies.ui.theme.AppTypography
 fun MovieItem(
     movieItem : MoviesItem? = null ,
     tvItem : DiscoverItem? = null ,
-    viewModel: HomeViewModel = hiltViewModel() ,
             onMovieClick : () -> Unit
 ){
 
@@ -104,20 +105,22 @@ fun MovieItem(
                         .clickable {
 
                                 if (tvItem == null) {
-                                    viewModel.doAction(
-                                        HomeEvents.addToFavoutire(
+                                    savedViewModel.doAction(
+                                        FavEvents.addToFavoutire(
                                             mediaId = movieItem?.id!!,
                                             mediaType = "movie",
-                                            favorite = if (!isFavorite) true else false
+                                            favorite = if (!isFavorite) true else false ,
+                                            item =  movieItem.toDiscoverItem()
                                         )
                                     )
 
                                 } else {
-                                    viewModel.doAction(
-                                        HomeEvents.addToFavoutire(
+                                    savedViewModel.doAction(
+                                        FavEvents.addToFavoutire(
                                             mediaId = tvItem?.id!!,
                                             mediaType = "tv",
-                                            favorite =  if (!isFavorite) true else false
+                                            favorite =  if (!isFavorite) true else false ,
+                                            item =  tvItem
                                         )
                                     )
 

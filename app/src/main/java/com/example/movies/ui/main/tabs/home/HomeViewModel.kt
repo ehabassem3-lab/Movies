@@ -56,25 +56,11 @@ class HomeViewModel @Inject constructor(
          is    HomeEvents.getDiscoverTv -> getDiscoverTv(events.page , events.genre)
             HomeEvents.LoadHomeSections -> loadHomeSections()
             HomeEvents.LoadMovies -> loadMovies()
-            is HomeEvents.addToFavoutire -> addFavourite(events.mediaId , events.mediaType , events.favorite)
         }
 
     }
 
-    private fun addFavourite(mediaId: Int, mediaType: String, favorite: Boolean) {
-        viewModelScope.launch {
-             state.value = state.value.copy(favApiState = Resources.Loading)
-            val request = repository.addToFavorite(mediaId , mediaType , favorite)
-             if (request.isSuccess){
-                 state.value = state.value.copy( favApiState = Resources.Success(request.getOrNull()))
-            }else{
-                state.value = state.value.copy(favApiState = Resources.Error(Throwable(request.exceptionOrNull())))
-             }
 
-
-        }
-
-    }
 
     init {
         doAction(HomeEvents.LoadHomeSections)

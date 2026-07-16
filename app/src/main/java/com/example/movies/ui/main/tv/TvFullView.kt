@@ -84,7 +84,6 @@ fun TvFullView(
         viewModel.doAction(HomeEvents.getDiscoverTv(page , genre))
     }
 
-    println(tvList )
     Scaffold (
         modifier = Modifier.fillMaxSize().background(colorScheme.background)
     ) { innerPadding ->

@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.auth.domain.repository.AuthRepository
 import com.example.movies.domain.repositories.home.HomeRepository
 import com.example.movies.network.response.FavItem
+import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.tabs.profile.FavouriteItem
 import com.example.movies.ui.main.tabs.profile.ProfileEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SavedViewModel @Inject constructor(
     val repository: AuthRepository ,
+    val homeRepository: HomeRepository
 ) : ViewModel (){
     val state : MutableStateFlow<FavStates> = MutableStateFlow(FavStates())
     init {
@@ -27,11 +30,55 @@ class SavedViewModel @Inject constructor(
 
     }
 
-    fun doAction(event: FavEvents){
-        when(event){
+
+    fun doAction(event: FavEvents) {
+        when (event) {
             FavEvents.OnGetFavouriteMovie -> getFavMovies()
             FavEvents.OnGetFavouriteTv -> getFavTv()
             FavEvents.onGetAllFav -> getAllFav()
+            is FavEvents.addToFavoutire -> addFavourite(event.mediaId, event.mediaType, event.favorite, event.item)
+        }
+    }
+
+    private fun addFavourite(mediaId: Int, mediaType: String, favorite: Boolean, item: DiscoverItem?) {
+        viewModelScope.launch {
+            state.value = state.value.copy(favApiState = Resources.Loading)
+            val request = homeRepository.addToFavorite(mediaId, mediaType, favorite)
+            if (request.isSuccess) {
+                state.value = state.value.copy(favApiState = Resources.Success(request.getOrNull()))
+
+                val currentList = (state.value.allFavState as? Resources.Success)?.data ?: emptyList()
+
+                val updatedList = if (favorite) {
+                    if (item != null && currentList.none { it.id == mediaId && it.mediaType == mediaType }) {
+                        val newFavItem = FavItem(
+                            id = item.id ?: mediaId,
+                            title = item.name ?: "",
+                            posterPath = item.posterPath,
+                            mediaType = mediaType,
+                            overview = item.overview,
+                            backdropPath = item.backdropPath,
+                            genreIds = item.genreIds,
+                            voteAverage = item.voteAverage,
+                            voteCount = item.voteCount,
+                            popularity = item.popularity,
+                            originalLanguage = item.originalLanguage,
+                            originalTitle = item.originalName,
+                            firstAirDate = item.firstAirDate,
+                            originCountry = item.originCountry as? List<String>,
+                        )
+                        listOf(newFavItem) + currentList
+                    } else {
+                        currentList
+                    }
+                } else {
+                    currentList.filterNot { it.id == mediaId && it.mediaType == mediaType }
+                }
+
+                state.value = state.value.copy(allFavState = Resources.Success(updatedList))
+            } else {
+                state.value = state.value.copy(favApiState = Resources.Error(Throwable(request.exceptionOrNull())))
+            }
         }
     }
     private fun getAllFav() {
@@ -85,6 +132,7 @@ class SavedViewModel @Inject constructor(
                 state.value =state.value.copy(allFavState = Resources.Success(favourites))
 
             }else{
+                delay(2000)
                 state.value = state.value.copy(allFavState =
                     Resources.Error(Throwable("${movieResult.exceptionOrNull()}  ${tvResult.exceptionOrNull()} " )))
 
@@ -100,8 +148,10 @@ class SavedViewModel @Inject constructor(
             state.value = state.value.copy(FavTvState = Resources.Loading)
             val request = repository.getFavouriteTv()
             if (request.isSuccess){
+                delay(2000)
                 state.value = state.value.copy(FavTvState = Resources.Success(request.getOrNull()))
             }else{
+                delay(2000)
                 state.value = state.value.copy(FavTvState = Resources.Error(Throwable(request.exceptionOrNull())))
 
             }
@@ -114,6 +164,7 @@ class SavedViewModel @Inject constructor(
         viewModelScope.launch {
             state.value = state.value.copy(FavMovieState = Resources.Loading)
             val request = repository.getFavouriteMovies()
+            delay(2000)
             if (request.isSuccess){
                 state.value = state.value.copy(FavMovieState = Resources.Success(request.getOrNull()))
             }else{

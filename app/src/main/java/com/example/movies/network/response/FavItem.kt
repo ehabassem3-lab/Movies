@@ -48,5 +48,7 @@ data class FavItem(
     @SerialName("origin_country")
     val originCountry: List<String>? = null,
 
-    val mediaType: String? = null
+    val mediaType: String? = null  ,
+
+    val fav : Boolean? = false
 )
