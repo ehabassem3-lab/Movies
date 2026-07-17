@@ -10,6 +10,7 @@ import com.example.movies.ui.main.Resources
 data class HomeStates(
     val sections: List<TvSectionUiState> = emptyList() ,
     val sectionsMovies: List<MovieSectionUiState> = emptyList() ,
+    val page : Int = 1
 
 )
 data class TvSectionUiState(
@@ -24,7 +25,10 @@ data class MovieSectionUiState(
 )
 sealed class HomeEvents{
     data class  getDiscoverTv (val page : Int? = 1 , val genre : Int?): HomeEvents()
+    data class  getDiscoverMovies (val page : Int? = 1 , val genre : Int?): HomeEvents()
+
     data object LoadHomeSections : HomeEvents()
     data object  LoadMovies : HomeEvents()
+    data object  onMoreClick : HomeEvents()
 
 }

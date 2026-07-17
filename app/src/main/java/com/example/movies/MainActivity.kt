@@ -23,6 +23,7 @@ import com.example.auth.ui.CreateSession
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.SplashScreen
 import com.example.movies.ui.main.MainScreen
+import com.example.movies.ui.main.movies.MoviesFullView
 import com.example.movies.ui.main.search.SearchView
 import com.example.movies.ui.main.tabs.home.TvDetailsView
 import com.example.movies.ui.main.tv.TvFullView
@@ -86,6 +87,14 @@ fun App(    deepLink: Uri?) {
         composable <AppRoutes.TvFullRoute>{backStackEntry ->
             val route = backStackEntry.toRoute<AppRoutes.TvFullRoute>()
             TvFullView(
+
+                genre = route.genre,
+                navController = navController
+            )
+        }
+        composable <AppRoutes.MovieFullRoute>{backStackEntry ->
+            val route = backStackEntry.toRoute<AppRoutes.MovieFullRoute>()
+            MoviesFullView(
 
                 genre = route.genre,
                 navController = navController

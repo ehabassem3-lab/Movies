@@ -59,18 +59,18 @@ fun MoviesView(
             state.sectionsMovies.all { it.state is Resources.Success } -> {
                 LazyColumn {
                     items(state.sectionsMovies) { sectionsMovies ->
-                        val tvList = (sectionsMovies.state as? Resources.Success)
+                        val movies = (sectionsMovies.state as? Resources.Success)
                             ?.data
                             ?.results
                             .orEmpty()
                         TvSection(
                             genre = sectionsMovies.genreId ,
                             title = stringResource(sectionsMovies.title),
-                            movies = tvList,
+                            movies = movies,
                             navController = navController,
                             onViewAll = {
                                 navController.navigate(
-                                    AppRoutes.TvFullRoute(sectionsMovies.genreId)
+                                    AppRoutes.MovieFullRoute(sectionsMovies.genreId)
                                 )
                             }
                         )

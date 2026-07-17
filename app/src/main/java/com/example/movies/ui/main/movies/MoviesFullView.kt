@@ -1,4 +1,5 @@
-package com.example.movies.ui.main.tv
+package com.example.movies.ui.main.movies
+
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -49,30 +50,39 @@ import com.example.movies.ui.theme.AppTypography
 import kotlin.collections.orEmpty
 
 @Composable
-fun TvFullView(
+fun MoviesFullView(
     genre : Int? ,
     navController: NavController,
 
-){
+    ){
     @StringRes
-    fun genreTitleRes(genre: Int?): Int = when (genre) {
+    fun movieGenreTitleRes(genre: Int?): Int = when (genre) {
         null -> R.string.recommendations
-        35 -> R.string.comedy
-        18 -> R.string.drama
+        28 -> R.string.action
+        12 -> R.string.adventure
         16 -> R.string.animation
+        35 -> R.string.comedy
         80 -> R.string.crime
-        10759 -> R.string.action_adventure
+        99 -> R.string.documentary
+        18 -> R.string.drama
         10751 -> R.string.family
+        14 -> R.string.fantasy
+        36 -> R.string.history
+        27 -> R.string.horror
+        10402 -> R.string.music
         9648 -> R.string.mystery
-        10762 -> R.string.kids
-        10768 -> R.string.war_politics
+        10749 -> R.string.romance
+        878 -> R.string.science_fiction
+        53 -> R.string.thriller
+        10752 -> R.string.war
+        37 -> R.string.western
         else -> R.string.recommendations
     }
     val viewModel = hiltViewModel<HomeViewModel>()
     val state = viewModel.state.collectAsState().value
     val colorScheme = MaterialTheme.colorScheme
 
-    val tvList = state.sections
+    val tvList = state.sectionsMovies
         .firstOrNull { it.genreId == genre }
         ?.state
         ?.let { it as? Resources.Success }
@@ -80,7 +90,7 @@ fun TvFullView(
         ?.results
         ?: emptyList()
     LaunchedEffect(state.page) {
-        viewModel.doAction(HomeEvents.getDiscoverTv(state.page , genre))
+        viewModel.doAction(HomeEvents.getDiscoverMovies(state.page , genre))
     }
 
     Scaffold (
@@ -103,7 +113,7 @@ fun TvFullView(
                     contentDescription = "" ,
                     tint = colorScheme.onBackground ,
                     modifier = Modifier.size(24.dp).clickable{ navController.popBackStack()})
-                Text( text = stringResource(genreTitleRes(genre))  , style = AppTypography.titleLarge.copy(color = colorScheme.onBackground),)
+                Text( text = stringResource(movieGenreTitleRes(genre))  , style = AppTypography.titleLarge.copy(color = colorScheme.onBackground),)
                 Text("")
 
             }
@@ -115,9 +125,9 @@ fun TvFullView(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
 
-            ) {
+                ) {
                 items(tvList, key = { it?.id!! }) {
-                    MovieItem(tvItem = it) {}
+                    MovieItem(movieItem = it) {}
                 }
                 item {
                     Box(

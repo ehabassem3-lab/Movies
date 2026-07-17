@@ -56,6 +56,8 @@ class HomeViewModel @Inject constructor(
          is    HomeEvents.getDiscoverTv -> getDiscoverTv(events.page , events.genre)
             HomeEvents.LoadHomeSections -> loadHomeSections()
             HomeEvents.LoadMovies -> loadMovies()
+            HomeEvents.onMoreClick -> {state.value = state.value.copy(page =+1)}
+            is HomeEvents.getDiscoverMovies -> getDiscoverMovies(events.page , events.genre)
         }
 
     }

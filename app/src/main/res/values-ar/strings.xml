@@ -41,6 +41,8 @@
     <string name="best_of_our_2026_tv_show">فضل مسلسلاتنا  في  ٢٠٢٦</string>
     <string name="log_out">تسجيل الخروج </string>
     <string name="are_you_sure_of_login_out">" هل انت متاكد من نسجيل الخروج  "</string>
+    <string name="documentary" > وثائقي</string>
+    <string name="science_fiction" > خيال علمي </string>
 
 
 </resources>

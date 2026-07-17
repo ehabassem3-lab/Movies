@@ -23,6 +23,11 @@ sealed class AppRoutes {
 
         )
     @Serializable
+    data class  MovieFullRoute (
+        val genre : Int?,
+
+        )
+    @Serializable
     data object SplashRoute : AppRoutes()
     @Serializable
     object SearchRoute : AppRoutes()
