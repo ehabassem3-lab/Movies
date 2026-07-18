@@ -58,15 +58,18 @@ class HomeViewModel @Inject constructor(
             HomeEvents.LoadMovies -> loadMovies()
             HomeEvents.onMoreClick -> {state.value = state.value.copy(page =+1)}
             is HomeEvents.getDiscoverMovies -> getDiscoverMovies(events.page , events.genre)
+
         }
 
     }
 
 
 
+
     init {
         doAction(HomeEvents.LoadHomeSections)
         doAction(HomeEvents.LoadMovies)
+
     }
 
     private fun loadMovies() {

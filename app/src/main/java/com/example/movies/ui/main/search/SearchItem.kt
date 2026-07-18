@@ -68,7 +68,7 @@ fun SearchItem(
         }
         Spacer(modifier = Modifier.size(8.dp))
         Text(
-           item.originalTitle ?:"" ,
+           item.name ?:"" ,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(20.dp),

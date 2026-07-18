@@ -59,11 +59,15 @@ fun ProfileView(
     navController: NavController ,
 ){
 
+
     Log.d("ProfileView", "Composed")
     val colorScheme = MaterialTheme.colorScheme
     val viewModel = hiltViewModel<ProfileViewModel>()
     val state = viewModel.state.collectAsState().value
-    LaunchedEffect(state.apiState) {
+    val user =  (state.localState as? Resources.Success)?.data
+    Log.d("user","$user")
+    LaunchedEffect(state.apiState)
+    {
         when(state.apiState){
             is Resources.Error -> {}
             Resources.Loading -> {}

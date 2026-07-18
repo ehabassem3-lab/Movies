@@ -67,14 +67,6 @@ fun SearchView(
     val state = viewModel.state.collectAsState().value
     val colorScheme = MaterialTheme.colorScheme
     var page by rememberSaveable() {  mutableIntStateOf(1)}
-//    LaunchedEffect(page) {
-//        viewModel.doAction(
-//            SearchEvent.onSearchClick(
-//                state.search ?: "",
-//                page
-//            )
-//        )
-//    }
 
     Column(
         modifier = Modifier

@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -36,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.movies.network.response.cast.Cast
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
@@ -57,6 +60,13 @@ fun TvDetailsView(
     val itemMovie = (state.moviesApi as? Resources.Success )?.data
     val itemTv = (state.tvApi as? Resources.Success )?.data
     val posterUrl = "https://image.tmdb.org/t/p/w500"
+    LaunchedEffect(Unit) {
+        when(type){
+            "Movie" -> viewModel.doAction(TvEvents.getMoviesCast(id))
+            "TV" -> viewModel.doAction(TvEvents.getTvCast(id))
+        }
+
+    }
 
     LaunchedEffect(Unit) {
         when(type){
@@ -123,6 +133,40 @@ fun TvDetailsView(
                         modifier = Modifier.padding(horizontal = 5.dp)
                     )
                 }
+
+             if (type == "Movie"){
+                 when(state.castStateMovies){
+                     is Resources.Error -> {}
+                     Resources.Loading -> {}
+                     is Resources.Success<Cast> -> {
+                         val castList = state.castStateMovies.data?.cast ?: emptyList()
+                         LazyRow() {
+                             items(castList){
+                                 CrewItem(it!!)
+
+                             }
+                         }
+                     }
+                     Resources.idle ->{}
+                 }
+
+             }else{
+                 when(state.castStateTv){
+                     is Resources.Error -> {}
+                     Resources.Loading -> {}
+                     is Resources.Success<Cast> ->{
+                         val castList = state.castStateTv.data?.cast ?: emptyList()
+                         LazyRow() {
+                             items(castList){
+                                 CrewItem(it!!)
+
+                             }
+                         }
+                     }
+                     Resources.idle -> {}
+                 }
+
+             }
 
             }
 

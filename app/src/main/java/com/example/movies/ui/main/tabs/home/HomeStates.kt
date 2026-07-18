@@ -1,6 +1,7 @@
 package com.example.movies.ui.main.tabs.home
 
 import androidx.annotation.StringRes
+import com.example.movies.network.response.cast.Cast
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesResponse
@@ -10,6 +11,8 @@ import com.example.movies.ui.main.Resources
 data class HomeStates(
     val sections: List<TvSectionUiState> = emptyList() ,
     val sectionsMovies: List<MovieSectionUiState> = emptyList() ,
+
+
     val page : Int = 1
 
 )
@@ -30,5 +33,7 @@ sealed class HomeEvents{
     data object LoadHomeSections : HomeEvents()
     data object  LoadMovies : HomeEvents()
     data object  onMoreClick : HomeEvents()
+
+
 
 }

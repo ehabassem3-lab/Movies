@@ -73,7 +73,7 @@ fun MoviesView(
                                     AppRoutes.MovieFullRoute(sectionsMovies.genreId)
                                 )
                             }
-                        )
+                        )   
                     }
                 }
             }

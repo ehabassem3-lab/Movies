@@ -18,7 +18,38 @@ class TvViewModel @Inject constructor(
         when(events){
             is TvEvents.GetMovie -> getMovie(events.id)
             is TvEvents.GetTv -> getTv(events.id)
+            is TvEvents.getMoviesCast -> getMoviesCast(events.id)
+            is TvEvents.getTvCast -> getTvCast(events.id)
         }
+
+    }
+    private fun getTvCast(id: Int) {
+        viewModelScope.launch {
+            state.value = state.value.copy(castStateTv = Resources.Loading)
+            val cast = repository.getTvCrew(id)
+            if (cast.isSuccess){
+                state.value = state.value.copy(castStateTv = Resources.Success(cast.getOrNull()))
+
+            }else{
+                state.value = state.value.copy(castStateTv = Resources.Error(Throwable(cast.exceptionOrNull())))
+            }
+        }
+
+
+    }
+
+    private fun getMoviesCast(id: Int) {
+        viewModelScope.launch {
+            state.value  = state.value.copy(castStateMovies = Resources.Loading)
+            val cast = repository.getMovieCrew(id)
+            if (cast.isSuccess){
+                state.value = state.value.copy(castStateMovies = Resources.Success(cast.getOrNull()))
+            }else{
+                state.value = state.value.copy( castStateMovies = Resources.Error(Throwable(cast.exceptionOrNull())))
+            }
+
+        }
+
 
     }
 

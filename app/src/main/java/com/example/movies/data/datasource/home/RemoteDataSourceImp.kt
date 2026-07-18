@@ -2,6 +2,7 @@ package com.example.movies.data.datasource.home
 
 import com.example.movies.network.createHttpClient
 import com.example.movies.network.request.FavoriteRequest
+import com.example.movies.network.response.cast.Cast
 import com.example.movies.network.response.details.DetailsItemResponse
 import com.example.movies.network.response.details.TvDetails
 import com.example.movies.network.response.discover.DiscoverItem
@@ -108,6 +109,34 @@ class RemoteDataSourceImp  @Inject constructor(
         }catch (e : Throwable){
             return Result.failure(e)
 
+        }
+    }
+
+    override suspend fun getTvCast(id: Int): Result<Cast> {
+        return try {
+            val request = client.get("tv/${id}/credits")
+            if (request.status.isSuccess()){
+                Result.success( request.body<Cast>())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+
+        }catch (e : Throwable){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getMovieCast(id: Int): Result<Cast> {
+        return try {
+            val request = client.get("movie/${id}/credits")
+            if (request.status.isSuccess()){
+                Result.success( request.body<Cast>())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+
+        }catch (e : Throwable){
+            Result.failure(e)
         }
     }
 
