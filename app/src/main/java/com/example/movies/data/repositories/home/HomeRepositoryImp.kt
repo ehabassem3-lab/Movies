@@ -7,6 +7,8 @@ import com.example.movies.data.datasource.home.LocalDataSource
 import com.example.movies.data.datasource.home.RemoteDataSource
 import com.example.movies.domain.repositories.home.HomeRepository
 import com.example.movies.network.response.FavItem
+import com.example.movies.network.response.cast.Actor
+import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.network.response.cast.Cast
 import com.example.movies.network.response.details.DetailsItemResponse
 import com.example.movies.network.response.details.TvDetails
@@ -110,6 +112,26 @@ class HomeRepositoryImp  @Inject constructor(
         }else{
             Result.failure(Throwable(request.exceptionOrNull()))
         }
+    }
+
+    override suspend fun getActor(id: Int): Result<Actor> {
+        val  request = dataSource.getPerson(id)
+        return    if (request.isSuccess){
+        Result.success(request.getOrNull()!!)
+        }else{
+        Result.failure(Throwable(request.exceptionOrNull()))
+       }
+       }
+
+    override suspend fun getActorWork(id: Int): Result<ActorWork> {
+        val request = dataSource.getPersonWork(id)
+        return  if (request.isSuccess){
+            Result.success(request.getOrNull()!!)
+
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+
     }
 
 

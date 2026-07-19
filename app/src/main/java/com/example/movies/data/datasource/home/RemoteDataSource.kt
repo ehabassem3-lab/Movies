@@ -1,5 +1,7 @@
 package com.example.movies.data.datasource.home
 
+import com.example.movies.network.response.cast.Actor
+import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.network.response.cast.Cast
 import com.example.movies.network.response.details.DetailsItemResponse
 import com.example.movies.network.response.details.TvDetails
@@ -14,11 +16,11 @@ interface RemoteDataSource{
    suspend fun getDiscoverMovies(page : Int? = 1 , genre : Int? = null) : Result<MoviesResponse>
    suspend fun getMovieById(id : Int ) : Result<MoviesItem>
    suspend fun getTvById(id : Int ) : Result<DiscoverItem>
-//   suspend fun getUserFavourite() : Result
 suspend fun getTvCast(id : Int ) : Result<Cast>
 
 suspend fun getMovieCast(id : Int ) : Result<Cast>
-
+   suspend fun  getPerson(id : Int) : Result<Actor>
+   suspend fun  getPersonWork(id :Int) : Result<ActorWork>
 
 
    suspend fun addToFavorite(accountId: Int, sessionId: String, mediaId: Int, mediaType: String, favorite: Boolean): Result<Unit>

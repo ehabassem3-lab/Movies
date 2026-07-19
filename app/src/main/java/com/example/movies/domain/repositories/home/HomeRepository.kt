@@ -1,5 +1,7 @@
 package com.example.movies.domain.repositories.home
 
+import com.example.movies.network.response.cast.Actor
+import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.network.response.cast.Cast
 import com.example.movies.network.response.details.DetailsItemResponse
 import com.example.movies.network.response.details.TvDetails
@@ -19,4 +21,6 @@ interface HomeRepository {
     suspend fun getTvById(id : Int ) : Result<DiscoverItem>
     suspend fun getMovieCrew(id : Int) : Result<Cast>
     suspend fun getTvCrew(id : Int) : Result<Cast>
+    suspend fun  getActor(id : Int) : Result<Actor>
+    suspend fun getActorWork(id : Int) : Result<ActorWork>
 }

@@ -4,6 +4,10 @@ import androidx.annotation.StringRes
 import kotlinx.serialization.Serializable
 
 sealed class AppRoutes {
+    @Serializable
+    data class  ActorRoute(
+        val id : Int
+    ) : AppRoutes()
 
     @Serializable
     data class AuthCallbackRoute(

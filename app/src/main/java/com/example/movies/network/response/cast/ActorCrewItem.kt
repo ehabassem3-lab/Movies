@@ -4,12 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-
-data class CastItem(
-    val character: String? = null,
-    val name: String? = null,
-    @SerialName("profile_path")
-    val profilePath: String? = null,
+data class ActorCrewItem(
     val id: Int? = null,
-    val order: Int? = null
+
+    val title: String? = null,
+
+    val name: String? = null,
+
+    @SerialName("poster_path")
+    val posterPath: String? = null
 )

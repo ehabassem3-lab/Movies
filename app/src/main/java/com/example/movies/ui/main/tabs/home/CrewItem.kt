@@ -1,6 +1,7 @@
 package com.example.movies.ui.main.tabs.home
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,11 +30,14 @@ import com.example.movies.ui.theme.AppTypography
 
 @Composable
 fun CrewItem(
-    cast: CastItem
+    cast: CastItem ,
+    onClick : () -> Unit
 ){
     val colorScheme = MaterialTheme.colorScheme
     Column(
-        Modifier.width(150.dp).height(170.dp) ,
+        Modifier.width(150.dp).height(170.dp).clickable{
+            onClick()
+        },
         verticalArrangement = Arrangement.Center ,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

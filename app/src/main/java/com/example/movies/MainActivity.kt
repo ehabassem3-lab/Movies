@@ -8,11 +8,8 @@ import android.os.LocaleList
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,10 +18,10 @@ import androidx.navigation.navDeepLink
 import androidx.navigation.toRoute
 import com.example.auth.ui.CreateSession
 import com.example.movies.routes.AppRoutes
-import com.example.movies.ui.SplashScreen
 import com.example.movies.ui.main.MainScreen
 import com.example.movies.ui.main.movies.MoviesFullView
 import com.example.movies.ui.main.search.SearchView
+import com.example.movies.ui.main.actor.ActorDetails
 import com.example.movies.ui.main.tabs.home.TvDetailsView
 import com.example.movies.ui.main.tv.TvFullView
 import com.example.movies.ui.theme.MoviesTheme
@@ -62,6 +59,14 @@ fun App(    deepLink: Uri?) {
         navController ,
         startDestination = AppRoutes.SplashRoute
     ){
+        composable <AppRoutes.ActorRoute>{
+            val data = it.toRoute<AppRoutes.ActorRoute>()
+            ActorDetails(
+                data.id ,
+                navController
+
+            )
+        }
         composable <AppRoutes.SplashRoute>{
             SplashView(navController)
         }

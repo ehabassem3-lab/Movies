@@ -2,6 +2,8 @@ package com.example.movies.data.datasource.home
 
 import com.example.movies.network.createHttpClient
 import com.example.movies.network.request.FavoriteRequest
+import com.example.movies.network.response.cast.Actor
+import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.network.response.cast.Cast
 import com.example.movies.network.response.details.DetailsItemResponse
 import com.example.movies.network.response.details.TvDetails
@@ -137,6 +139,36 @@ class RemoteDataSourceImp  @Inject constructor(
 
         }catch (e : Throwable){
             Result.failure(e)
+        }
+    }
+
+    override suspend fun getPerson(id: Int): Result<Actor> {
+        return   try {
+            val request = client.get("person/${id}")
+            if (request.status.isSuccess()){
+                Result.success(request.body())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+
+        }catch (e : Throwable){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getPersonWork(id: Int): Result<ActorWork> {
+
+        return try {
+            val request = client.get("person/${id}/combined_credits")
+            if (request.status.isSuccess()){
+                Result.success(request.body())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+
+        }catch (e : Throwable){
+            return Result.failure(e)
+
         }
     }
 

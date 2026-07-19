@@ -142,7 +142,8 @@ fun TvDetailsView(
                          val castList = state.castStateMovies.data?.cast ?: emptyList()
                          LazyRow() {
                              items(castList){
-                                 CrewItem(it!!)
+                                 CrewItem(it!!){navController.navigate(AppRoutes.ActorRoute(it.id!!))}
+
 
                              }
                          }
@@ -158,7 +159,7 @@ fun TvDetailsView(
                          val castList = state.castStateTv.data?.cast ?: emptyList()
                          LazyRow() {
                              items(castList){
-                                 CrewItem(it!!)
+                                 CrewItem(it!!){ navController.navigate(it.id!!) }
 
                              }
                          }
