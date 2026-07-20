@@ -62,7 +62,6 @@ fun MovieItem(
     val colorScheme = MaterialTheme.colorScheme
     Column(
         modifier = Modifier
-
             .padding(horizontal = 8.dp, vertical = 8.dp)
             .width(200.dp)
             .height(380.dp)

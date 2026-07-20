@@ -76,34 +76,42 @@ fun TvDetailsView(
 
     }
     Scaffold (
-        modifier = Modifier.fillMaxSize().background(colorScheme.background)
+        modifier = Modifier.fillMaxSize().background(colorScheme.background).padding(10.dp) ,
+        topBar = {
+            Box(
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .fillMaxWidth()
+                    .height(60.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack ,
+                    contentDescription = "" ,
+                    tint = colorScheme.onBackground ,
+                    modifier = Modifier
+                        .align(Alignment.CenterStart)
+                        .size(24.dp)
+                        .clickable{
+                        navController.popBackStack()
+                    }
+                )
+                Text(
+                    itemTv?.name?: itemMovie?.name ?:"" ,
+                    style = AppTypography.titleLarge,
+                    modifier = Modifier.align(Alignment.Center),
+
+                    )
+
+
+            }
+        }
     ) {
 
         Column (
             modifier = Modifier.padding(it) ,
 
         ){
-            Row(
-                modifier = Modifier.fillMaxWidth().height(60.dp) ,
-                 verticalAlignment = Alignment.CenterVertically ,
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack ,
-                    contentDescription = "" ,
-                     tint = colorScheme.onBackground ,
-                    modifier = Modifier.size(24.dp).clickable{
-                         navController.popBackStack()
-                    }
-                )
-                Text(
-                     itemTv?.name?: itemMovie?.name ?:"" ,
-                    style = AppTypography.titleLarge
-                )
-                Text("")
 
-
-            }
             Column(
                 modifier = Modifier.padding(horizontal = 10.dp).fillMaxSize()  ,
                 horizontalAlignment = Alignment.Start

@@ -72,12 +72,6 @@ fun ActorsWork(
 
         }
 
-        Column(
-            modifier = Modifier.height(350.dp).fillMaxWidth()
-        ) {
-
-        }
-
 
     }
 
