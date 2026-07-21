@@ -10,11 +10,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,33 +29,46 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.movies.R
+import com.example.movies.ui.main.Resources
 import com.example.movies.ui.theme.AppTypography
+import com.example.utilities.RefreshIndicator
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun SavedView(
     navController: NavController
 ){
     val viewModel = sharedSavedViewModel()
-
+    val pullState = rememberPullToRefreshState()
     val state = viewModel.state.collectAsState().value
     val colorScheme = MaterialTheme.colorScheme
     val fav = listOf( "All","Movies" ,  "Tv"  )
     var selecteTab  by rememberSaveable { mutableStateOf(0) }
-    LaunchedEffect(state.lastFav) {
-        viewModel.doAction(FavEvents.onGetAllFav)
-        viewModel.doAction(FavEvents.OnGetFavouriteTv)
-        viewModel.doAction(FavEvents.OnGetFavouriteMovie)
+    var refreshing by remember { mutableStateOf(false) }
 
+    LaunchedEffect(
+        state.allFavState,
+        state.FavMovieState,
+        state.FavTvState
+    ) {
+        val loading =
+            state.allFavState is Resources.Loading ||
+                    state.FavMovieState is Resources.Loading ||
+                    state.FavTvState is Resources.Loading
+
+        refreshing = loading
     }
-
     Column(
         modifier = Modifier
             .padding(top = 20.dp)
@@ -113,16 +131,24 @@ fun SavedView(
 
                 }
             }
-            Column(
+
+            PullToRefreshBox(
+                state = pullState,
+
+                isRefreshing = refreshing,
+                onRefresh = {
+                    refreshing = true
+                    viewModel.doAction(FavEvents.onGetAllFav)
+                    viewModel.doAction(FavEvents.OnGetFavouriteMovie)
+                    viewModel.doAction(FavEvents.OnGetFavouriteTv)
+                },
                 modifier = Modifier.fillMaxSize()
             ) {
-                when(selecteTab){
-                    0->Allfav(state.allFavState)
-                    1-> MoviesFav(state.FavMovieState){}
-                    2-> TvFav(state.FavTvState){}
-
+                when (selecteTab) {
+                    0 -> Allfav(state.allFavState, navController)
+                    1 -> MoviesFav(state.FavMovieState, navController) {}
+                    2 -> TvFav(state.FavTvState, navController) {}
                 }
-
             }
         }
 

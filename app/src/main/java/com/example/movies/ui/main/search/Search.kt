@@ -55,6 +55,7 @@ import com.example.movies.ui.main.tabs.home.MovieItem
 import com.example.movies.ui.main.tabs.home.TvSection
 import com.example.movies.ui.theme.AppTypography
 import com.example.utilities.ErrorView
+import com.example.utilities.LoadingView
 import io.github.suwasto.kmmcomposeshimmer.ShimmerContainer
 import kotlinx.coroutines.delay
 import kotlin.collections.orEmpty
@@ -124,21 +125,13 @@ fun SearchView(
             when(state.apiState){
                 is Resources.Error -> ErrorView { viewModel.doAction(SearchEvent.onSearchClick(state.search?:"", page)) }
                 Resources.Loading -> {
-                    LazyVerticalGrid (
-                        columns = GridCells.Fixed(2)  ,
-                        verticalArrangement = Arrangement.spacedBy(10.dp) ,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-
-                    ) {
-
-                        items(10){
-                            ShimmerContainer(
-                                modifier = Modifier.height(350.dp).width(250.dp).background( Color.White, RoundedCornerShape(15.dp))
-                            ) {
-                                Box(modifier = Modifier.height(300.dp).width(200.dp).background(Color.Gray  ,  RoundedCornerShape(15.dp)))
+                    LazyColumn {
+                        items(10) {
+                            LazyRow() {
+                                items(10){
+                                    LoadingView()
+                                }
                             }
-
-
                         }
                     }
                 }

@@ -12,8 +12,10 @@ data class DiscoverItem(
 	val genreIds: List<Int>? = null,
 	@SerialName("poster_path")
 	val posterPath: String? = null,
+	@SerialName("origin_country")
 	val originCountry: List<String?>? = null,
 	val backdropPath: String? = null,
+	@SerialName("original_name")
 	val originalName: String? = null,
 	val popularity: Double? = null,
 	@SerialName("vote_average")

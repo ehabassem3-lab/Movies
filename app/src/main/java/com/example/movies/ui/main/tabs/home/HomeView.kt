@@ -45,7 +45,6 @@ fun HomeView(
     navController: NavController ,
     viewModel: HomeViewModel = hiltViewModel()
 ){
-    val scope = rememberCoroutineScope()
     val colorScheme = MaterialTheme.colorScheme
     val state by viewModel.state.collectAsStateWithLifecycle()
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }

@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MoviesItem (
+
     val firstAirDate: String? = null,
     val overview: String? = null,
     val originalLanguage: String? = null,

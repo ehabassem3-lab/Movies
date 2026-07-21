@@ -28,11 +28,15 @@ import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -51,6 +55,7 @@ import com.example.movies.network.createHttpClient
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.tabs.home.HomeView
 import com.example.movies.ui.main.tabs.profile.ProfileView
+import com.example.movies.ui.main.tabs.saved.FavEvents
 import com.example.movies.ui.main.tabs.saved.SavedView
 import com.example.movies.ui.main.tabs.trending.TrendingView
 import com.example.movies.ui.theme.Black

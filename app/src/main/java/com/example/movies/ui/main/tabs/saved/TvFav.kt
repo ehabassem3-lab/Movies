@@ -6,8 +6,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
+import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.search.MovieItem
 import com.example.utilities.ErrorView
@@ -16,6 +18,7 @@ import com.example.utilities.LoadingView
 @Composable
 fun TvFav(
     state: Resources<DiscoverResponse>,
+    navController: NavController ,
     onRetry: () -> Unit
 ) {
     when(state){
@@ -38,6 +41,10 @@ fun TvFav(
                 items(tv){
                     MovieItem(tvItem =  it){
 
+                          navController.navigate(AppRoutes.TvDetailsRoute(
+                              it?.id!! ,
+                              "TV"
+                          ))
                     }
 
                 }

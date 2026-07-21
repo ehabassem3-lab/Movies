@@ -109,7 +109,10 @@ fun TvDetailsView(
 
     }
     Scaffold (
-        modifier = Modifier.fillMaxSize().background(colorScheme.background).padding(10.dp) ,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorScheme.background)
+            .padding(10.dp) ,
         topBar = {
             Box(
                 modifier = Modifier
@@ -124,16 +127,19 @@ fun TvDetailsView(
                     modifier = Modifier
                         .align(Alignment.CenterStart)
                         .size(24.dp)
-                        .clickable{
-                        navController.popBackStack()
-                    }
+                        .clickable {
+                            navController.popBackStack()
+                        }
                 )
                 Text(
                     itemTv?.name?: itemMovie?.name ?:"" ,
                     style = AppTypography.titleLarge,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
-                    modifier = Modifier.align(Alignment.Center).width(300.dp).height(50.dp),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .width(300.dp)
+                        .height(50.dp),
 
                     )
 
@@ -148,7 +154,9 @@ fun TvDetailsView(
         ){
 
             LazyColumn (
-                modifier = Modifier.padding(horizontal = 10.dp).fillMaxSize()  ,
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .fillMaxSize()  ,
                 horizontalAlignment = Alignment.Start
 
             ) {
@@ -157,13 +165,19 @@ fun TvDetailsView(
                    item{
                        Box(
                            contentAlignment = Alignment.TopEnd,
-                           modifier = Modifier.fillMaxWidth(.99f).height(400.dp).clip(RoundedCornerShape(12.dp)) ,
+                           modifier = Modifier
+                               .fillMaxWidth(.99f)
+                               .height(400.dp)
+                               .clip(RoundedCornerShape(12.dp)) ,
                        ) {
 
                            AsyncImage(
                                if (itemTv!= null)  "$posterUrl${itemTv.posterPath}"  else  "$posterUrl${itemMovie?.posterPath}",
                                contentDescription = "" ,
-                               modifier = Modifier.padding(vertical = 20.dp).fillMaxSize().clip(RoundedCornerShape(12.dp)) ,
+                               modifier = Modifier
+                                   .padding(vertical = 20.dp)
+                                   .fillMaxSize()
+                                   .clip(RoundedCornerShape(12.dp)) ,
                                contentScale = ContentScale.FillBounds ,
                                alignment = Alignment.Center
 
@@ -172,29 +186,48 @@ fun TvDetailsView(
                                if (isFavorite)painterResource(R.drawable.ic_fav_filled)
                                else painterResource(R.drawable.ic_fav),
                                contentDescription = "" ,
-                               modifier = Modifier.padding(40.dp).size(30.dp).clickable {
-                                   savedViewModel.doAction(
-                                       FavEvents.addToFavoutire(
-                                           mediaId = id,
-                                           mediaType = type.lowercase(),
-                                           favorite = !isFavorite,
-                                           item = if (type == "Movie")
-                                               itemMovie?.toDiscoverItem()
-                                           else
-                                               itemTv
+                               modifier = Modifier
+                                   .padding(40.dp)
+                                   .size(30.dp)
+                                   .clickable {
+                                       savedViewModel.doAction(
+                                           FavEvents.addToFavoutire(
+                                               mediaId = id,
+                                               mediaType = type.lowercase(),
+                                               favorite = !isFavorite,
+                                               item = if (type == "Movie")
+                                                   itemMovie?.toDiscoverItem()
+                                               else
+                                                   itemTv
+                                           )
                                        )
-                                   )
-                                   if (type == "Movie") {
-                                       savedViewModel.doAction(FavEvents.OnGetFavouriteMovie)
-                                   }else{
-                                       savedViewModel.doAction(FavEvents.OnGetFavouriteTv)
+                                       if (type == "Movie") {
+                                           savedViewModel.doAction(FavEvents.OnGetFavouriteMovie)
+                                       } else {
+                                           savedViewModel.doAction(FavEvents.OnGetFavouriteTv)
 
-                                   }
-                               } ,
+                                       }
+                                   } ,
                                tint = Color.White
                            )
                        }
                    }
+                item{
+                    Row(
+                        modifier = Modifier
+                            .padding(vertical = 20.dp)
+                            .fillMaxWidth()
+                            .height(60.dp)
+                    ) {
+
+                        Text(
+                            if (itemTv!= null) "Genres"
+                            else  "Genres[${itemMovie?.genreIds?.first()}]"
+
+                        )
+
+                    }
+                }
                 item{
                     Text(
                         itemTv?.overview?: itemMovie?.overview ?:"" ,
