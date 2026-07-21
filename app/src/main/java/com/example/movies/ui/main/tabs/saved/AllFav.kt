@@ -23,9 +23,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.movies.mapper.toDiscoverItem
 import com.example.movies.mapper.toMovieItem
 import com.example.movies.network.response.discover.MoviesItem
+import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.search.MovieItem
 import com.example.movies.ui.main.tabs.profile.FavouriteItem
 import com.example.utilities.LoadingView
@@ -34,7 +36,8 @@ import io.ktor.sse.COLON
 
 @Composable
 fun Allfav(
-    state: Resources<List<FavItem>>
+    state: Resources<List<FavItem>> ,
+    navController: NavController ,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -60,9 +63,19 @@ fun Allfav(
                 ) {
                     items(all!!) {
                         if (it.mediaType == "movie") {
-                            MovieItem(movieItem = it.toMovieItem()) {}
+                            MovieItem(movieItem = it.toMovieItem()) {
+                                navController.navigate(AppRoutes.TvDetailsRoute(
+                                    it?.id!!,
+                                     "Movie"
+                                ))
+                            }
                         } else {
-                            MovieItem(tvItem = it.toDiscoverItem()) {}
+                            MovieItem(tvItem = it.toDiscoverItem()) {
+                                navController.navigate(AppRoutes.TvDetailsRoute(
+                                    it?.id!!,
+                                    "TV"
+                                ))
+                            }
 
                         }
 
