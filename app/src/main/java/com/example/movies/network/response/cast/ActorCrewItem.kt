@@ -5,11 +5,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ActorCrewItem(
+
     val id: Int? = null,
 
     val title: String? = null,
 
     val name: String? = null,
+
+    @SerialName("media_type")
+    val mediaType: String? = null,
+
+    val job: String? = null,
 
     @SerialName("poster_path")
     val posterPath: String? = null

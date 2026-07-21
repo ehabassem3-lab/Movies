@@ -3,6 +3,8 @@ package com.example.movies.ui.main.tv
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movies.domain.repositories.home.HomeRepository
+import com.example.movies.network.response.FavItem
+import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.ui.main.Resources
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -20,9 +22,34 @@ class TvViewModel @Inject constructor(
             is TvEvents.GetTv -> getTv(events.id)
             is TvEvents.getMoviesCast -> getMoviesCast(events.id)
             is TvEvents.getTvCast -> getTvCast(events.id)
+            is TvEvents.getDetails -> getDetails(events.id , events.mediaType)
+            is TvEvents.addToFavoutire ->  addFavourite(events.mediaId, events.mediaType, events.favorite,events.item)
         }
 
     }
+
+    private fun addFavourite(
+        mediaId: Int,
+        mediaType: String,
+        favorite: Boolean,
+        item: DiscoverItem?
+    ) {
+
+
+  }
+
+    private fun getDetails(id: Int, mediaType: String) {
+        viewModelScope.launch {
+            state.value = state.value.copy(favState = Resources.Loading)
+            val request = repository.getDetails(id,mediaType)
+            if (request.isSuccess){
+                state.value =state.value.copy(favState = Resources.Success(request.getOrNull()))
+            }else{
+                state.value =state.value.copy(favState = Resources.Error(Throwable(request.exceptionOrNull())))
+            }
+        }
+    }
+
     private fun getTvCast(id: Int) {
         viewModelScope.launch {
             state.value = state.value.copy(castStateTv = Resources.Loading)

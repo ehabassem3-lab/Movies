@@ -22,7 +22,9 @@ fun ExpandableText(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var isOverflowing by remember { mutableStateOf(false) }
-    Column {
+    Column(
+        modifier = Modifier.padding(30.dp)
+    ) {
         Text(
             text = text,
             color = MaterialTheme.colorScheme.onBackground,

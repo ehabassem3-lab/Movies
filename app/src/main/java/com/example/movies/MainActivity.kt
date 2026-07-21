@@ -8,6 +8,7 @@ import android.os.LocaleList
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 
 import androidx.compose.runtime.Composable
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -23,6 +24,7 @@ import com.example.movies.ui.main.movies.MoviesFullView
 import com.example.movies.ui.main.search.SearchView
 import com.example.movies.ui.main.actor.ActorDetails
 import com.example.movies.ui.main.tabs.home.TvDetailsView
+import com.example.movies.ui.main.tabs.saved.SavedViewModel
 import com.example.movies.ui.main.tv.TvFullView
 import com.example.movies.ui.theme.MoviesTheme
 import com.example.splash.SplashView
@@ -31,6 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)

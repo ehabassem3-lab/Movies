@@ -40,6 +40,7 @@ import com.example.movies.ui.main.tabs.home.HomeEvents
 import com.example.movies.ui.main.tabs.home.HomeViewModel
 import com.example.movies.ui.main.tabs.saved.FavEvents
 import com.example.movies.ui.main.tabs.saved.SavedViewModel
+import com.example.movies.ui.main.tabs.saved.sharedSavedViewModel
 import com.example.movies.ui.theme.AppTypography
 
 @Composable
@@ -49,8 +50,8 @@ fun MovieItem(
             onMovieClick : () -> Unit
 ){
 
-    val savedViewModel = hiltViewModel<SavedViewModel>()
-        val  favorites    = (savedViewModel.state.collectAsState().value.allFavState as?  Resources.Success)?.data
+    val savedViewModel = sharedSavedViewModel()
+    val  favorites    = (savedViewModel.state.collectAsState().value.allFavState as?  Resources.Success)?.data
 
     val isFavorite = favorites?.any {
         if (tvItem == null) {
@@ -108,7 +109,7 @@ fun MovieItem(
                                         FavEvents.addToFavoutire(
                                             mediaId = movieItem?.id!!,
                                             mediaType = "movie",
-                                            favorite = if (!isFavorite) true else false ,
+                                            favorite = !isFavorite,
                                             item =  movieItem.toDiscoverItem()
                                         )
                                     )

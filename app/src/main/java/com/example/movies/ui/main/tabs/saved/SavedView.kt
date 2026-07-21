@@ -1,5 +1,6 @@
 package com.example.movies.ui.main.tabs.saved
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -32,11 +33,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.movies.ui.theme.AppTypography
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 fun SavedView(
     navController: NavController
 ){
-    val viewModel = hiltViewModel<SavedViewModel>()
+    val viewModel = sharedSavedViewModel()
+
     val state = viewModel.state.collectAsState().value
     val colorScheme = MaterialTheme.colorScheme
     val fav = listOf( "All","Movies" ,  "Tv"  )

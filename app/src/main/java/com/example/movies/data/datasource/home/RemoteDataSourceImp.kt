@@ -5,6 +5,7 @@ import com.example.movies.network.request.FavoriteRequest
 import com.example.movies.network.response.cast.Actor
 import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.network.response.cast.Cast
+import com.example.movies.network.response.details.DetailsItem
 import com.example.movies.network.response.details.DetailsItemResponse
 import com.example.movies.network.response.details.TvDetails
 import com.example.movies.network.response.discover.DiscoverItem
@@ -214,6 +215,29 @@ class RemoteDataSourceImp  @Inject constructor(
 
         }catch (e : Throwable){
             return Result.failure(e)
+        }
+    }
+
+    override suspend fun getDetails(id: Int, mediaType: String , sessionId: String): Result<DetailsItem> {
+     return   try {
+
+            val request = if (mediaType == "Movie") client.get("movie/${id}/account_states") {
+                parameter(
+                    "session_id",
+                    sessionId
+                )
+            }
+            else client.get("tv/${id}/account_states") { parameter("session_id", sessionId) }
+
+
+            if (request.status.isSuccess()) {
+                Result.success(request.body<DetailsItem>())
+            } else {
+                Result.failure(Throwable(request.status.description))
+            }
+
+        } catch (e: Throwable) {
+            Result.failure(e)
         }
     }
 }

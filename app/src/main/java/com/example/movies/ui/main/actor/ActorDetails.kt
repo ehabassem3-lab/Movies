@@ -42,9 +42,11 @@ import coil3.compose.AsyncImage
 import com.example.movies.R
 import com.example.movies.network.response.cast.Actor
 import com.example.movies.network.response.cast.ActorWork
+import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.theme.AppTypography
 import com.example.utilities.ExpandableText
+import com.example.utilities.SeparationLine
 import io.ktor.sse.SPACE
 
 @Composable
@@ -60,15 +62,17 @@ fun ActorDetails(
         viewModel.doAction(ActorEvents.onGetActorWork(id))
     }
     Column(
-        modifier = Modifier.fillMaxSize().background(colorScheme.background).padding(30.dp)
+        modifier = Modifier.fillMaxSize().background(colorScheme.background)
     ) {
         LazyColumn() {
 
             item {
                 Row(
                     modifier = Modifier
+                        .padding(20.dp)
                         .fillMaxWidth()
                         .height(40.dp)
+
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -88,6 +92,7 @@ fun ActorDetails(
                     item {
                         Column(
                             modifier = Modifier
+
                                 .padding(top = 10.dp)
                                 .fillMaxWidth()
                                 .animateContentSize(),
@@ -96,7 +101,7 @@ fun ActorDetails(
 
                             Box(
                                 modifier = Modifier
-                                    .size(250.dp)
+                                    .size(350.dp)
                                     .clip(CircleShape)
                             ) {
                                 AsyncImage(
@@ -114,6 +119,7 @@ fun ActorDetails(
                             ) {
 
                                 Text(
+                                    modifier =  Modifier.padding(20.dp),
                                     text = actor?.name.orEmpty(),
                                     style = AppTypography.titleLarge.copy(
                                         color = colorScheme.onBackground,
@@ -150,9 +156,13 @@ fun ActorDetails(
                             }
 
                             ExpandableText(
+
                                 text = actor?.biography.orEmpty(),
                                 collapsedLines = 10
                             )
+
+                                SeparationLine()
+
                         }
                     }
                 }
@@ -169,21 +179,31 @@ fun ActorDetails(
                     item {
                         ActorMovies(
                             actorWork = cast,
-                            actorName = actor?.name.orEmpty()
+                            actorName = actor?.name.orEmpty() ,
+                            navController
                         )
+                    }
+                    item {
+                        SeparationLine()
                     }
 
                     item {
                         ActorTvShows(
                             actorWork = cast,
-                            actorName = actor?.name.orEmpty()
+                            actorName = actor?.name.orEmpty(),
+                            navController
                         )
                     }
+                    item {
+                        SeparationLine()
+                    }
+
 
                     item {
                         ActorOtherMovies(
                             actorWork = crew,
-                            actorName = actor?.name.orEmpty()
+                            actorName = actor?.name.orEmpty(),
+                            navController
                         )
                     }
                 }

@@ -1,6 +1,7 @@
 package com.example.movies.ui.main.actor
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,31 +28,36 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.movies.R
 import com.example.movies.network.response.cast.ActorWorkItem
+import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.theme.AppTypography
 
 @Composable
 fun ActorTvShows(
     actorWork: List<ActorWorkItem?>? ,
-    actorName: String
+    actorName: String ,
+       navController: NavController
 ){
     val colorScheme = MaterialTheme.colorScheme
     val tvShows = actorWork?.filter { it?.mediaType == "tv" }
     if (!tvShows.isNullOrEmpty()){
         Column(
-            modifier = Modifier.height(340.dp).fillMaxWidth()
+            modifier = Modifier.padding(10.dp).height(340.dp).fillMaxWidth()
         ) {
             Text(
                 "Tv Shows ${actorName}" ,
                 modifier = Modifier.padding(bottom = 20.dp , top = 20.dp),
                 style = AppTypography.titleLarge.copy(color = colorScheme.onBackground , fontWeight = FontWeight.Normal))
             LazyRow() {
-                items(actorWork!!){
+                items(actorWork){
                     if (it?.mediaType == "tv") {
                         Column(
-                            modifier = Modifier.padding(horizontal = 10.dp).height(290.dp).width(300.dp) ,
+                            modifier = Modifier.padding(horizontal = 10.dp).height(290.dp).width(300.dp).clickable{
+                                navController.navigate(AppRoutes.TvDetailsRoute(it.id!! , "TV"))
+                            } ,
                             verticalArrangement = Arrangement.Center ,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {

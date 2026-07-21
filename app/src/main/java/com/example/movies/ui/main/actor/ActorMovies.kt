@@ -43,19 +43,21 @@ import com.example.movies.R
 import com.example.movies.network.response.cast.Actor
 import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.network.response.cast.ActorWorkItem
+import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.theme.AppTypography
 
 @Composable
 fun ActorMovies(
     actorWork: List<ActorWorkItem?>? ,
-    actorName: String
+    actorName: String ,
+    navController: NavController
 ){
     val colorScheme = MaterialTheme.colorScheme
     val movies = actorWork?.filter { it?.mediaType == "movie" }
     if (!movies.isNullOrEmpty()){
         Column(
-            modifier = Modifier.height(340.dp).fillMaxWidth()
+            modifier = Modifier.padding(10.dp).height(340.dp).fillMaxWidth()
         ) {
             Text("Movies Stared ${actorName}" ,            modifier = Modifier.padding(bottom = 20.dp , top = 20.dp),
                 style = AppTypography.titleLarge.copy(color = colorScheme.onBackground , fontWeight = FontWeight.Normal))
@@ -63,7 +65,10 @@ fun ActorMovies(
                 items(actorWork){
                     if (it?.mediaType == "movie") {
                         Column(
-                            modifier = Modifier.padding(horizontal = 10.dp).height(290.dp).width(300.dp) ,
+                            modifier = Modifier.padding(horizontal = 10.dp).height(290.dp).width(300.dp).clickable{
+                             navController.navigate(AppRoutes.TvDetailsRoute(it.id!!, "Movie"))
+                            } ,
+
                             verticalArrangement = Arrangement.Center ,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {

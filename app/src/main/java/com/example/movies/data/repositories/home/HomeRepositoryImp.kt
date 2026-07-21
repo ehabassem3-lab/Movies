@@ -10,6 +10,7 @@ import com.example.movies.network.response.FavItem
 import com.example.movies.network.response.cast.Actor
 import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.network.response.cast.Cast
+import com.example.movies.network.response.details.DetailsItem
 import com.example.movies.network.response.details.DetailsItemResponse
 import com.example.movies.network.response.details.TvDetails
 import com.example.movies.network.response.discover.DiscoverItem
@@ -132,6 +133,19 @@ class HomeRepositoryImp  @Inject constructor(
             Result.failure(Throwable(request.exceptionOrNull()))
         }
 
+    }
+
+    override suspend fun getDetails(id: Int, mediaType: String) : Result<DetailsItem>{
+        val request = dataSource.getDetails(
+            id = id,
+            mediaType = mediaType,
+            sessionId = dataStore.data.first()[PreferencesKeys.SESSION_ID]?:""
+        )
+           return    if (request.isSuccess){
+               Result.success(request.getOrNull()!!)
+        }else{
+               Result.failure(Throwable(request.exceptionOrNull()))
+           }
     }
 
 
