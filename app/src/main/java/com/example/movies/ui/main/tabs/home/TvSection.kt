@@ -43,7 +43,6 @@ fun TvSection(
     tvList: List<DiscoverItem?>? = null,
     movies : List<MoviesItem?>? = null ,
     navController: NavController,
-
     onViewAll: () -> Unit ,
 ) {
     val  colorScheme = MaterialTheme.colorScheme

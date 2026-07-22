@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -49,6 +50,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.movies.R
 import com.example.movies.mapper.toDiscoverItem
+import com.example.movies.network.response.Genres
 import com.example.movies.network.response.cast.Cast
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.routes.AppRoutes
@@ -61,7 +63,7 @@ import com.example.movies.ui.main.tv.TvViewModel
 import com.example.movies.ui.theme.AppTypography
 import com.google.gson.annotations.Until
 
-@SuppressLint("UnrememberedGetBackStackEntry")
+@SuppressLint("UnrememberedGetBackStackEntry", "LocalContextGetResourceValueCall")
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun TvDetailsView(
@@ -77,6 +79,45 @@ fun TvDetailsView(
     val posterUrl = "https://image.tmdb.org/t/p/w500"
     val savedViewModel = sharedSavedViewModel()
     val savedState = savedViewModel.state.collectAsState().value
+    val tvGenres =listOf(
+        Genres(35 , R.string.comedy),
+        Genres(18 , R.string.drama),
+        Genres(16 , R.string.animation),
+        Genres(80 , R.string.crime),
+        Genres(10759 , R.string.action_adventure),
+        Genres(10751 , R.string.family),
+        Genres(9648 , R.string.mystery),
+        Genres(10762 , R.string.kids),
+        Genres(10768 , R.string.war_politics)
+    )
+    val movieGenres =listOf(
+        Genres(28 , R.string.action),
+        Genres(12 , R.string.adventure),
+        Genres(16 , R.string.animation),
+        Genres(80 , R.string.crime),
+        Genres(35 , R.string.comedy),
+        Genres(10751 , R.string.family),
+        Genres(9648 , R.string.mystery),
+        Genres(10749 , R.string.romance),
+        Genres(10752 , R.string.war) ,
+        Genres(36 , R.string.history),
+        Genres(10402 , R.string.music),
+        Genres(27 , R.string.horror)
+
+    )
+    val context = LocalContext.current
+    val genreList = if (itemTv != null) tvGenres else movieGenres
+    val genreMap = genreList.associateBy({ it.id }, { it.name })
+
+    val genreNamesString = (itemTv?.genres ?: itemMovie?.genres)
+        ?.mapNotNull { it.name }
+        ?.joinToString(" . ")
+        ?: (itemTv?.genreIds ?: itemMovie?.genreIds)
+            ?.mapNotNull { id -> genreMap[id] }
+            ?.joinToString(" . ") { resId -> context.getString(resId) }
+        ?: ""
+
+
 
     val favorites =
         (savedState.allFavState as? Resources.Success)?.data
@@ -153,6 +194,7 @@ fun TvDetailsView(
 
         ){
 
+
             LazyColumn (
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
@@ -219,12 +261,8 @@ fun TvDetailsView(
                             .fillMaxWidth()
                             .height(60.dp)
                     ) {
+                        Text(genreNamesString)
 
-                        Text(
-                            if (itemTv!= null) "Genres"
-                            else  "Genres[${itemMovie?.genreIds?.first()}]"
-
-                        )
 
                     }
                 }
