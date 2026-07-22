@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -255,16 +256,36 @@ fun TvDetailsView(
                        }
                    }
                 item{
-                    Row(
+                    Column (
                         modifier = Modifier
-                            .padding(vertical = 20.dp)
+                            .padding(vertical = 10.dp)
                             .fillMaxWidth()
-                            .height(60.dp)
+                            .height(80.dp) ,
+                        verticalArrangement = Arrangement.Center ,
+                        horizontalAlignment = Alignment.Start
                     ) {
-                        Text(genreNamesString)
+                        Text(
+                            stringResource(R.string.genres) ,
+                            style = AppTypography.titleLarge.copy(
+                                color = colorScheme.onBackground  ,
+                                fontSize = 32.sp
+
+                            )
+                        )
+                        Text(
+                            genreNamesString ,
+                            modifier =  Modifier.padding(vertical =  10.dp, horizontal = 20.dp),
+                            style = AppTypography.titleSmall.copy(
+                                color = colorScheme.onBackground ,
+                                fontSize = 20.sp
+                             )
+                        )
 
 
                     }
+                }
+                item{
+
                 }
                 item{
                     Text(

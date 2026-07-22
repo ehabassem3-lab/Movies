@@ -88,7 +88,7 @@ fun MainScreen(navController: NavController){
     val navigationItems = listOf(
         navigationItem(0 , R.drawable.ic_home) ,
         navigationItem(1 , R.drawable.ic_trending) ,
-        navigationItem( 2,R.drawable.ic_saved) ,
+        navigationItem( 2,R.drawable.ic_fav) ,
         navigationItem( 3,R.drawable.ic_profile) ,
 
     )

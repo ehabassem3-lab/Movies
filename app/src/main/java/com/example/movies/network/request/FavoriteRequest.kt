@@ -11,5 +11,7 @@ data class FavoriteRequest(
     @SerialName("media_id")
     val mediaId: Int,
 
-    val favorite: Boolean
+    val favorite: Boolean? = null ,
+    val watchlist  : Boolean? = null
+
 )

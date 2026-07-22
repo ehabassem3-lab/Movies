@@ -173,6 +173,31 @@ class RemoteDataSourceImp  @Inject constructor(
         }
     }
 
+    override suspend fun addToWatchList(
+        accountId: Int,
+        sessionId: String,
+        mediaId: Int,
+        mediaType: String,
+        watchList: Boolean
+    ): Result<Unit> {
+        return try {
+            val request = client.post("account/${accountId}/watchlist"){
+                parameter("session_id" , sessionId)
+                setBody(FavoriteRequest(mediaType,mediaId,watchlist =watchList))
+            }
+            if (request.status.isSuccess()){
+                Result.success(request.body())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+
+
+        }catch ( e : Throwable){
+            Result.failure(e)
+
+        }
+    }
+
     override suspend fun addToFavorite(
         accountId: Int,
         sessionId: String,
