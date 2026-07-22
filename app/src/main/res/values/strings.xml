@@ -45,6 +45,7 @@
     <string name="are_you_sure_of_login_out">" Are you Sure of Login Out "</string>
     <string name="documentary" />
     <string name="science_fiction" />
+    <string name="genres">Genres</string>
 
 
 </resources>

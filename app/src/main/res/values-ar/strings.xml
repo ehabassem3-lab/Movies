@@ -43,6 +43,7 @@
     <string name="are_you_sure_of_login_out">" هل انت متاكد من نسجيل الخروج  "</string>
     <string name="documentary" > وثائقي</string>
     <string name="science_fiction" > خيال علمي </string>
+    <string name="genres">الانواع </string>
 
 
 </resources>

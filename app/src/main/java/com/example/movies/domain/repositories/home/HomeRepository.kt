@@ -17,6 +17,7 @@ interface HomeRepository {
     suspend fun getDiscoveryTv(page : Int? , genre : Int? = null) : Result<DiscoverResponse?>
     suspend fun getDiscoveryMovies(page : Int? , genre : Int? = null) : Result<MoviesResponse?>
     suspend fun addToFavorite(mediaId: Int, mediaType: String, favorite: Boolean): Result<Unit>
+    suspend fun addToWatchList(mediaId: Int, mediaType: String, watchList: Boolean): Result<Unit>
 
     suspend fun getMovieById(id : Int ) : Result<MoviesItem>
     suspend fun getTvById(id : Int ) : Result<DiscoverItem>

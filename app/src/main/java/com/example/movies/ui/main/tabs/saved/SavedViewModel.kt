@@ -36,7 +36,20 @@ class SavedViewModel @Inject constructor(
             FavEvents.OnGetFavouriteMovie -> getFavMovies()
             FavEvents.OnGetFavouriteTv -> getFavTv()
             FavEvents.onGetAllFav -> getAllFav()
+          is  FavEvents.onAddToWatchList -> addToWatchList(event.mediaId, event.mediaType, event.watchList)
             is FavEvents.addToFavoutire -> addFavourite(event.mediaId, event.mediaType, event.favorite, event.item)
+        }
+    }
+
+    private fun addToWatchList(mediaId: Int, mediaType: String, watchList: Boolean) {
+        viewModelScope.launch {
+            state.value =state.value.copy(watchListState = Resources.Loading)
+            val request = homeRepository.addToWatchList(mediaId,mediaType,watchList)
+            if (request.isSuccess){
+                state.value =state.value.copy(watchListState = Resources.Success(request.getOrNull()))
+            }else{
+                state.value =state.value.copy(watchListState = Resources.Error(Throwable(request.exceptionOrNull())))
+            }
         }
     }
 

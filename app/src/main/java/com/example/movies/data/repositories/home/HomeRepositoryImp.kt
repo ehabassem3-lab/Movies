@@ -6,6 +6,7 @@ import com.example.auth.ds.PreferencesKeys
 import com.example.movies.data.datasource.home.LocalDataSource
 import com.example.movies.data.datasource.home.RemoteDataSource
 import com.example.movies.domain.repositories.home.HomeRepository
+import com.example.movies.network.createHttpClient
 import com.example.movies.network.response.FavItem
 import com.example.movies.network.response.cast.Actor
 import com.example.movies.network.response.cast.ActorWork
@@ -76,6 +77,26 @@ class HomeRepositoryImp  @Inject constructor(
              Result.failure(Throwable(request.exceptionOrNull()))
          }
 
+    }
+
+    override suspend fun addToWatchList(
+        mediaId: Int,
+        mediaType: String,
+        watchList: Boolean
+    ): Result<Unit> {
+        val preferences = dataStore.data.first()
+        val request = dataSource.addToWatchList(
+            accountId = preferences[PreferencesKeys.ACCOUNT_ID]?:0,
+            sessionId = preferences[PreferencesKeys.SESSION_ID]?:"",
+            mediaId = mediaId,
+            mediaType = mediaType,
+            watchList = watchList
+        )
+        return  if (request.isSuccess){
+                Result.success(request.getOrNull()!!)
+        }else{
+             Result.failure(Throwable(request.exceptionOrNull()))
+        }
     }
 
     override suspend fun getMovieById(id: Int): Result<MoviesItem> {

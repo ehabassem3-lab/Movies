@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -59,42 +60,7 @@ fun MovieItem(
     tvItem : DiscoverItem? = null ,
             onMovieClick : () -> Unit
 ){
-     val tvGenres =listOf(
-         Genres(35 , R.string.comedy),
-         Genres(18 , R.string.drama),
-         Genres(16 , R.string.animation),
-         Genres(80 , R.string.crime),
-         Genres(10759 , R.string.action_adventure),
-         Genres(10751 , R.string.family),
-         Genres(9648 , R.string.mystery),
-         Genres(10762 , R.string.kids),
-         Genres(10768 , R.string.war_politics)
-     )
-    val movieGenres =listOf(
-        Genres(28 , R.string.action),
-        Genres(12 , R.string.adventure),
-        Genres(16 , R.string.animation),
-        Genres(80 , R.string.crime),
-        Genres(35 , R.string.comedy),
-        Genres(10751 , R.string.family),
-        Genres(9648 , R.string.mystery),
-        Genres(10749 , R.string.romance),
-        Genres(10752 , R.string.war) ,
-        Genres(36 , R.string.history),
-        Genres(10402 , R.string.music),
-        Genres(27 , R.string.horror)
 
-    )
-    val context = LocalContext.current
-    val genreList = if (tvItem != null) tvGenres else movieGenres
-    val genreIds = if (tvItem != null) tvItem.genreIds else movieItem?.genreIds
-
-    val genreMap = genreList.associateBy({ it.id }, { it.name })
-
-    val genreNamesString = genreIds
-        ?.mapNotNull { id -> genreMap[id] }
-        ?.joinToString(" . ") { resId -> context.getString(resId) }
-        ?: ""
 
     val savedViewModel = sharedSavedViewModel()
     val  favorites    = (savedViewModel.state.collectAsState().value.allFavState as?  Resources.Success)?.data
@@ -124,7 +90,6 @@ fun MovieItem(
                     .fillMaxWidth()
                     .height(280.dp)
                     .clip(RoundedCornerShape(10.dp)) ,
-                contentAlignment = Alignment.BottomEnd
             ) {
                 AsyncImage(
                     model =if (movieItem != null) "https://image.tmdb.org/t/p/w500${movieItem?.posterPath}"
@@ -137,6 +102,44 @@ fun MovieItem(
                         .fillMaxSize()
                         .clip(RoundedCornerShape(10.dp))
                 )
+                Box(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .background(colorScheme.background , CircleShape)
+                        .size(34.dp)
+                        .align(Alignment.TopEnd)                    ,
+                    contentAlignment = Alignment.Center
+                ){
+                    Icon(
+                        painterResource(R.drawable.ic_save) ,
+                        contentDescription = "" ,
+                        tint = colorScheme.onBackground ,
+                        modifier = Modifier.size(20.dp).clickable{
+                            if (tvItem == null) {
+                                savedViewModel.doAction(
+                                    FavEvents.onAddToWatchList(
+                                        mediaId = movieItem?.id!!,
+                                        mediaType = "movie",
+                                        watchList = true,
+                                    )
+                                )
+
+                            } else {
+                                savedViewModel.doAction(
+                                    FavEvents.onAddToWatchList(
+                                        mediaId = tvItem?.id!!,
+                                        mediaType = "tv",
+                                        watchList =  true ,
+
+                                    )
+                                )
+
+                            }
+                        }
+
+                    )
+                }
+
                 Icon(
                     painter = painterResource(
                         if (isFavorite) R.drawable.ic_fav_filled
@@ -146,6 +149,7 @@ fun MovieItem(
                     tint = Color.White
                     ,
                     modifier = Modifier
+                        .align (Alignment.BottomEnd)
                         .padding(20.dp)
                         .size(20.dp)
                         .clickable {
@@ -201,9 +205,6 @@ fun MovieItem(
                 fontWeight = FontWeight.Bold ,
                 fontSize = 18.sp
             )
-        )
-        Text(
-            text = genreNamesString
         )
 
 
