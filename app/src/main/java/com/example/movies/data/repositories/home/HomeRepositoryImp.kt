@@ -135,6 +135,35 @@ class HomeRepositoryImp  @Inject constructor(
             Result.failure(Throwable(request.exceptionOrNull()))
         }
     }
+    override suspend fun getWatchListMovie(
+    ): Result<MoviesResponse> {
+        val preferences = dataStore.data.first()
+      val request = dataSource.getUserWatchListMovies(
+          accountId = preferences[PreferencesKeys.ACCOUNT_ID]?:0,
+          sessionId = preferences[PreferencesKeys.SESSION_ID]?:""
+      )
+        return if (request.isSuccess){
+            Result.success(request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+    }
+    override suspend fun getWatchListTv(
+
+    ): Result<DiscoverResponse> {
+        val preferences = dataStore.data.first()
+        val request = dataSource.getUserWatchListTv(
+            accountId = preferences[PreferencesKeys.ACCOUNT_ID]?:0,
+            sessionId = preferences[PreferencesKeys.SESSION_ID]?:""
+        )
+        return if (request.isSuccess){
+            Result.success(request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+    }
+
+
 
     override suspend fun getActor(id: Int): Result<Actor> {
         val  request = dataSource.getPerson(id)

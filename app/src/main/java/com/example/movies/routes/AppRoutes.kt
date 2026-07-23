@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 
 sealed class AppRoutes {
     @Serializable
+    data object  WatchListRoute : AppRoutes()
+    @Serializable
     data class  ActorRoute(
         val id : Int
     ) : AppRoutes()

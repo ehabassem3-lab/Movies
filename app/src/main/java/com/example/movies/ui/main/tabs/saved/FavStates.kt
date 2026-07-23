@@ -14,7 +14,10 @@ data class FavStates (
     val FavMovieState : Resources<MoviesResponse> = Resources.idle ,
     val allFavState: Resources<List<FavItem>> = Resources.Loading ,
     val favApiState : Resources<Unit> = Resources.idle ,
-    val watchListState: Resources<Unit> = Resources.idle
+    val watchListState: Resources<Unit> = Resources.idle,
+    val WatchListTvState : Resources<DiscoverResponse> = Resources.idle,
+    val WatchMovieState : Resources<MoviesResponse> = Resources.idle ,
+    val allWatchListState: Resources<List<FavItem>> = Resources.Loading ,
 
 )
 
@@ -24,7 +27,10 @@ sealed class FavEvents{
     object OnGetFavouriteMovie  : FavEvents()
     object OnGetFavouriteTv : FavEvents()
     object onGetAllFav : FavEvents()
-    data class   onAddToWatchList (val mediaId: Int, val  mediaType: String, val watchList: Boolean )  : FavEvents()
+    object OnGetWatchListMovie  : FavEvents()
+    object OnGetWatchListTv : FavEvents()
+    object onGetAllWatchList : FavEvents()
+    data class   onAddToWatchList (val mediaId: Int, val  mediaType: String, val watchList: Boolean , val item : DiscoverItem? = null )  : FavEvents()
     data class  addToFavoutire(val item: DiscoverItem? = null, val mediaId: Int, val  mediaType: String, val favorite: Boolean ) : FavEvents()
 
 }

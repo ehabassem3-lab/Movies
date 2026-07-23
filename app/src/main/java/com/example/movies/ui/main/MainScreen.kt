@@ -93,7 +93,7 @@ fun MainScreen(navController: NavController){
 
     )
     ModalNavigationDrawer(
-        drawerContent = { SideNavigationDrawer()},
+        drawerContent = { SideNavigationDrawer(navController)},
         drawerState = drawerState,
 
     ) {

@@ -12,7 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SeparationLine(){
+fun SeparationLine(
+){
     val colorScheme = MaterialTheme.colorScheme
     Box(
         modifier = Modifier.height(2.dp).background(colorScheme.onBackground).fillMaxWidth()

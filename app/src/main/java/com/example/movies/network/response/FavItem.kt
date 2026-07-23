@@ -30,7 +30,6 @@ data class FavItem(
     @SerialName("original_language")
     val originalLanguage: String? = null,
 
-    // Movies
     val title: String? = null,
 
     @SerialName("original_title")
@@ -38,8 +37,6 @@ data class FavItem(
 
     @SerialName("release_date")
     val releaseDate: String? = null,
-
-    // TV
 
 
     @SerialName("first_air_date")

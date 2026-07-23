@@ -222,6 +222,46 @@ class RemoteDataSourceImp  @Inject constructor(
         }
     }
 
+    override suspend fun getUserWatchListMovies(
+        accountId: Int,
+        sessionId: String
+    ): Result<MoviesResponse> {
+        return try {
+            val request = client.get("account/${accountId}/watchlist/movies"){
+                parameter("session_id", sessionId)
+
+            }
+                if(request.status.isSuccess()){
+                    Result.success(request.body<MoviesResponse>())
+                }else{
+                    Result.failure(Throwable(request.status.description))
+                }
+        }catch ( e  : Throwable){
+            Result.failure(e)
+
+        }
+    }
+
+    override suspend fun getUserWatchListTv(
+        accountId: Int,
+        sessionId: String
+    ): Result<DiscoverResponse> {
+        return try {
+            val request = client.get("account/${accountId}/watchlist/tv"){
+                parameter("session_id", sessionId)
+
+            }
+            if(request.status.isSuccess()){
+                Result.success(request.body<DiscoverResponse>())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+        }catch ( e  : Throwable){
+            Result.failure(e)
+
+        }
+    }
+
 
     override suspend fun searchMovies(search: String , page: Int?): Result<SearchResponse> {
         try {

@@ -25,7 +25,8 @@ suspend fun getMovieCast(id : Int ) : Result<Cast>
    suspend fun addToWatchList( accountId : Int , sessionId: String , mediaId: Int, mediaType: String, watchList: Boolean) : Result<Unit>
 
    suspend fun addToFavorite(accountId: Int, sessionId: String, mediaId: Int, mediaType: String, favorite: Boolean): Result<Unit>
-
+   suspend fun getUserWatchListMovies(accountId : Int ,  sessionId : String) : Result<MoviesResponse>
+   suspend fun getUserWatchListTv(accountId : Int ,  sessionId : String) : Result<DiscoverResponse>
    suspend fun searchMovies(search : String  , page : Int? = 1  ) : Result<SearchResponse>
    suspend fun getDetails(id : Int , mediaType: String ,  sessionId: String)  : Result<DetailsItem>
 }
