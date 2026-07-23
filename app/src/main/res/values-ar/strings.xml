@@ -44,6 +44,8 @@
     <string name="documentary" > وثائقي</string>
     <string name="science_fiction" > خيال علمي </string>
     <string name="genres">الانواع </string>
+    <string name="watch_list_count">"عدد المشاهده لاحقا  "</string>
+    <string name="go_to_watch_lst">"الذهاب الي قائمه المشاهده لاحقا "</string>
 
 
 </resources>

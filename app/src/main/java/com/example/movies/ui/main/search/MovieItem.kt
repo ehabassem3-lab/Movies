@@ -63,8 +63,15 @@ fun MovieItem(
 
 
     val savedViewModel = sharedSavedViewModel()
+    val watchList = (savedViewModel.state.collectAsState().value.allWatchListState as?  Resources.Success)?.data
     val  favorites    = (savedViewModel.state.collectAsState().value.allFavState as?  Resources.Success)?.data
-
+    val isWatchList = watchList?.any {
+        if (tvItem == null) {
+            it.id == movieItem?.id && it.mediaType == "movie"
+        } else {
+            it.id == tvItem?.id && it.mediaType == "tv"
+        }
+    } ?: false
     val isFavorite = favorites?.any {
         if (tvItem == null) {
             it.id == movieItem?.id && it.mediaType == "movie"
@@ -111,7 +118,7 @@ fun MovieItem(
                     contentAlignment = Alignment.Center
                 ){
                     Icon(
-                        painterResource(R.drawable.ic_save) ,
+                      if (isWatchList) painterResource(R.drawable.ic_un_save) else painterResource(R.drawable.ic_save) ,
                         contentDescription = "" ,
                         tint = colorScheme.onBackground ,
                         modifier = Modifier.size(20.dp).clickable{
@@ -120,7 +127,8 @@ fun MovieItem(
                                     FavEvents.onAddToWatchList(
                                         mediaId = movieItem?.id!!,
                                         mediaType = "movie",
-                                        watchList = true,
+                                        watchList = !isWatchList,
+                                         item = movieItem.toDiscoverItem()
                                     )
                                 )
 
@@ -129,8 +137,8 @@ fun MovieItem(
                                     FavEvents.onAddToWatchList(
                                         mediaId = tvItem?.id!!,
                                         mediaType = "tv",
-                                        watchList =  true ,
-
+                                        watchList = !isWatchList ,
+                                       item =tvItem
                                     )
                                 )
 

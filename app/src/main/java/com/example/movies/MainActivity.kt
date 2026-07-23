@@ -26,6 +26,7 @@ import com.example.movies.ui.main.actor.ActorDetails
 import com.example.movies.ui.main.tabs.home.TvDetailsView
 import com.example.movies.ui.main.tabs.saved.SavedViewModel
 import com.example.movies.ui.main.tv.TvFullView
+import com.example.movies.ui.main.watchlist.WatchList
 import com.example.movies.ui.theme.MoviesTheme
 import com.example.splash.SplashView
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,6 +63,9 @@ fun App(    deepLink: Uri?) {
         navController ,
         startDestination = AppRoutes.SplashRoute
     ){
+        composable <AppRoutes.WatchListRoute>{
+            WatchList(navController)
+        }
         composable <AppRoutes.ActorRoute>{
             val data = it.toRoute<AppRoutes.ActorRoute>()
             ActorDetails(
