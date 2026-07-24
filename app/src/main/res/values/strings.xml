@@ -48,6 +48,9 @@
     <string name="genres">Genres</string>
     <string name="watch_list_count">"Watch List Count "</string>
     <string name="go_to_watch_lst">"Go to Watch List "</string>
+    <string name="all">All</string>
+    <string name="tv">Tv</string>
+    <string name="watch_list">Watch List</string>
 
 
 </resources>
