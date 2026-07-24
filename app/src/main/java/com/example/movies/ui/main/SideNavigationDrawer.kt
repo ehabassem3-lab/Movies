@@ -68,7 +68,9 @@ fun SideNavigationDrawer(
                 stringResource(R.string.movies_side_drawer_header),
                 color =  colorScheme.onBackground ,
                 textAlign = TextAlign.Center ,
-                style = AppTypography.titleLarge
+                style = AppTypography.titleLarge.copy(
+                    fontSize = 46.sp
+                )
             )
 
         }
@@ -78,7 +80,9 @@ fun SideNavigationDrawer(
                 .fillMaxSize()
         ) {
             Row(
-                modifier = Modifier.padding(10.dp),
+                modifier = Modifier.padding(10.dp).clickable{
+                    navController.navigate(AppRoutes.WatchListRoute)
+                },
                 verticalAlignment = Alignment.CenterVertically ,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -92,7 +96,11 @@ fun SideNavigationDrawer(
                     )
                 )
                 Box(
-                    modifier = Modifier.size(30.dp).background(colorScheme.background , CircleShape) ,
+                    modifier = Modifier
+                        .size(30.dp)
+                        .background(colorScheme.background , CircleShape).clickable{
+
+                        } ,
                     contentAlignment = Alignment.Center
                 ){
                     Icon(
@@ -100,7 +108,7 @@ fun SideNavigationDrawer(
                         contentDescription = "" ,
                         tint = colorScheme.onBackground,
                         modifier = Modifier.size(15.dp).clickable{
-                            navController.navigate(AppRoutes.WatchListRoute)
+
                         }
                     )
                 }
@@ -112,11 +120,17 @@ fun SideNavigationDrawer(
               ){
                   Text(
                       stringResource(R.string.watch_list_count) ,
-                      modifier = Modifier.padding(5.dp)
+                      modifier = Modifier.padding(5.dp) ,
+                      style = AppTypography.titleMedium.copy(
+                          color = colorScheme.background
+                      )
                   )
                   Text(
                      number.toString() ,
-                      modifier = Modifier.padding(5.dp)
+                      modifier = Modifier.padding(5.dp) ,
+                      style = AppTypography.titleMedium.copy(
+                          color = colorScheme.background
+                      )
 
                   )
                   Icon(
