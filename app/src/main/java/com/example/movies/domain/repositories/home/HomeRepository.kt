@@ -30,4 +30,6 @@ interface HomeRepository {
     suspend fun  getActor(id : Int) : Result<Actor>
     suspend fun getActorWork(id : Int) : Result<ActorWork>
     suspend fun getDetails(id : Int , mediaType: String) : Result<DetailsItem>
+    suspend fun getMoviesTrending() : Result<MoviesResponse>
+    suspend fun getTvTrending() : Result<DiscoverResponse>
 }

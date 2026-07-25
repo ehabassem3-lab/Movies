@@ -1,5 +1,6 @@
 package com.example.movies.data.repositories.home
 
+import androidx.compose.ui.text.Paragraph
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.example.auth.ds.PreferencesKeys
@@ -196,6 +197,24 @@ class HomeRepositoryImp  @Inject constructor(
         }else{
                Result.failure(Throwable(request.exceptionOrNull()))
            }
+    }
+
+    override suspend fun getMoviesTrending(): Result<MoviesResponse> {
+        val request = dataSource.getMoviesTrending()
+        return if (request.isSuccess) {
+            Result.success(request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+    }
+
+    override suspend fun getTvTrending(): Result<DiscoverResponse> {
+        val request = dataSource.getTvTrending()
+        return if (request.isSuccess) {
+            Result.success(request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
     }
 
 

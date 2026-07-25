@@ -172,7 +172,7 @@ fun MainScreen(navController: NavController){
             Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 when(selectedIndex){
                     0 -> HomeView(navController)
-                    1 -> TrendingView()
+                    1 -> TrendingView(navController)
                     2 -> SavedView(navController)
                     3 -> ProfileView(navController)
 
