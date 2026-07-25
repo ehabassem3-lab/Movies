@@ -15,6 +15,7 @@ import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.network.response.search.SearchResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.isSaved
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
@@ -303,6 +304,34 @@ class RemoteDataSourceImp  @Inject constructor(
 
         } catch (e: Throwable) {
             Result.failure(e)
+        }
+    }
+
+    override suspend fun getMoviesTrending(): Result<MoviesResponse> {
+        return try {
+            val request = client.get ("trending/movie/day")
+            if (request.status.isSuccess()){
+                Result.success(request.body())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+        }catch (e : Throwable){
+            Result.failure(e)
+
+        }
+    }
+
+    override suspend fun getTvTrending(): Result<DiscoverResponse> {
+        return try {
+            val request = client.get ("trending/tv/day")
+            if (request.status.isSuccess()){
+                Result.success(request.body())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+        }catch (e : Throwable){
+            Result.failure(e)
+
         }
     }
 }

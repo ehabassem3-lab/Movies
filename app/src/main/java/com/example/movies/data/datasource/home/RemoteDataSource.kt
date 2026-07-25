@@ -29,4 +29,7 @@ suspend fun getMovieCast(id : Int ) : Result<Cast>
    suspend fun getUserWatchListTv(accountId : Int ,  sessionId : String) : Result<DiscoverResponse>
    suspend fun searchMovies(search : String  , page : Int? = 1  ) : Result<SearchResponse>
    suspend fun getDetails(id : Int , mediaType: String ,  sessionId: String)  : Result<DetailsItem>
+   suspend fun getMoviesTrending() : Result<MoviesResponse>
+   suspend fun getTvTrending() : Result<DiscoverResponse>
+
 }
