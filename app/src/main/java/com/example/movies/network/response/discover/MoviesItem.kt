@@ -28,7 +28,8 @@ data class MoviesItem (
     val voteAverage: Double? = null,
     @SerialName("title")
     val name: String? = null,
-
+    @SerialName("videos")
+    val videos: VideosResponse? = null,
     val id: Int? = null,
 
     @SerialName("vote_count")

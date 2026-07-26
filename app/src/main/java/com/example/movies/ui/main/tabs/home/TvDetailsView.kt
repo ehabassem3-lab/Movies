@@ -1,6 +1,8 @@
 package com.example.movies.ui.main.tabs.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,10 +21,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -78,6 +83,13 @@ fun TvDetailsView(
     val itemMovie = (state.moviesApi as? Resources.Success )?.data
     val itemTv = (state.tvApi as? Resources.Success )?.data
     val posterUrl = "https://image.tmdb.org/t/p/w500"
+    val videoLink = if (itemTv == null) itemMovie?.videos?.results?.firstOrNull{
+        it.site == "YouTube" && it.type == "Trailer"
+    }else itemTv.videos?.results?.firstOrNull{
+            it.site == "YouTube" && it.type == "Trailer"
+        }
+
+
     val savedViewModel = sharedSavedViewModel()
     val savedState = savedViewModel.state.collectAsState().value
     val tvGenres =listOf(
@@ -122,7 +134,10 @@ fun TvDetailsView(
 
     val favorites =
         (savedState.allFavState as? Resources.Success)?.data
-
+    val watchlist = (savedState.allWatchListState as?  Resources.Success)?.data
+      val isWatchList = watchlist?.any{
+          it.id == id && it.mediaType == type.lowercase()
+      } ?: false
     val isFavorite = favorites?.any {
         it.id == id && it.mediaType == type.lowercase()
     } ?: false
@@ -226,6 +241,19 @@ fun TvDetailsView(
 
                            )
                            Icon(
+                               painter =  if (isWatchList) painterResource(R.drawable.ic_un_save)
+                                          else painterResource(R.drawable.ic_save) ,
+                               contentDescription = "" ,
+                               modifier = Modifier.size(30.dp).offset(x = -330.dp , y = 40.dp).clickable {
+                                   savedViewModel.doAction(FavEvents.onAddToWatchList(
+                                       mediaId = id,
+                                       mediaType = type.lowercase(),
+                                       watchList = !isWatchList,
+                                       item = itemTv ?: itemMovie?.toDiscoverItem()
+                                   ))
+                               }
+                           )
+                           Icon(
                                if (isFavorite)painterResource(R.drawable.ic_fav_filled)
                                else painterResource(R.drawable.ic_fav),
                                contentDescription = "" ,
@@ -235,7 +263,7 @@ fun TvDetailsView(
                                    .clickable {
                                        savedViewModel.doAction(
                                            FavEvents.addToFavoutire(
-                                               mediaId = id,
+                                               mediaId = if (itemTv == null ) itemMovie?.id!! else itemTv.id!!,
                                                mediaType = type.lowercase(),
                                                favorite = !isFavorite,
                                                item = if (type == "Movie")
@@ -260,18 +288,53 @@ fun TvDetailsView(
                         modifier = Modifier
                             .padding(vertical = 10.dp)
                             .fillMaxWidth()
-                            .height(80.dp) ,
+                            .height(100.dp) ,
                         verticalArrangement = Arrangement.Center ,
                         horizontalAlignment = Alignment.Start
                     ) {
-                        Text(
-                            stringResource(R.string.genres) ,
-                            style = AppTypography.titleLarge.copy(
-                                color = colorScheme.onBackground  ,
-                                fontSize = 32.sp
+                        Row(
+                            modifier =  Modifier.fillMaxWidth() ,
+                            horizontalArrangement = Arrangement.SpaceAround
+                        ){
+                            Text(
+                                stringResource(R.string.genres) ,
+                                modifier = Modifier.offset(x= -50.dp) ,
 
+                                        style = AppTypography.titleLarge.copy(
+                                    color = colorScheme.onBackground  ,
+                                    fontSize = 32.sp
+
+                                )
                             )
-                        )
+                            Box(
+                                modifier = Modifier
+                                    .offset(x= 30.dp)
+                                    .size(50.dp)
+                                    .background(colorScheme.onBackground, RoundedCornerShape(12.dp))
+                                    .clickable{
+                                        val youtubeUrl = videoLink?.key?.let {
+                                            "https://www.youtube.com/watch?v=$it"
+                                        }
+                                        youtubeUrl?.let { url ->
+                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                            context.startActivity(intent)
+                                        }
+                                    },
+
+                                contentAlignment = Alignment.Center
+                            ){
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_play) ,
+                                    contentDescription = "" ,
+                                    tint = colorScheme.background ,
+                                    modifier = Modifier.size(20.dp)
+
+                                    )
+                            }
+
+                        }
+
+
                         Text(
                             genreNamesString ,
                             modifier =  Modifier.padding(vertical =  10.dp, horizontal = 20.dp),

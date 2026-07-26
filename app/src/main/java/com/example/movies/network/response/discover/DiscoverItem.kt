@@ -28,5 +28,7 @@ data class DiscoverItem(
 	@SerialName("vote_count")
 	val voteCount: Double? = null ,
 	val type : String = "TV" ,
-	val fav : Boolean? = false
+	val fav : Boolean? = false,
+	@SerialName("videos")
+	val videos: VideosResponse? = null
 )
