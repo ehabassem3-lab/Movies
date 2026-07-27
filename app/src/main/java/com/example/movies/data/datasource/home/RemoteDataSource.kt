@@ -31,5 +31,6 @@ suspend fun getMovieCast(id : Int ) : Result<Cast>
    suspend fun getDetails(id : Int , mediaType: String ,  sessionId: String)  : Result<DetailsItem>
    suspend fun getMoviesTrending() : Result<MoviesResponse>
    suspend fun getTvTrending() : Result<DiscoverResponse>
+   suspend fun rateMovie(sessionId : String , rating : Double , movieId : Int) : Result<Unit>
 
 }

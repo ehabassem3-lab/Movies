@@ -43,6 +43,7 @@ import com.example.movies.ui.main.Resources
 import com.example.movies.ui.theme.AppTypography
 import com.example.utilities.ErrorView
 import com.example.utilities.LoadingView
+import com.example.utilities.SeparationLine
 import io.github.suwasto.kmmcomposeshimmer.ShimmerContainer
 import kotlin.collections.orEmpty
 
@@ -73,7 +74,8 @@ fun MoviesView(
                                     AppRoutes.MovieFullRoute(sectionsMovies.genreId)
                                 )
                             }
-                        )   
+                        )
+                        SeparationLine()
                     }
                 }
             }

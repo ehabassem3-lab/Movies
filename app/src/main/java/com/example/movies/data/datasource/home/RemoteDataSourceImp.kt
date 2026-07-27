@@ -334,4 +334,25 @@ class RemoteDataSourceImp  @Inject constructor(
 
         }
     }
+
+    override suspend fun rateMovie(
+        sessionId: String,
+        rating: Double ,
+        movieId : Int ,
+    ): Result<Unit> {
+        return try {
+            val request = client.post ("movie/${movieId}/rating"){
+                parameter("session_id", sessionId)
+                setBody(mapOf("value" to rating))
+            }
+            if (request.status.isSuccess()){
+                Result.success(request.body())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+        }catch (e : Throwable){
+            Result.failure(e)
+
+        }
+    }
 }

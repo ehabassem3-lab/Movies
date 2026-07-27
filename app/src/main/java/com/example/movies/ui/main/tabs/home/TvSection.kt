@@ -35,6 +35,7 @@ import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.search.MovieItem
 import com.example.movies.ui.theme.AppTypography
+import com.example.utilities.SeparationLine
 
 @Composable
 fun TvSection(
@@ -140,6 +141,7 @@ fun TvSection(
             }
 
         }
+
 
     }
 }

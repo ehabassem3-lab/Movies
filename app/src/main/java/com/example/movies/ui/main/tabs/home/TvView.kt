@@ -31,6 +31,7 @@ import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
 import com.example.utilities.ErrorView
 import com.example.utilities.LoadingView
+import com.example.utilities.SeparationLine
 import io.github.suwasto.kmmcomposeshimmer.ShimmerContainer
 import kotlin.collections.orEmpty
 
@@ -61,6 +62,8 @@ fun TvView(state : HomeStates , navController: NavController , onRetry : () -> U
                                 )
                             }
                         )
+                        SeparationLine()
+
                     }
                 }
             }

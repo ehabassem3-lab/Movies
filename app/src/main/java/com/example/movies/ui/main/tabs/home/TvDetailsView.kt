@@ -240,47 +240,58 @@ fun TvDetailsView(
                                alignment = Alignment.Center
 
                            )
-                           Icon(
-                               painter =  if (isWatchList) painterResource(R.drawable.ic_un_save)
-                                          else painterResource(R.drawable.ic_save) ,
-                               contentDescription = "" ,
-                               modifier = Modifier.size(30.dp).offset(x = -330.dp , y = 40.dp).clickable {
-                                   savedViewModel.doAction(FavEvents.onAddToWatchList(
-                                       mediaId = id,
-                                       mediaType = type.lowercase(),
-                                       watchList = !isWatchList,
-                                       item = itemTv ?: itemMovie?.toDiscoverItem()
-                                   ))
-                               }
-                           )
-                           Icon(
-                               if (isFavorite)painterResource(R.drawable.ic_fav_filled)
-                               else painterResource(R.drawable.ic_fav),
-                               contentDescription = "" ,
-                               modifier = Modifier
-                                   .padding(40.dp)
-                                   .size(30.dp)
-                                   .clickable {
-                                       savedViewModel.doAction(
-                                           FavEvents.addToFavoutire(
-                                               mediaId = if (itemTv == null ) itemMovie?.id!! else itemTv.id!!,
-                                               mediaType = type.lowercase(),
-                                               favorite = !isFavorite,
-                                               item = if (type == "Movie")
-                                                   itemMovie?.toDiscoverItem()
-                                               else
-                                                   itemTv
-                                           )
-                                       )
-                                       if (type == "Movie") {
-                                           savedViewModel.doAction(FavEvents.OnGetFavouriteMovie)
-                                       } else {
-                                           savedViewModel.doAction(FavEvents.OnGetFavouriteTv)
+                           Box(
+                               modifier = Modifier.size(30.dp).offset(x = -330.dp , y = 30.dp).background(colorScheme.onBackground , RoundedCornerShape(12.dp)),
+                               contentAlignment = Alignment.Center
+                           ){
+                               Icon(
+                                   painter =  if (isWatchList) painterResource(R.drawable.ic_un_save)
+                                   else painterResource(R.drawable.ic_save) ,
+                                   contentDescription = "" ,
+                                   tint = colorScheme.background ,
+                                   modifier = Modifier.size(20.dp).clickable {
+                                       savedViewModel.doAction(FavEvents.onAddToWatchList(
+                                           mediaId = id,
+                                           mediaType = type.lowercase(),
+                                           watchList = !isWatchList,
+                                           item = itemTv ?: itemMovie?.toDiscoverItem()
+                                       ))
+                                   }
+                               )
+                           }
+                               Box(
+                                   modifier = Modifier.size(30.dp).offset(y = 30.dp , x = -10.dp).background(colorScheme.onBackground , RoundedCornerShape(12.dp)) ,
+                                   contentAlignment = Alignment.Center
+                               ) {
+                                   Icon(
+                                       if (isFavorite)painterResource(R.drawable.ic_fav_filled)
+                                       else painterResource(R.drawable.ic_fav),
+                                       contentDescription = "" ,
+                                       modifier = Modifier
+                                           .size(20.dp)
+                                           .clickable {
+                                               savedViewModel.doAction(
+                                                   FavEvents.addToFavoutire(
+                                                       mediaId = if (itemTv == null ) itemMovie?.id!! else itemTv.id!!,
+                                                       mediaType = type.lowercase(),
+                                                       favorite = !isFavorite,
+                                                       item = if (type == "Movie")
+                                                           itemMovie?.toDiscoverItem()
+                                                       else
+                                                           itemTv
+                                                   )
+                                               )
+                                               if (type == "Movie") {
+                                                   savedViewModel.doAction(FavEvents.OnGetFavouriteMovie)
+                                               } else {
+                                                   savedViewModel.doAction(FavEvents.OnGetFavouriteTv)
 
-                                       }
-                                   } ,
-                               tint = Color.White
-                           )
+                                               }
+                                           } ,
+                                       tint = colorScheme.background
+                                   )
+                               }
+
                        }
                    }
                 item{
@@ -288,7 +299,7 @@ fun TvDetailsView(
                         modifier = Modifier
                             .padding(vertical = 10.dp)
                             .fillMaxWidth()
-                            .height(100.dp) ,
+                            .height(150.dp) ,
                         verticalArrangement = Arrangement.Center ,
                         horizontalAlignment = Alignment.Start
                     ) {
@@ -337,7 +348,7 @@ fun TvDetailsView(
 
                         Text(
                             genreNamesString ,
-                            modifier =  Modifier.padding(vertical =  10.dp, horizontal = 20.dp),
+                            modifier =  Modifier.padding(vertical =  10.dp, horizontal = 20.dp).fillMaxWidth().height(200.dp),
                             style = AppTypography.titleSmall.copy(
                                 color = colorScheme.onBackground ,
                                 fontSize = 20.sp
