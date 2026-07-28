@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,8 +44,39 @@ class SavedViewModel @Inject constructor(
             FavEvents.OnGetWatchListMovie -> getWatchListMovies()
             FavEvents.OnGetWatchListTv -> getWatchListTv()
             FavEvents.onGetAllWatchList -> getAllWatchList()
+           is FavEvents.onRateMovie -> rateMovie(event.id , event.rate)
+            FavEvents.onGetRatedMovies -> getRatedMovies()
         }
     }
+
+    private fun getRatedMovies() {
+        viewModelScope.launch {
+            state.value = state.value.copy(RatedMoviesState = Resources.Loading)
+            val request = homeRepository.getRatedMovies()
+            if (request.isSuccess){
+                state.value =state.value.copy(RatedMoviesState = Resources.Success(request.getOrNull()))
+            }else{
+                state.value = state.value.copy(RatedMoviesState = Resources.Error(Throwable(request.exceptionOrNull())))
+            }
+            }
+
+
+    }
+
+    private fun rateMovie(id: Int , rate : Double) {
+        viewModelScope.launch {
+            state.value = state.value.copy(movieRatingApiState = Resources.Loading)
+            val request = homeRepository.rateMovie( id,rate)
+            if (request.isSuccess){
+                state.value =state.value.copy(movieRatingApiState = Resources.Success(request.getOrNull()))
+            }else{
+                state.value =state.value.copy(movieRatingApiState = Resources.Error(Throwable(request.exceptionOrNull())))
+            }
+        }
+
+
+    }
+
     private fun getWatchListTv(){
         viewModelScope.launch {
             state.value = state.value.copy(WatchListTvState = Resources.Loading)

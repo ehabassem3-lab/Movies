@@ -1,6 +1,7 @@
 package com.example.movies.domain.repositories.home
 
 import android.accounts.Account
+import android.media.Rating
 import com.example.movies.network.response.cast.Actor
 import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.network.response.cast.Cast
@@ -32,4 +33,6 @@ interface HomeRepository {
     suspend fun getDetails(id : Int , mediaType: String) : Result<DetailsItem>
     suspend fun getMoviesTrending() : Result<MoviesResponse>
     suspend fun getTvTrending() : Result<DiscoverResponse>
+    suspend fun rateMovie(id : Int  , rating: Double) : Result<Unit>
+    suspend fun getRatedMovies() : Result<MoviesResponse>
 }

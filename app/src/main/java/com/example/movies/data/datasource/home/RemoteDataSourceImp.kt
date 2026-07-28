@@ -174,6 +174,23 @@ class RemoteDataSourceImp  @Inject constructor(
         }
     }
 
+    override suspend fun getUserRatedMovies(sessionId: String, accountId: Int)  : Result<MoviesResponse>{
+         return try {
+                 val request = client.get ("account/${accountId}/rated/movies"){
+                     parameter("session_id",sessionId)
+                 }
+             if (request.status.isSuccess()){
+                 Result.success(request.body())
+             }else{
+                 Result.failure(Throwable(request.status.description))
+             }
+         }catch (e : Throwable){
+             Result.failure(e)
+
+         }
+
+    }
+
     override suspend fun addToWatchList(
         accountId: Int,
         sessionId: String,

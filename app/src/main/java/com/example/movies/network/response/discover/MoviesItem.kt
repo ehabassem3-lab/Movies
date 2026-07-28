@@ -36,7 +36,9 @@ data class MoviesItem (
     val voteCount: Double? = null,
 
     val type : String = "Movie",
-    val     fav  : Boolean? = false
+    val     fav  : Boolean? = false ,
+    val isRated : Boolean? = false
+
 
 )
 

@@ -217,5 +217,33 @@ class HomeRepositoryImp  @Inject constructor(
         }
     }
 
+    override suspend fun rateMovie(id: Int , rate : Double): Result<Unit> {
+        val preferences = dataStore.data.first()
+        val request = dataSource.rateMovie(
+            sessionId = preferences[PreferencesKeys.SESSION_ID] ?:"",
+            rating = rate,
+            movieId = id
+        )
+        return if (request.isSuccess){
+            Result.success(request.getOrNull()?: Unit)
+
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+    }
+
+    override suspend fun getRatedMovies(): Result<MoviesResponse> {
+        val preferences = dataStore.data.first()
+        val request = dataSource.getUserRatedMovies(
+            sessionId = preferences[PreferencesKeys.SESSION_ID]?:"",
+            accountId = preferences[PreferencesKeys.ACCOUNT_ID] ?:0
+        )
+     return   if (request.isSuccess){
+            Result.success(request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+    }
+
 
 }
