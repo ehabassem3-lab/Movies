@@ -23,6 +23,8 @@ suspend fun getMovieCast(id : Int ) : Result<Cast>
    suspend fun  getPerson(id : Int) : Result<Actor>
    suspend fun  getPersonWork(id :Int) : Result<ActorWork>
    suspend fun getUserRatedMovies(sessionId : String , accountId: Int )  : Result<MoviesResponse>
+
+   suspend fun getUserRatedTv(sessionId : String , accountId: Int )  : Result<DiscoverResponse>
    suspend fun addToWatchList( accountId : Int , sessionId: String , mediaId: Int, mediaType: String, watchList: Boolean) : Result<Unit>
 
    suspend fun addToFavorite(accountId: Int, sessionId: String, mediaId: Int, mediaType: String, favorite: Boolean): Result<Unit>
@@ -32,6 +34,8 @@ suspend fun getMovieCast(id : Int ) : Result<Cast>
    suspend fun getDetails(id : Int , mediaType: String ,  sessionId: String)  : Result<DetailsItem>
    suspend fun getMoviesTrending() : Result<MoviesResponse>
    suspend fun getTvTrending() : Result<DiscoverResponse>
-   suspend fun rateMovie(sessionId : String , rating : Double , movieId : Int) : Result<Unit>
+   suspend fun rateTv(sessionId : String , rating : Double , movieId : Int , mediaType: String, rated: Boolean) : Result<Unit>
+   suspend fun rateMovie(sessionId : String , rating : Double , movieId : Int , mediaType: String, rated: Boolean) : Result<Unit>
+
 
 }

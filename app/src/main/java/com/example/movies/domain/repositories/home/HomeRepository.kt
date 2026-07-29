@@ -33,6 +33,11 @@ interface HomeRepository {
     suspend fun getDetails(id : Int , mediaType: String) : Result<DetailsItem>
     suspend fun getMoviesTrending() : Result<MoviesResponse>
     suspend fun getTvTrending() : Result<DiscoverResponse>
-    suspend fun rateMovie(id : Int  , rating: Double) : Result<Unit>
+    suspend fun rateTv(id : Int  , rating: Double , mediaType: String, rate: Boolean) : Result<Unit>
+    suspend fun rateMovie(id : Int  , rating: Double , mediaType: String, rate: Boolean) : Result<Unit>
+
+
     suspend fun getRatedMovies() : Result<MoviesResponse>
+    suspend fun getRatedTv() : Result<DiscoverResponse>
+
 }

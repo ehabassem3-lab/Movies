@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -65,6 +66,7 @@ fun MovieItem(
     val savedViewModel = sharedSavedViewModel()
     val watchList = (savedViewModel.state.collectAsState().value.allWatchListState as?  Resources.Success)?.data
     val  favorites    = (savedViewModel.state.collectAsState().value.allFavState as?  Resources.Success)?.data
+
     val isWatchList = watchList?.any {
         if (tvItem == null) {
             it.id == movieItem?.id && it.mediaType == "movie"
@@ -188,6 +190,7 @@ fun MovieItem(
 
                         }
                 )
+
             }
             Spacer(modifier = Modifier.size(8.dp))
             Text(

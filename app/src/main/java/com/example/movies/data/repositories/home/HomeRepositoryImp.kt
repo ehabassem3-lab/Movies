@@ -217,12 +217,16 @@ class HomeRepositoryImp  @Inject constructor(
         }
     }
 
-    override suspend fun rateMovie(id: Int , rate : Double): Result<Unit> {
+
+
+    override suspend fun rateTv(id: Int, rating: Double ,  mediaType: String, rate: Boolean): Result<Unit> {
         val preferences = dataStore.data.first()
-        val request = dataSource.rateMovie(
-            sessionId = preferences[PreferencesKeys.SESSION_ID] ?:"",
-            rating = rate,
-            movieId = id
+        val request = dataSource.rateTv(
+            sessionId = preferences[PreferencesKeys.SESSION_ID] ?: "",
+            rating = rating,
+            movieId = id,
+            mediaType = mediaType,
+            rated = rate
         )
         return if (request.isSuccess){
             Result.success(request.getOrNull()?: Unit)
@@ -230,6 +234,30 @@ class HomeRepositoryImp  @Inject constructor(
         }else{
             Result.failure(Throwable(request.exceptionOrNull()))
         }
+
+    }
+
+    override suspend fun rateMovie(
+        id: Int,
+        rating: Double,
+        mediaType: String,
+        rate: Boolean
+    ): Result<Unit> {
+        val preferences = dataStore.data.first()
+        val request = dataSource.rateMovie(
+            sessionId = preferences[PreferencesKeys.SESSION_ID] ?: "",
+            rating = rating,
+            movieId = id,
+            mediaType = mediaType,
+            rated = rate
+        )
+        return if (request.isSuccess){
+            Result.success(request.getOrNull()?: Unit)
+
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+
     }
 
     override suspend fun getRatedMovies(): Result<MoviesResponse> {
@@ -239,6 +267,19 @@ class HomeRepositoryImp  @Inject constructor(
             accountId = preferences[PreferencesKeys.ACCOUNT_ID] ?:0
         )
      return   if (request.isSuccess){
+            Result.success(request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+    }
+
+    override suspend fun getRatedTv(): Result<DiscoverResponse> {
+        val preferences = dataStore.data.first()
+        val request = dataSource.getUserRatedTv(
+            sessionId = preferences[PreferencesKeys.SESSION_ID]?:"",
+            accountId = preferences[PreferencesKeys.ACCOUNT_ID]?:0
+        )
+        return if (request.isSuccess){
             Result.success(request.getOrNull()!!)
         }else{
             Result.failure(Throwable(request.exceptionOrNull()))

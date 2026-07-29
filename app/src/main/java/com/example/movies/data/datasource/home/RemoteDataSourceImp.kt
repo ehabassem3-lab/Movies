@@ -191,6 +191,27 @@ class RemoteDataSourceImp  @Inject constructor(
 
     }
 
+    override suspend fun getUserRatedTv(
+        sessionId: String,
+        accountId: Int
+    ): Result<DiscoverResponse> {
+        return try {
+            val request = client.get ("account/${accountId}/rated/tv"){
+                parameter("session_id",sessionId)
+            }
+            if (request.status.isSuccess()){
+                Result.success(request.body())
+
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+
+        }catch (e : Throwable){
+            Result.failure(e)
+
+        }
+    }
+
     override suspend fun addToWatchList(
         accountId: Int,
         sessionId: String,
@@ -352,10 +373,37 @@ class RemoteDataSourceImp  @Inject constructor(
         }
     }
 
+
+
+    override suspend fun rateTv(
+        sessionId: String,
+        rating: Double,
+        movieId: Int ,
+        mediaType: String,
+        rated: Boolean
+    ): Result<Unit> {
+        return try {
+            val request = client.post ("tv/${movieId}/rating"){
+                parameter("session_id", sessionId)
+                setBody(mapOf("value" to rating))
+            }
+            if (request.status.isSuccess()){
+                Result.success(request.body())
+            }else{
+                Result.failure(Throwable(request.status.description))
+            }
+        }catch (e : Throwable){
+            Result.failure(e)
+
+        }
+    }
+
     override suspend fun rateMovie(
         sessionId: String,
-        rating: Double ,
-        movieId : Int ,
+        rating: Double,
+        movieId: Int,
+        mediaType: String,
+        rated: Boolean
     ): Result<Unit> {
         return try {
             val request = client.post ("movie/${movieId}/rating"){

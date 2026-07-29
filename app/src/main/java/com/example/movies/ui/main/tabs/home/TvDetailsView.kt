@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.room.util.TableInfo
 import coil3.compose.AsyncImage
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -67,6 +68,9 @@ import com.example.movies.ui.main.tabs.saved.sharedSavedViewModel
 import com.example.movies.ui.main.tv.TvEvents
 import com.example.movies.ui.main.tv.TvViewModel
 import com.example.movies.ui.theme.AppTypography
+import com.example.utilities.EmptyStar
+import com.example.utilities.FullStar
+import com.example.utilities.HalfStar
 import com.google.gson.annotations.Until
 
 @SuppressLint("UnrememberedGetBackStackEntry", "LocalContextGetResourceValueCall")
@@ -131,7 +135,17 @@ fun TvDetailsView(
         ?: ""
 
 
+    val rated = (savedViewModel.state.collectAsState().value.allRatedState as? Resources.Success )?.data
+    val rateds = (savedViewModel.state.collectAsState().value.RatedMoviesState as? Resources.Success )?.data?.results
 
+
+    val isRated = rated?.any{
+        if (itemTv == null){
+            it.id == itemMovie?.id && it.mediaType == "movie"
+        }else{
+            it.id ==itemMovie?.id && it.mediaType == "tv"
+        }
+    }?:false
     val favorites =
         (savedState.allFavState as? Resources.Success)?.data
     val watchlist = (savedState.allWatchListState as?  Resources.Success)?.data
@@ -241,7 +255,10 @@ fun TvDetailsView(
 
                            )
                            Box(
-                               modifier = Modifier.size(30.dp).offset(x = -330.dp , y = 30.dp).background(colorScheme.onBackground , RoundedCornerShape(12.dp)),
+                               modifier = Modifier
+                                   .size(30.dp)
+                                   .offset(x = -330.dp, y = 30.dp)
+                                   .background(colorScheme.onBackground, RoundedCornerShape(12.dp)),
                                contentAlignment = Alignment.Center
                            ){
                                Icon(
@@ -249,18 +266,28 @@ fun TvDetailsView(
                                    else painterResource(R.drawable.ic_save) ,
                                    contentDescription = "" ,
                                    tint = colorScheme.background ,
-                                   modifier = Modifier.size(20.dp).clickable {
-                                       savedViewModel.doAction(FavEvents.onAddToWatchList(
-                                           mediaId = id,
-                                           mediaType = type.lowercase(),
-                                           watchList = !isWatchList,
-                                           item = itemTv ?: itemMovie?.toDiscoverItem()
-                                       ))
-                                   }
+                                   modifier = Modifier
+                                       .size(20.dp)
+                                       .clickable {
+                                           savedViewModel.doAction(
+                                               FavEvents.onAddToWatchList(
+                                                   mediaId = id,
+                                                   mediaType = type.lowercase(),
+                                                   watchList = !isWatchList,
+                                                   item = itemTv ?: itemMovie?.toDiscoverItem()
+                                               )
+                                           )
+                                       }
                                )
                            }
                                Box(
-                                   modifier = Modifier.size(30.dp).offset(y = 30.dp , x = -10.dp).background(colorScheme.onBackground , RoundedCornerShape(12.dp)) ,
+                                   modifier = Modifier
+                                       .size(30.dp)
+                                       .offset(y = 30.dp, x = -10.dp)
+                                       .background(
+                                           colorScheme.onBackground,
+                                           RoundedCornerShape(12.dp)
+                                       ) ,
                                    contentAlignment = Alignment.Center
                                ) {
                                    Icon(
@@ -272,7 +299,7 @@ fun TvDetailsView(
                                            .clickable {
                                                savedViewModel.doAction(
                                                    FavEvents.addToFavoutire(
-                                                       mediaId = if (itemTv == null ) itemMovie?.id!! else itemTv.id!!,
+                                                       mediaId = if (itemTv == null) itemMovie?.id!! else itemTv.id!!,
                                                        mediaType = type.lowercase(),
                                                        favorite = !isFavorite,
                                                        item = if (type == "Movie")
@@ -291,6 +318,7 @@ fun TvDetailsView(
                                        tint = colorScheme.background
                                    )
                                }
+
 
                        }
                    }
@@ -319,10 +347,10 @@ fun TvDetailsView(
                             )
                             Box(
                                 modifier = Modifier
-                                    .offset(x= 30.dp)
+                                    .offset(x = 30.dp)
                                     .size(50.dp)
                                     .background(colorScheme.onBackground, RoundedCornerShape(12.dp))
-                                    .clickable{
+                                    .clickable {
                                         val youtubeUrl = videoLink?.key?.let {
                                             "https://www.youtube.com/watch?v=$it"
                                         }
@@ -348,7 +376,10 @@ fun TvDetailsView(
 
                         Text(
                             genreNamesString ,
-                            modifier =  Modifier.padding(vertical =  10.dp, horizontal = 20.dp).fillMaxWidth().height(200.dp),
+                            modifier =  Modifier
+                                .padding(vertical = 10.dp, horizontal = 20.dp)
+                                .fillMaxWidth()
+                                .height(200.dp),
                             style = AppTypography.titleSmall.copy(
                                 color = colorScheme.onBackground ,
                                 fontSize = 20.sp
@@ -359,6 +390,151 @@ fun TvDetailsView(
                     }
                 }
                 item{
+                    if (isRated){
+                        Column(
+                            modifier = Modifier
+                                .padding(end = 40.dp)
+                                .offset(y = -50.dp)
+                                .width(350.dp)
+                                .fillMaxHeight()
+
+                            ) {
+                             Text(
+                                 "Your Rate is  :  ${savedState.Rate}" ,
+                                 style = AppTypography.titleLarge.copy(
+                                 )
+                             )
+                            val rating = (savedState.Rate / 2).toFloat()
+                                 Row (){
+
+                                          repeat(5) { index ->
+                                              when {
+                                                  index + 1 <= rating -> {
+                                                      FullStar()
+                                                  }
+
+                                                  index + 0.5f <= rating -> {
+                                                      HalfStar()
+                                                  }
+
+                                                  else -> {
+                                                      EmptyStar()
+                                                  }
+                                              }
+                                          }
+
+                                  }
+
+                            }
+                    }else{
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp) ,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(end = 40.dp)
+                                    .offset(y = -50.dp)
+                                    .width(150.dp)
+                                    .fillMaxHeight()
+                                    .background(colorScheme.onBackground, RoundedCornerShape(10.dp))
+                                    .clickable {
+                                    }
+                                    .clickable {
+                                        if (itemTv == null) {
+                                            savedViewModel.doAction(
+                                                FavEvents.onRateMovie(
+                                                    id = itemMovie?.id!!,
+                                                    rate = savedState.Rate,
+                                                    item = itemMovie.toDiscoverItem(),
+                                                    rated = true,
+                                                    mediaType = "movie"
+                                                )
+                                            )
+                                        } else {
+                                            savedViewModel.doAction(
+                                                FavEvents.onRateTv(
+                                                    id = itemTv.id!!,
+                                                    rate = savedState.Rate,
+                                                    item = itemTv,
+                                                    rated = true,
+                                                    mediaType = "tv"
+                                                )
+                                            )
+
+                                        }
+                                    } ,
+                                contentAlignment = Alignment.Center
+                            ){
+                                Text(
+                                    "Rate" ,
+                                    style = AppTypography.titleMedium.copy(
+                                        color = colorScheme.background
+                                    )
+                                )
+                            }
+                            Row (
+                                modifier = Modifier
+                                    .offset(y = -50.dp)
+                                    .fillMaxHeight()
+                                    .width(150.dp)
+                                    .background(colorScheme.onBackground, RoundedCornerShape(10.dp)) ,
+                                horizontalArrangement = Arrangement.SpaceAround ,
+                                verticalAlignment = Alignment.CenterVertically
+                            ){
+                                Box(
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .background(
+                                            colorScheme.background,
+                                            RoundedCornerShape(10.dp)
+                                        )
+                                        .clickable {
+                                            savedViewModel.doAction(FavEvents.onRateChange("plus"))
+                                        } ,
+                                    contentAlignment = Alignment.Center
+                                ){
+                                    Icon(
+                                        painterResource(R.drawable.ic_plus) ,
+                                        contentDescription = "" ,
+                                        tint = colorScheme.onBackground,
+                                        modifier = Modifier.size(15.dp)
+                                    )
+                                }
+                                Text(
+                                    text = (savedState.Rate).toString() ,
+                                    style = AppTypography.titleLarge.copy(
+                                        color =colorScheme.background
+                                    )
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .background(
+                                            colorScheme.background,
+                                            RoundedCornerShape(10.dp)
+                                        )
+                                        .clickable {
+                                            savedViewModel.doAction(FavEvents.onRateChange("minus"))
+
+                                        } ,
+                                    contentAlignment = Alignment.Center
+                                ){
+                                    Icon(
+                                        painterResource(R.drawable.ic_minus) ,
+                                        contentDescription = "" ,
+                                        tint = colorScheme.onBackground,
+                                        modifier = Modifier.size(15.dp)
+                                    )
+                                }
+
+
+                            }
+                        }
+
+                    }
 
                 }
                 item{
