@@ -31,5 +31,7 @@ data class DiscoverItem(
 	val fav : Boolean? = false,
 	@SerialName("videos")
 	val videos: VideosResponse? = null ,
-	val isRated : Boolean? = false
+	val isRated : Boolean? = false ,
+	val rate : Double? = .5
+
 )

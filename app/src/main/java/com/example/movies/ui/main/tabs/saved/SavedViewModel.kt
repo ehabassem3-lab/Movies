@@ -54,25 +54,25 @@ class SavedViewModel @Inject constructor(
             FavEvents.onGetAllRated -> getALlRated()
             FavEvents.onGetRatedTv -> getRatedTv()
             is FavEvents.onRateTv -> rateTv(event.id , event.rate,event.rated ,event.item , event.mediaType)
-          is  FavEvents.onRateChange -> {
-                if (state.value.Rate == 10.0 ){
+          is  FavEvents.onIncreaseRate -> {
+              val current = state.value.rates[event.id] ?: 0.5
 
-                }else{
-                    if (event.type == "plus"){
-                        state.value = state.value.copy(
-                            Rate = state.value.Rate +.5
-                        )
-                    } else{
-                        if ( state.value.Rate != 0.5){
-                            state.value = state.value.copy(
-                                Rate = state.value.Rate -.5
-                            )
-                        }
-
-                    }
-
-                }
+              if (current < 10.0) {
+                  state.value = state.value.copy(
+                      rates = state.value.rates + (event.id to (current + 0.5))
+                  )
               }
+              }
+
+            is FavEvents.onDecreaseRate -> {
+                val current = state.value.rates[event.id] ?: 0.5
+
+                if (current > 0.5) {
+                    state.value = state.value.copy(
+                        rates = state.value.rates + (event.id to (current - 0.5))
+                    )
+                }
+            }
         }
     }
     private fun rateTv(id: Int, rate: Double , rated : Boolean , item : DiscoverItem? , mediaType: String) {

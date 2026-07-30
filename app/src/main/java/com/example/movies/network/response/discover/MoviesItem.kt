@@ -37,8 +37,8 @@ data class MoviesItem (
 
     val type : String = "Movie",
     val     fav  : Boolean? = false ,
-    val isRated : Boolean? = false
-
+    val isRated : Boolean? = false ,
+     val rate : Double? = .5
 
 )
 

@@ -23,16 +23,19 @@ data class FavStates (
     val RatedMoviesState : Resources<MoviesResponse> = Resources.idle,
     val RatedTvState : Resources<DiscoverResponse> = Resources.idle,
     val allRatedState : Resources<List<FavItem>> = Resources.idle ,
-    val Rate : Double = .5 ,
+    val rates: Map<Int, Double> = emptyMap()
 
 
 
-    )
+
+)
 
 
 
 sealed class FavEvents{
-    data class onRateChange(val type : String): FavEvents()
+    data class onIncreaseRate(val id : Int): FavEvents()
+    data class onDecreaseRate(val id : Int): FavEvents()
+
     data  class onRateMovie (val id : Int , val rate : Double , val item : DiscoverItem? = null , val rated : Boolean = false , val mediaType: String): FavEvents()
     data  class onRateTv(val id : Int , val rate : Double , val item : DiscoverItem? = null , val rated : Boolean = false , val mediaType: String): FavEvents()
 

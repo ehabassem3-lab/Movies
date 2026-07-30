@@ -51,6 +51,7 @@
     <string name="all">All</string>
     <string name="tv">Tv</string>
     <string name="watch_list">Watch List</string>
+    <string name="your_rate_is">Your Rate is  :  %1$s</string>
 
 
 </resources>

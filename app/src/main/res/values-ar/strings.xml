@@ -49,7 +49,7 @@
     <string name="tv">المسلسلات</string>
     <string name="watch_list">قائمه المشاهده</string>
     <string name="all">الكل</string>
-
+    <string name="your_rate_is">تقييمك هو :   %1$s</string>
 
 
 </resources>

@@ -17,7 +17,7 @@ fun EmptyStar(){
         modifier = Modifier.size(30.dp)
     ){
         Icon(
-            painter = painterResource(R.drawable.ic_star) ,
+            painter = painterResource(R.drawable.ic_empt_star) ,
             contentDescription = "" ,
             tint = colorScheme.onBackground ,
             modifier = Modifier

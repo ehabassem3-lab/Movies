@@ -72,6 +72,12 @@ import com.example.utilities.EmptyStar
 import com.example.utilities.FullStar
 import com.example.utilities.HalfStar
 import com.google.gson.annotations.Until
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.double
+import kotlinx.serialization.json.jsonPrimitive
+import kotlin.time.Duration.Companion.minutes
+import androidx.core.net.toUri
 
 @SuppressLint("UnrememberedGetBackStackEntry", "LocalContextGetResourceValueCall")
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -125,6 +131,8 @@ fun TvDetailsView(
     val context = LocalContext.current
     val genreList = if (itemTv != null) tvGenres else movieGenres
     val genreMap = genreList.associateBy({ it.id }, { it.name })
+    val rating = if (itemTv == null) savedState.rates[itemMovie?.id] ?: 0.5
+                 else savedState.rates[itemTv.id]?:.5
 
     val genreNamesString = (itemTv?.genres ?: itemMovie?.genres)
         ?.mapNotNull { it.name }
@@ -136,14 +144,12 @@ fun TvDetailsView(
 
 
     val rated = (savedViewModel.state.collectAsState().value.allRatedState as? Resources.Success )?.data
-    val rateds = (savedViewModel.state.collectAsState().value.RatedMoviesState as? Resources.Success )?.data?.results
-
 
     val isRated = rated?.any{
         if (itemTv == null){
             it.id == itemMovie?.id && it.mediaType == "movie"
         }else{
-            it.id ==itemMovie?.id && it.mediaType == "tv"
+            it.id ==itemTv?.id && it.mediaType == "tv"
         }
     }?:false
     val favorites =
@@ -355,7 +361,7 @@ fun TvDetailsView(
                                             "https://www.youtube.com/watch?v=$it"
                                         }
                                         youtubeUrl?.let { url ->
-                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
                                             context.startActivity(intent)
                                         }
                                     },
@@ -400,28 +406,31 @@ fun TvDetailsView(
 
                             ) {
                              Text(
-                                 "Your Rate is  :  ${savedState.Rate}" ,
+                                 stringResource(R.string.your_rate_is, rating),
+                                 modifier = Modifier.padding(bottom = 10.dp),
                                  style = AppTypography.titleLarge.copy(
                                  )
                              )
-                            val rating = (savedState.Rate / 2).toFloat()
                                  Row (){
+                                      val rating = rating/2
+                                     repeat(5) { index ->
+                                         val starValue = index + 1
 
-                                          repeat(5) { index ->
-                                              when {
-                                                  index + 1 <= rating -> {
-                                                      FullStar()
-                                                  }
+                                         when {
+                                             rating >= starValue -> {
+                                               FullStar()
 
-                                                  index + 0.5f <= rating -> {
-                                                      HalfStar()
-                                                  }
+                                             }
 
-                                                  else -> {
-                                                      EmptyStar()
-                                                  }
-                                              }
-                                          }
+                                             rating == starValue - 0.5 -> {
+                                           HalfStar()
+                                             }
+
+                                             else -> {
+                                                 EmptyStar()
+                                             }
+                                         }
+                                     }
 
                                   }
 
@@ -447,7 +456,7 @@ fun TvDetailsView(
                                             savedViewModel.doAction(
                                                 FavEvents.onRateMovie(
                                                     id = itemMovie?.id!!,
-                                                    rate = savedState.Rate,
+                                                    rate = rating,
                                                     item = itemMovie.toDiscoverItem(),
                                                     rated = true,
                                                     mediaType = "movie"
@@ -457,7 +466,7 @@ fun TvDetailsView(
                                             savedViewModel.doAction(
                                                 FavEvents.onRateTv(
                                                     id = itemTv.id!!,
-                                                    rate = savedState.Rate,
+                                                    rate = rating,
                                                     item = itemTv,
                                                     rated = true,
                                                     mediaType = "tv"
@@ -492,7 +501,11 @@ fun TvDetailsView(
                                             RoundedCornerShape(10.dp)
                                         )
                                         .clickable {
-                                            savedViewModel.doAction(FavEvents.onRateChange("plus"))
+                                            savedViewModel.doAction(
+                                                FavEvents.onIncreaseRate(
+                                                    if (itemTv == null) itemMovie?.id!! else itemTv.id!!
+                                                )
+                                            )
                                         } ,
                                     contentAlignment = Alignment.Center
                                 ){
@@ -504,7 +517,7 @@ fun TvDetailsView(
                                     )
                                 }
                                 Text(
-                                    text = (savedState.Rate).toString() ,
+                                    text = rating.toString(),
                                     style = AppTypography.titleLarge.copy(
                                         color =colorScheme.background
                                     )
@@ -517,8 +530,11 @@ fun TvDetailsView(
                                             RoundedCornerShape(10.dp)
                                         )
                                         .clickable {
-                                            savedViewModel.doAction(FavEvents.onRateChange("minus"))
-
+                                            savedViewModel.doAction(
+                                                FavEvents.onDecreaseRate(
+                                                    if (itemTv == null) itemMovie?.id!! else itemTv.id!!
+                                                )
+                                            )
                                         } ,
                                     contentAlignment = Alignment.Center
                                 ){
