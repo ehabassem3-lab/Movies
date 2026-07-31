@@ -66,6 +66,14 @@ fun MovieItem(
     val savedViewModel = sharedSavedViewModel()
     val watchList = (savedViewModel.state.collectAsState().value.allWatchListState as?  Resources.Success)?.data
     val  favorites    = (savedViewModel.state.collectAsState().value.allFavState as?  Resources.Success)?.data
+    val rated = (savedViewModel.state.collectAsState().value.allRatedState as? Resources.Success)?.data
+    val isRated = rated?.any{
+        if (tvItem == null){
+            it.id == movieItem?.id && it.mediaType == "movie"
+        }else{
+            it.id == tvItem?.id && it.mediaType == "tv"
+        }
+    }?:false
 
     val isWatchList = watchList?.any {
         if (tvItem == null) {

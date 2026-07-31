@@ -145,7 +145,7 @@ fun TvDetailsView(
 
     val rated = (savedViewModel.state.collectAsState().value.allRatedState as? Resources.Success )?.data
 
-    val isRated = rated?.any{
+    var isRated = rated?.any{
         if (itemTv == null){
             it.id == itemMovie?.id && it.mediaType == "movie"
         }else{
@@ -396,69 +396,75 @@ fun TvDetailsView(
                     }
                 }
                 item{
-                    if (isRated){
-                        Column(
-                            modifier = Modifier
-                                .padding(end = 40.dp)
-                                .offset(y = -50.dp)
-                                .width(350.dp)
-                                .fillMaxHeight()
+                    Column() {
 
-                            ) {
-                             Text(
-                                 stringResource(R.string.your_rate_is, rating),
-                                 modifier = Modifier.padding(bottom = 10.dp),
-                                 style = AppTypography.titleLarge.copy(
-                                 )
-                             )
-                                 Row (){
-                                      val rating = rating/2
-                                     repeat(5) { index ->
-                                         val starValue = index + 1
 
-                                         when {
-                                             rating >= starValue -> {
-                                               FullStar()
+                    Row(
 
-                                             }
-
-                                             rating == starValue - 0.5 -> {
-                                           HalfStar()
-                                             }
-
-                                             else -> {
-                                                 EmptyStar()
-                                             }
-                                         }
-                                     }
-
-                                  }
-
-                            }
-                    }else{
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(50.dp) ,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
+                    ) {
+                        if (isRated) {
+                            Column(
                                 modifier = Modifier
                                     .padding(end = 40.dp)
                                     .offset(y = -50.dp)
-                                    .width(150.dp)
+                                    .width(200.dp)
                                     .fillMaxHeight()
-                                    .background(colorScheme.onBackground, RoundedCornerShape(10.dp))
-                                    .clickable {
+
+                            ) {
+                                Text(
+                                    stringResource(R.string.your_rate_is, rating),
+                                    modifier = Modifier.padding(bottom = 10.dp),
+                                    style = AppTypography.titleLarge.copy(
+                                    )
+                                )
+                                Row() {
+                                    val rating = rating / 2
+                                    repeat(5) { index ->
+                                        val starValue = index + 1
+
+                                        when {
+                                            rating >= starValue -> {
+                                                FullStar()
+
+                                            }
+
+                                            rating == starValue - 0.5 -> {
+                                                HalfStar()
+                                            }
+
+                                            else -> {
+                                                EmptyStar()
+                                            }
+                                        }
                                     }
-                                    .clickable {
+
+                                }
+
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .offset(y = -40.dp)
+                                    .width(120.dp)
+                                    .height(50.dp)
+                                    .background(
+                                        colorScheme.onBackground,
+                                        RoundedCornerShape(10.dp)
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    stringResource(R.string.edit),
+                                    style = AppTypography.titleLarge.copy(
+                                        color = colorScheme.background,
+                                    ),
+                                    modifier = Modifier.clickable {
                                         if (itemTv == null) {
                                             savedViewModel.doAction(
                                                 FavEvents.onRateMovie(
                                                     id = itemMovie?.id!!,
                                                     rate = rating,
                                                     item = itemMovie.toDiscoverItem(),
-                                                    rated = true,
+                                                    rated = false,
                                                     mediaType = "movie"
                                                 )
                                             )
@@ -468,91 +474,169 @@ fun TvDetailsView(
                                                     id = itemTv.id!!,
                                                     rate = rating,
                                                     item = itemTv,
-                                                    rated = true,
+                                                    rated = false,
                                                     mediaType = "tv"
                                                 )
                                             )
 
                                         }
-                                    } ,
-                                contentAlignment = Alignment.Center
-                            ){
-                                Text(
-                                    "Rate" ,
-                                    style = AppTypography.titleMedium.copy(
-                                        color = colorScheme.background
-                                    )
+                                    }
+
                                 )
                             }
-                            Row (
+                        } else {
+                            Row(
                                 modifier = Modifier
-                                    .offset(y = -50.dp)
-                                    .fillMaxHeight()
-                                    .width(150.dp)
-                                    .background(colorScheme.onBackground, RoundedCornerShape(10.dp)) ,
-                                horizontalArrangement = Arrangement.SpaceAround ,
+                                    .fillMaxWidth()
+                                    .height(50.dp),
                                 verticalAlignment = Alignment.CenterVertically
-                            ){
+                            ) {
                                 Box(
                                     modifier = Modifier
-                                        .size(30.dp)
+                                        .padding(end = 40.dp)
+                                        .offset(y = -50.dp)
+                                        .width(150.dp)
+                                        .fillMaxHeight()
                                         .background(
-                                            colorScheme.background,
+                                            colorScheme.onBackground,
                                             RoundedCornerShape(10.dp)
                                         )
                                         .clickable {
-                                            savedViewModel.doAction(
-                                                FavEvents.onIncreaseRate(
-                                                    if (itemTv == null) itemMovie?.id!! else itemTv.id!!
-                                                )
-                                            )
-                                        } ,
-                                    contentAlignment = Alignment.Center
-                                ){
-                                    Icon(
-                                        painterResource(R.drawable.ic_plus) ,
-                                        contentDescription = "" ,
-                                        tint = colorScheme.onBackground,
-                                        modifier = Modifier.size(15.dp)
-                                    )
-                                }
-                                Text(
-                                    text = rating.toString(),
-                                    style = AppTypography.titleLarge.copy(
-                                        color =colorScheme.background
-                                    )
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .size(30.dp)
-                                        .background(
-                                            colorScheme.background,
-                                            RoundedCornerShape(10.dp)
-                                        )
+                                        }
                                         .clickable {
-                                            savedViewModel.doAction(
-                                                FavEvents.onDecreaseRate(
-                                                    if (itemTv == null) itemMovie?.id!! else itemTv.id!!
+                                            if (itemTv == null) {
+                                                savedViewModel.doAction(
+                                                    FavEvents.onRateMovie(
+                                                        id = itemMovie?.id!!,
+                                                        rate = rating,
+                                                        item = itemMovie.toDiscoverItem(),
+                                                        rated = true,
+                                                        mediaType = "movie"
+                                                    )
                                                 )
-                                            )
-                                        } ,
+                                            } else {
+                                                savedViewModel.doAction(
+                                                    FavEvents.onRateTv(
+                                                        id = itemTv.id!!,
+                                                        rate = rating,
+                                                        item = itemTv,
+                                                        rated = true,
+                                                        mediaType = "tv"
+                                                    )
+                                                )
+
+                                            }
+                                        },
                                     contentAlignment = Alignment.Center
-                                ){
-                                    Icon(
-                                        painterResource(R.drawable.ic_minus) ,
-                                        contentDescription = "" ,
-                                        tint = colorScheme.onBackground,
-                                        modifier = Modifier.size(15.dp)
+                                ) {
+                                    Text(
+                                        "Rate",
+                                        style = AppTypography.titleMedium.copy(
+                                            color = colorScheme.background
+                                        )
                                     )
                                 }
+                                Row(
+                                    modifier = Modifier
+                                        .offset(y = -50.dp)
+                                        .fillMaxHeight()
+                                        .width(150.dp)
+                                        .background(
+                                            colorScheme.onBackground,
+                                            RoundedCornerShape(10.dp)
+                                        ),
+                                    horizontalArrangement = Arrangement.SpaceAround,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .background(
+                                                colorScheme.background,
+                                                RoundedCornerShape(10.dp)
+                                            )
+                                            .clickable {
+                                                savedViewModel.doAction(
+                                                    FavEvents.onIncreaseRate(
+                                                        if (itemTv == null) itemMovie?.id!! else itemTv.id!!
+                                                    )
+                                                )
+                                            },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            painterResource(R.drawable.ic_plus),
+                                            contentDescription = "",
+                                            tint = colorScheme.onBackground,
+                                            modifier = Modifier.size(15.dp)
+                                        )
+                                    }
+                                    Text(
+                                        text = rating.toString(),
+                                        style = AppTypography.titleLarge.copy(
+                                            color = colorScheme.background
+                                        )
+                                    )
+                                    Box(
+                                        modifier = Modifier
+                                            .size(30.dp)
+                                            .background(
+                                                colorScheme.background,
+                                                RoundedCornerShape(10.dp)
+                                            )
+                                            .clickable {
+                                                savedViewModel.doAction(
+                                                    FavEvents.onDecreaseRate(
+                                                        if (itemTv == null) itemMovie?.id!! else itemTv.id!!
+                                                    )
+                                                )
+                                            },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            painterResource(R.drawable.ic_minus),
+                                            contentDescription = "",
+                                            tint = colorScheme.onBackground,
+                                            modifier = Modifier.size(15.dp)
+                                        )
+                                    }
 
 
+                                }
                             }
+
                         }
+                    }
+                         Column(
+                             modifier = Modifier
+                                 .fillMaxWidth()
+                                 .height(100.dp)
+                         ) {
+                             val voteAverage = if (itemTv == null) itemMovie?.voteAverage
+                                           else itemTv.voteAverage
+                             val voteCount = if(itemTv == null) itemMovie?.voteCount
+                                            else itemTv.voteCount
+                              Text(
+                                  stringResource(R.string.the_watchers_rate_is),
+                                  style =AppTypography.titleLarge.copy(
+                                      fontSize = 28.sp
+                                  ) ,
+                                  modifier = Modifier.padding(bottom = 20.dp)
+                              )
+                             Text(
+                                 "${voteAverage.toString()}  ⭐  (  $voteCount  )" ,
+                                 style = AppTypography.titleLarge
+
+                             )
+
+
+                         }
 
                     }
 
+
                 }
+
                 item{
                     Text(
                         itemTv?.overview?: itemMovie?.overview ?:"" ,

@@ -52,6 +52,8 @@
     <string name="tv">Tv</string>
     <string name="watch_list">Watch List</string>
     <string name="your_rate_is">Your Rate is  :  %1$s</string>
+    <string name="edit">Edit</string>
+    <string name="the_watchers_rate_is">The Watchers Rate is</string>
 
 
 </resources>
