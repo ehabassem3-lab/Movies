@@ -23,6 +23,7 @@ import com.example.movies.ui.main.MainScreen
 import com.example.movies.ui.main.movies.MoviesFullView
 import com.example.movies.ui.main.search.SearchView
 import com.example.movies.ui.main.actor.ActorDetails
+import com.example.movies.ui.main.rate.RatedView
 import com.example.movies.ui.main.tabs.home.TvDetailsView
 import com.example.movies.ui.main.tabs.saved.SavedViewModel
 import com.example.movies.ui.main.tv.TvFullView
@@ -63,6 +64,9 @@ fun App(    deepLink: Uri?) {
         navController ,
         startDestination = AppRoutes.SplashRoute
     ){
+        composable <AppRoutes.RatedRoute>{
+            RatedView(navController)
+        }
         composable <AppRoutes.WatchListRoute>{
             WatchList(navController)
         }

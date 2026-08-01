@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -51,6 +52,7 @@ fun SideNavigationDrawer(
     val savedViewModel = sharedSavedViewModel()
     val state = savedViewModel.state.collectAsState().value
     val number = (state.allWatchListState as? Resources.Success)?.data?.size
+    val rated = (state.allRatedState as?  Resources.Success)?.data?.size
     Column (
         modifier = Modifier
             .fillMaxHeight()
@@ -80,9 +82,11 @@ fun SideNavigationDrawer(
                 .fillMaxSize()
         ) {
             Row(
-                modifier = Modifier.padding(10.dp).clickable{
-                    navController.navigate(AppRoutes.WatchListRoute)
-                },
+                modifier = Modifier
+                    .padding(14.dp)
+                    .clickable {
+                        navController.navigate(AppRoutes.WatchListRoute)
+                    },
                 verticalAlignment = Alignment.CenterVertically ,
                 horizontalArrangement = Arrangement.Center
             ) {
@@ -98,7 +102,8 @@ fun SideNavigationDrawer(
                 Box(
                     modifier = Modifier
                         .size(30.dp)
-                        .background(colorScheme.background , CircleShape).clickable{
+                        .background(colorScheme.background, CircleShape)
+                        .clickable {
 
                         } ,
                     contentAlignment = Alignment.Center
@@ -107,9 +112,11 @@ fun SideNavigationDrawer(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward ,
                         contentDescription = "" ,
                         tint = colorScheme.onBackground,
-                        modifier = Modifier.size(15.dp).clickable{
+                        modifier = Modifier
+                            .size(15.dp)
+                            .clickable {
 
-                        }
+                            }
                     )
                 }
             }
@@ -145,8 +152,93 @@ fun SideNavigationDrawer(
                   )
               }
             Box(
-                modifier = Modifier.height(2.dp).background(colorScheme.background).fillMaxWidth()
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .height(2.dp)
+                    .background(colorScheme.background)
+                    .fillMaxWidth()
             )
+            Box(
+                modifier = Modifier.clickable{
+                    navController.navigate(AppRoutes.RatedRoute)
+                }
+            ){
+                Box(
+                    modifier = Modifier
+                        .offset(y = 15.dp  , x = 170.dp)
+                        .size(30.dp)
+                        .background(colorScheme.background, CircleShape) ,
+                    contentAlignment = Alignment.Center
+                ){
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward ,
+                        contentDescription = "" ,
+                        tint = colorScheme.onBackground,
+                        modifier = Modifier
+                            .size(15.dp)
+                            .clickable {
+
+                            }
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .padding(14.dp) ,
+                    verticalAlignment = Alignment.CenterVertically ,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+
+
+                    Text(
+                        stringResource(R.string.go_to_rated_movies_tv_shows),
+                        style = AppTypography.titleLarge.copy(
+                            color = colorScheme.background,
+                            fontSize = 24.sp,
+                        )
+                    )
+
+                }
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically ,
+                horizontalArrangement = Arrangement.Center ,
+                modifier = Modifier.padding(10.dp)
+            ){
+                Text(
+                    stringResource(R.string.rated_count),
+                    modifier = Modifier.padding(5.dp) ,
+                    style = AppTypography.titleMedium.copy(
+                        color = colorScheme.background
+                    )
+                )
+                Text(
+                    rated.toString() ,
+                    modifier = Modifier.padding(5.dp) ,
+                    style = AppTypography.titleMedium.copy(
+                        color = colorScheme.background
+                    )
+
+                )
+                Icon(
+                    painterResource(R.drawable.ic_star) ,
+                    contentDescription = ""  ,
+                    tint = colorScheme.background ,
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .size(24.dp)
+                        .background(colorScheme.onBackground)
+                    ,
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .height(2.dp)
+                    .background(colorScheme.background)
+                    .fillMaxWidth()
+            )
+
         }
 
 
