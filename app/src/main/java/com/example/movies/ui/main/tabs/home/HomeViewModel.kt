@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
          is    HomeEvents.getDiscoverTv -> getDiscoverTv(events.page , events.genre)
             HomeEvents.LoadHomeSections -> loadHomeSections()
             HomeEvents.LoadMovies -> loadMovies()
-            HomeEvents.onMoreClick -> {state.value = state.value.copy(page =+1)}
+            HomeEvents.onMoreClick -> {state.value = state.value.copy(page = state.value.page + 1)}
             is HomeEvents.getDiscoverMovies -> getDiscoverMovies(events.page , events.genre)
 
         }
@@ -146,6 +146,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getDiscoverTv(page: Int?, genre: Int? = null) {
         viewModelScope.launch {
+
             val previousResults = state.value.sections
                 .firstOrNull { it.genreId == genre }
                 ?.state
@@ -154,10 +155,20 @@ class HomeViewModel @Inject constructor(
                 ?.results
                 .orEmpty()
 
+            // Show full screen loading only for the first page
             state.value = state.value.copy(
                 sections = state.value.sections.map { section ->
                     if (section.genreId == genre) {
-                        section.copy(state = Resources.Loading)
+                        if (page == null || page == 1) {
+                            section.copy(
+                                state = Resources.Loading,
+                                isLoadingMore = false
+                            )
+                        } else {
+                            section.copy(
+                                isLoadingMore = true
+                            )
+                        }
                     } else {
                         section
                     }
@@ -165,22 +176,29 @@ class HomeViewModel @Inject constructor(
             )
 
             val response = repository.getDiscoveryTv(page, genre)
+
             if (response.isSuccess) {
                 delay(2000)
 
                 val data = response.getOrNull()
                 val newResults = data?.results.orEmpty()
 
-                val mergedData = if (page != null && page > 1) {
-                    data?.copy(results = previousResults + newResults)
-                } else {
-                    data
-                }
+                val mergedData =
+                    if (page != null && page > 1) {
+                        data?.copy(
+                            results = previousResults + newResults
+                        )
+                    } else {
+                        data
+                    }
 
                 state.value = state.value.copy(
                     sections = state.value.sections.map { section ->
                         if (section.genreId == genre) {
-                            section.copy(state = Resources.Success(mergedData))
+                            section.copy(
+                                state = Resources.Success(mergedData),
+                                isLoadingMore = false
+                            )
                         } else {
                             section
                         }
@@ -192,7 +210,10 @@ class HomeViewModel @Inject constructor(
                 state.value = state.value.copy(
                     sections = state.value.sections.map { section ->
                         if (section.genreId == genre) {
-                            section.copy(state = Resources.Error(response.exceptionOrNull()!!))
+                            section.copy(
+                                state = Resources.Error(response.exceptionOrNull()!!),
+                                isLoadingMore = false
+                            )
                         } else {
                             section
                         }

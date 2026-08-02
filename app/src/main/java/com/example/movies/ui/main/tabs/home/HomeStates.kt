@@ -19,12 +19,14 @@ data class HomeStates(
 data class TvSectionUiState(
     @StringRes val title: Int,
     val genreId: Int?,
-    val state: Resources<DiscoverResponse> = Resources.idle
+    val state: Resources<DiscoverResponse> = Resources.idle ,
+    val isLoadingMore: Boolean = false
 )
 data class MovieSectionUiState(
     @StringRes   val title: Int,
     val genreId: Int?,
-    val state: Resources<MoviesResponse> = Resources.idle
+    val state: Resources<MoviesResponse> = Resources.idle ,
+    val isLoadingMore: Boolean = false
 )
 sealed class HomeEvents{
     data class  getDiscoverTv (val page : Int? = 1 , val genre : Int?): HomeEvents()

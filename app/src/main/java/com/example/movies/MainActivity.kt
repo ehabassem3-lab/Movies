@@ -111,7 +111,6 @@ fun App(    deepLink: Uri?) {
         composable <AppRoutes.MovieFullRoute>{backStackEntry ->
             val route = backStackEntry.toRoute<AppRoutes.MovieFullRoute>()
             MoviesFullView(
-
                 genre = route.genre,
                 navController = navController
             )

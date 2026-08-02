@@ -145,7 +145,7 @@ fun TvDetailsView(
 
     val rated = (savedViewModel.state.collectAsState().value.allRatedState as? Resources.Success )?.data
 
-    var isRated = rated?.any{
+    val isRated = rated?.any{
         if (itemTv == null){
             it.id == itemMovie?.id && it.mediaType == "movie"
         }else{
