@@ -19,7 +19,7 @@ data class MoviesItem (
     val genreIds: List<Int>? = null,
     @SerialName("poster_path")
     val posterPath: String? = null,
-    val genres: List<Genre>? = null ,
+    val genres: List<Genre>? = null,
     val originCountry: List<String?>? = null,
     val backdropPath: String? = null,
     val originalName: String? = null,
@@ -36,9 +36,9 @@ data class MoviesItem (
     val voteCount: Double? = null,
 
     val type : String = "Movie",
-    val     fav  : Boolean? = false ,
-    val isRated : Boolean? = false ,
-     val rate : Double? = .5
+    val     fav  : Boolean? = false,
+    val isRated : Boolean? = false,
+    var rate : Double? = .5
 
 )
 

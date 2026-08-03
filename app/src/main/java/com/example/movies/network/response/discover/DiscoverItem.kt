@@ -7,31 +7,31 @@ import kotlinx.serialization.Serializer
 
 @Serializable
 data class DiscoverItem(
-	val firstAirDate: String? = null,
-	val overview: String? = null,
-	val originalLanguage: String? = null,
-	@SerialName("genre_ids")
+    val firstAirDate: String? = null,
+    val overview: String? = null,
+    val originalLanguage: String? = null,
+    @SerialName("genre_ids")
 	val genreIds: List<Int>? = null,
-	@SerialName("poster_path")
+    @SerialName("poster_path")
 	val posterPath: String? = null,
-	val genres: List<Genre>? = null ,
-	@SerialName("origin_country")
+    val genres: List<Genre>? = null,
+    @SerialName("origin_country")
 	val originCountry: List<String?>? = null,
-	val backdropPath: String? = null,
-	@SerialName("original_name")
+    val backdropPath: String? = null,
+    @SerialName("original_name")
 	val originalName: String? = null,
-	val popularity: Double? = null,
-	@SerialName("vote_average")
+    val popularity: Double? = null,
+    @SerialName("vote_average")
 	val voteAverage: Double? = null,
-	val name: String? = null,
-	val id: Int? = null,
-	@SerialName("vote_count")
-	val voteCount: Double? = null ,
-	val type : String = "TV" ,
-	val fav : Boolean? = false,
-	@SerialName("videos")
-	val videos: VideosResponse? = null ,
-	val isRated : Boolean? = false ,
-	val rate : Double? = .5
+    val name: String? = null,
+    val id: Int? = null,
+    @SerialName("vote_count")
+	val voteCount: Double? = null,
+    val type : String = "TV",
+    val fav : Boolean? = false,
+    @SerialName("videos")
+	val videos: VideosResponse? = null,
+    val isRated : Boolean? = false,
+    var rate : Double? = .5
 
 )

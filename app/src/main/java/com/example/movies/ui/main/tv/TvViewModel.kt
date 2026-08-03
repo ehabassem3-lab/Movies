@@ -8,6 +8,7 @@ import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.ui.main.Resources
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 @HiltViewModel
@@ -41,7 +42,8 @@ class TvViewModel @Inject constructor(
     private fun getDetails(id: Int, mediaType: String) {
         viewModelScope.launch {
             state.value = state.value.copy(favState = Resources.Loading)
-            val request = repository.getDetails(id,mediaType)
+            delay(500)
+            val request =  repository.getDetails(id,mediaType)
             if (request.isSuccess){
                 state.value =state.value.copy(favState = Resources.Success(request.getOrNull()))
             }else{

@@ -155,7 +155,6 @@ class HomeViewModel @Inject constructor(
                 ?.results
                 .orEmpty()
 
-            // Show full screen loading only for the first page
             state.value = state.value.copy(
                 sections = state.value.sections.map { section ->
                     if (section.genreId == genre) {
