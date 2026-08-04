@@ -56,9 +56,30 @@ class HomeViewModel @Inject constructor(
          is    HomeEvents.getDiscoverTv -> getDiscoverTv(events.page , events.genre)
             HomeEvents.LoadHomeSections -> loadHomeSections()
             HomeEvents.LoadMovies -> loadMovies()
-            HomeEvents.onMoreClick -> {state.value = state.value.copy(page = state.value.page + 1)}
             is HomeEvents.getDiscoverMovies -> getDiscoverMovies(events.page , events.genre)
+            is HomeEvents.OnMoreClick -> {
 
+                val tvSection = state.value.sections
+                    .firstOrNull { it.genreId == events.genre }
+
+                if (tvSection != null) {
+                    getDiscoverTv(
+                        page = tvSection.page + 1,
+                        genre = events.genre
+                    )
+                    return
+                }
+
+                val movieSection = state.value.sectionsMovies
+                    .firstOrNull { it.genreId == events.genre }
+
+                if (movieSection != null) {
+                    getDiscoverMovies(
+                        page = movieSection.page + 1,
+                        genre = events.genre
+                    )
+                }
+            }
         }
 
     }
@@ -102,7 +123,15 @@ class HomeViewModel @Inject constructor(
             state.value = state.value.copy(
                 sectionsMovies = state.value.sectionsMovies.map { section ->
                     if (section.genreId == genre) {
-                        section.copy(state = Resources.Loading)
+                        if (page == 1) {
+                            section.copy(
+                                state = Resources.Loading
+                            )
+                        } else {
+                            section.copy(
+                                isLoadingMore = true
+                            )
+                        }
                     } else {
                         section
                     }
@@ -123,7 +152,11 @@ class HomeViewModel @Inject constructor(
                 state.value = state.value.copy(
                     sectionsMovies = state.value.sectionsMovies.map { section ->
                         if (section.genreId == genre) {
-                            section.copy(state = Resources.Success(mergedData))
+                            section.copy(
+                                state = Resources.Success(mergedData),
+                                page = page ?: 1,
+                                isLoadingMore = false
+                            )
                         } else {
                             section
                         }
@@ -196,6 +229,7 @@ class HomeViewModel @Inject constructor(
                         if (section.genreId == genre) {
                             section.copy(
                                 state = Resources.Success(mergedData),
+                                page = page ?: 1,
                                 isLoadingMore = false
                             )
                         } else {

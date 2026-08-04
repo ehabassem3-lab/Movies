@@ -80,21 +80,10 @@ fun TvFullView(
     }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val colorScheme = MaterialTheme.colorScheme
-
-    val tvList = state.sections
-        .firstOrNull { it.genreId == genre }
-        ?.state
-        ?.let { it as? Resources.Success }
-        ?.data
-        ?.results
-        ?: emptyList()
     val currentSection = state.sections.firstOrNull { it.genreId == genre }
+    val tvList = (currentSection?.state as? Resources.Success)?.data?.results.orEmpty()
 
-    LaunchedEffect(genre) {
-        if (currentSection?.state !is Resources.Success) {
-            viewModel.doAction(HomeEvents.getDiscoverTv(1, genre))
-        }
-    }
+
     Scaffold (
         modifier = Modifier.fillMaxSize().background(colorScheme.background)
     ) { innerPadding ->
@@ -121,7 +110,7 @@ fun TvFullView(
             }
 
             when(
-                state.sections.firstOrNull()?.state
+                currentSection?.state
             ){
                 is Resources.Error -> {}
                 Resources.Loading -> {
@@ -156,7 +145,9 @@ fun TvFullView(
                                     .width(170.dp)
                                     .height(70.dp)
                                     .background(colorScheme.onBackground, RoundedCornerShape(10.dp))
-                                    .clickable {viewModel.doAction(HomeEvents.onMoreClick)}
+                                    .clickable {  viewModel.doAction(
+                                        HomeEvents.OnMoreClick(genre)
+                                    )}
                             ) {
                                 Text("Load More", style = AppTypography.bodyMedium.copy(color = colorScheme.background, fontWeight = FontWeight.Normal))
                             }

@@ -90,10 +90,6 @@ fun MoviesFullView(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val colorScheme = MaterialTheme.colorScheme
 
-    LaunchedEffect(state.page) {
-        viewModel.doAction(HomeEvents.getDiscoverMovies(state.page , genre))
-    }
-
     Scaffold (
         modifier = Modifier.fillMaxSize().background(colorScheme.background)
     ) { innerPadding ->
@@ -165,7 +161,9 @@ fun MoviesFullView(
                                     .width(170.dp)
                                     .height(70.dp)
                                     .background(colorScheme.onBackground, RoundedCornerShape(10.dp))
-                                    .clickable {viewModel.doAction(HomeEvents.onMoreClick)}
+                                    .clickable {  viewModel.doAction(
+                                        HomeEvents.OnMoreClick(genre)
+                                    )}
                             ) {
                                 Text("Load More", style = AppTypography.bodyMedium.copy(color = colorScheme.background, fontWeight = FontWeight.Normal))
                             }

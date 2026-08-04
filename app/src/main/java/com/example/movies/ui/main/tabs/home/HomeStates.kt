@@ -11,22 +11,20 @@ import com.example.movies.ui.main.Resources
 data class HomeStates(
     val sections: List<TvSectionUiState> = emptyList() ,
     val sectionsMovies: List<MovieSectionUiState> = emptyList() ,
-
-
-    val page : Int = 1
-
 )
 data class TvSectionUiState(
     @StringRes val title: Int,
     val genreId: Int?,
     val state: Resources<DiscoverResponse> = Resources.idle ,
+    val page: Int = 1,
     val isLoadingMore: Boolean = false
 )
 data class MovieSectionUiState(
     @StringRes   val title: Int,
     val genreId: Int?,
     val state: Resources<MoviesResponse> = Resources.idle ,
-    val isLoadingMore: Boolean = false
+    val isLoadingMore: Boolean = false ,
+    val page: Int = 1,
 )
 sealed class HomeEvents{
     data class  getDiscoverTv (val page : Int? = 1 , val genre : Int?): HomeEvents()
@@ -34,8 +32,9 @@ sealed class HomeEvents{
 
     data object LoadHomeSections : HomeEvents()
     data object  LoadMovies : HomeEvents()
-    data object  onMoreClick : HomeEvents()
-
+    data class OnMoreClick(
+        val genre: Int?
+    ) : HomeEvents()
 
 
 }
