@@ -32,9 +32,9 @@ sealed class HomeEvents{
 
     data object LoadHomeSections : HomeEvents()
     data object  LoadMovies : HomeEvents()
-    data class OnMoreClick(
-        val genre: Int?
-    ) : HomeEvents()
+    data class OnMoreTvClick(val genre: Int?) : HomeEvents()
+
+    data class OnMoreMovieClick(val genre: Int?) : HomeEvents()
 
 
 }

@@ -2,6 +2,11 @@ package com.example.movies.ui.main.movies
 
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridCells.*
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -38,6 +44,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,6 +54,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.movies.R
 import com.example.movies.network.response.discover.DiscoverItem
+import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
@@ -87,8 +96,22 @@ fun MoviesFullView(
         37 -> R.string.western
         else -> R.string.recommendations
     }
+
     val state by viewModel.state.collectAsStateWithLifecycle()
     val colorScheme = MaterialTheme.colorScheme
+    val currentSection = state.sectionsMovies.firstOrNull { it.genreId == genre }
+
+    val infiniteTransition = rememberInfiniteTransition(label = "")
+
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(500),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = ""
+    )
 
     Scaffold (
         modifier = Modifier.fillMaxSize().background(colorScheme.background)
@@ -114,15 +137,15 @@ fun MoviesFullView(
                 Text("")
 
             }
-            when(state.sectionsMovies
-                .firstOrNull { it.genreId == genre }
-                ?.state){
+            when(
+              currentSection?.state
+            ){
 
                 is Resources.Error -> {}
                 Resources.Loading -> {
 
                     LazyColumn {
-                        items(2) {
+                        items(10) {
                             LazyRow() {
                                 items(10){
                                     LoadingView()
@@ -131,55 +154,71 @@ fun MoviesFullView(
                         }
                     }
                 }
-                is Resources.Success<MoviesResponse> ->{
-                    val moviesList = state.sectionsMovies
-                        .firstOrNull { it.genreId == genre }
-                        ?.state
-                        ?.let { it as? Resources.Success }
-                        ?.data
+                is Resources.Success<MoviesResponse> -> {
+                    val moviesList = (currentSection.state)
+                        .data
                         ?.results
-                        ?: emptyList()
+                        .orEmpty()
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         modifier = Modifier,
-                        contentPadding = PaddingValues(10.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
                         horizontalArrangement = Arrangement.SpaceAround,
 
                         ) {
                         items(moviesList, key = { it?.id!! }) {
                             MovieItem(movieItem = it) {
-                                navController.navigate(AppRoutes.TvDetailsRoute(it?.id!! , type = "Movie" ))
-
+                                navController.navigate(
+                                    AppRoutes.TvDetailsRoute(it?.id!!, type = "Movie")
+                                )
                             }
                         }
                         item {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .offset(x = 100.dp)
-                                    .width(170.dp)
-                                    .height(70.dp)
-                                    .background(colorScheme.onBackground, RoundedCornerShape(10.dp))
-                                    .clickable {  viewModel.doAction(
-                                        HomeEvents.OnMoreClick(genre)
-                                    )}
-                            ) {
-                                Text("Load More", style = AppTypography.bodyMedium.copy(color = colorScheme.background, fontWeight = FontWeight.Normal))
+                            when(currentSection.isLoadingMore){
+                                true -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .offset(x = 100.dp)
+                                            .size(70.dp)
+                                            .graphicsLayer {
+                                                scaleX = scale
+                                                scaleY = scale
+                                            }
+                                        ,
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_aap_logo),
+                                            contentDescription = null,
+                                            tint = colorScheme.onBackground ,
+                                            modifier = Modifier.size(50.dp))
+
+                                    }
+                                }
+                                false -> {
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier
+                                            .offset(x = 100.dp)
+                                            .width(170.dp)
+                                            .height(70.dp)
+                                            .background(colorScheme.onBackground, RoundedCornerShape(10.dp))
+                                            .clickable { viewModel.doAction(HomeEvents.OnMoreMovieClick(genre))}
+                                    ) {
+                                        Text("Load More", style = AppTypography.bodyMedium.copy(color = colorScheme.background, fontWeight = FontWeight.Normal))
+                                    }
+                                }
+                                null -> {}
                             }
+
                         }
                     }
                 }
                 Resources.idle -> {}
-                null -> TODO()
+                null -> {}
             }
 
 
         }
 
-
-
-
     }
-
 }

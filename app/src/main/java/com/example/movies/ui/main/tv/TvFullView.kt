@@ -1,6 +1,11 @@
 package com.example.movies.ui.main.tv
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,6 +42,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -82,7 +89,17 @@ fun TvFullView(
     val colorScheme = MaterialTheme.colorScheme
     val currentSection = state.sections.firstOrNull { it.genreId == genre }
     val tvList = (currentSection?.state as? Resources.Success)?.data?.results.orEmpty()
+    val infiniteTransition = rememberInfiniteTransition(label = "")
 
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(500),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = ""
+    )
 
     Scaffold (
         modifier = Modifier.fillMaxSize().background(colorScheme.background)
@@ -138,25 +155,51 @@ fun TvFullView(
                             }
                         }
                         item {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .offset(x = 100.dp)
-                                    .width(170.dp)
-                                    .height(70.dp)
-                                    .background(colorScheme.onBackground, RoundedCornerShape(10.dp))
-                                    .clickable {  viewModel.doAction(
-                                        HomeEvents.OnMoreClick(genre)
-                                    )}
-                            ) {
-                                Text("Load More", style = AppTypography.bodyMedium.copy(color = colorScheme.background, fontWeight = FontWeight.Normal))
+                            when(currentSection.isLoadingMore){
+                                true -> {
+                                    Box(
+                                        modifier = Modifier
+                                            .offset(x = 100.dp)
+                                            .size(70.dp)
+                                            .graphicsLayer {
+                                                scaleX = scale
+                                                scaleY = scale
+                                            }
+                                         ,
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Icon(
+                                            painter = painterResource(R.drawable.ic_aap_logo),
+                                            contentDescription = null,
+                                            tint = colorScheme.onBackground ,
+                                            modifier = Modifier.size(50.dp))
+
+                                    }
+                                }
+                                false -> {
+                                    Box(
+                                        contentAlignment = Alignment.Center,
+                                        modifier = Modifier
+                                            .offset(x = 100.dp)
+                                            .width(170.dp)
+                                            .height(70.dp)
+                                            .background(colorScheme.onBackground, RoundedCornerShape(10.dp))
+                                            .clickable {  viewModel.doAction(HomeEvents.OnMoreTvClick(genre))}
+                                    ) {
+                                        Text("Load More", style = AppTypography.bodyMedium.copy(color = colorScheme.background, fontWeight = FontWeight.Normal))
+                                    }
+                                }
+                                null -> TODO()
                             }
+
                         }
                     }
                 }
                 Resources.idle -> {}
                 null -> {}
             }
+
+
 
 
         }

@@ -57,28 +57,14 @@ class HomeViewModel @Inject constructor(
             HomeEvents.LoadHomeSections -> loadHomeSections()
             HomeEvents.LoadMovies -> loadMovies()
             is HomeEvents.getDiscoverMovies -> getDiscoverMovies(events.page , events.genre)
-            is HomeEvents.OnMoreClick -> {
+            is HomeEvents.OnMoreTvClick -> {
+                val section = state.value.sections.first { it.genreId == events.genre }
+                getDiscoverTv(section.page + 1, events.genre)
+            }
 
-                val tvSection = state.value.sections
-                    .firstOrNull { it.genreId == events.genre }
-
-                if (tvSection != null) {
-                    getDiscoverTv(
-                        page = tvSection.page + 1,
-                        genre = events.genre
-                    )
-                    return
-                }
-
-                val movieSection = state.value.sectionsMovies
-                    .firstOrNull { it.genreId == events.genre }
-
-                if (movieSection != null) {
-                    getDiscoverMovies(
-                        page = movieSection.page + 1,
-                        genre = events.genre
-                    )
-                }
+            is HomeEvents.OnMoreMovieClick -> {
+                val section = state.value.sectionsMovies.first { it.genreId == events.genre }
+                getDiscoverMovies(section.page + 1, events.genre)
             }
         }
 
@@ -144,7 +130,7 @@ class HomeViewModel @Inject constructor(
                 val data = response.getOrNull()
                 val newResults = data?.results.orEmpty()
                 val mergedData = if (page != null && page > 1) {
-                    data?.copy(results = previousResults + newResults)
+                    data?.copy(results = (previousResults + newResults).distinctBy { it?.id })
                 } else {
                     data
                 }
