@@ -60,6 +60,7 @@ import com.example.movies.ui.main.tabs.home.HomeEvents
 import com.example.movies.ui.main.tabs.home.HomeViewModel
 import com.example.movies.ui.main.tabs.home.sharedHOmeViewModel
 import com.example.movies.ui.theme.AppTypography
+import com.example.utilities.LoadingScreen
 import com.example.utilities.LoadingView
 import kotlin.collections.orEmpty
 
@@ -89,17 +90,7 @@ fun TvFullView(
     val colorScheme = MaterialTheme.colorScheme
     val currentSection = state.sections.firstOrNull { it.genreId == genre }
     val tvList = (currentSection?.state as? Resources.Success)?.data?.results.orEmpty()
-    val infiniteTransition = rememberInfiniteTransition(label = "")
 
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.5f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(500),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = ""
-    )
 
     Scaffold (
         modifier = Modifier.fillMaxSize().background(colorScheme.background)
@@ -157,24 +148,7 @@ fun TvFullView(
                         item {
                             when(currentSection.isLoadingMore){
                                 true -> {
-                                    Box(
-                                        modifier = Modifier
-                                            .offset(x = 100.dp)
-                                            .size(70.dp)
-                                            .graphicsLayer {
-                                                scaleX = scale
-                                                scaleY = scale
-                                            }
-                                         ,
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_aap_logo),
-                                            contentDescription = null,
-                                            tint = colorScheme.onBackground ,
-                                            modifier = Modifier.size(50.dp))
-
-                                    }
+                                    LoadingScreen(true)
                                 }
                                 false -> {
                                     Box(

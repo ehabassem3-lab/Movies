@@ -57,12 +57,16 @@ import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.routes.AppRoutes
+import com.example.movies.routes.AppRoutes.*
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.search.MovieItem
 import com.example.movies.ui.main.tabs.home.HomeEvents
+import com.example.movies.ui.main.tabs.home.HomeEvents.*
 import com.example.movies.ui.main.tabs.home.HomeViewModel
 import com.example.movies.ui.main.tabs.home.sharedHOmeViewModel
 import com.example.movies.ui.theme.AppTypography
+import com.example.utilities.ErrorView
+import com.example.utilities.LoadingScreen
 import com.example.utilities.LoadingView
 import kotlin.collections.orEmpty
 
@@ -101,17 +105,6 @@ fun MoviesFullView(
     val colorScheme = MaterialTheme.colorScheme
     val currentSection = state.sectionsMovies.firstOrNull { it.genreId == genre }
 
-    val infiniteTransition = rememberInfiniteTransition(label = "")
-
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.5f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(500),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = ""
-    )
 
     Scaffold (
         modifier = Modifier.fillMaxSize().background(colorScheme.background)
@@ -141,7 +134,11 @@ fun MoviesFullView(
               currentSection?.state
             ){
 
-                is Resources.Error -> {}
+                is Resources.Error -> {
+                    ErrorView {
+                        viewModel.doAction(getDiscoverMovies(genre =genre))
+                    }
+                }
                 Resources.Loading -> {
 
                     LazyColumn {
@@ -160,7 +157,7 @@ fun MoviesFullView(
                         ?.results
                         .orEmpty()
                     LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
+                        columns = Fixed(2),
                         modifier = Modifier,
                         horizontalArrangement = Arrangement.SpaceAround,
 
@@ -168,31 +165,14 @@ fun MoviesFullView(
                         items(moviesList, key = { it?.id!! }) {
                             MovieItem(movieItem = it) {
                                 navController.navigate(
-                                    AppRoutes.TvDetailsRoute(it?.id!!, type = "Movie")
+                                    TvDetailsRoute(it?.id!!, type = "Movie")
                                 )
                             }
                         }
                         item {
                             when(currentSection.isLoadingMore){
                                 true -> {
-                                    Box(
-                                        modifier = Modifier
-                                            .offset(x = 100.dp)
-                                            .size(70.dp)
-                                            .graphicsLayer {
-                                                scaleX = scale
-                                                scaleY = scale
-                                            }
-                                        ,
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        Icon(
-                                            painter = painterResource(R.drawable.ic_aap_logo),
-                                            contentDescription = null,
-                                            tint = colorScheme.onBackground ,
-                                            modifier = Modifier.size(50.dp))
-
-                                    }
+                                    LoadingScreen(isGrid = true)
                                 }
                                 false -> {
                                     Box(
@@ -202,19 +182,19 @@ fun MoviesFullView(
                                             .width(170.dp)
                                             .height(70.dp)
                                             .background(colorScheme.onBackground, RoundedCornerShape(10.dp))
-                                            .clickable { viewModel.doAction(HomeEvents.OnMoreMovieClick(genre))}
+                                            .clickable { viewModel.doAction(OnMoreMovieClick(genre))}
                                     ) {
                                         Text("Load More", style = AppTypography.bodyMedium.copy(color = colorScheme.background, fontWeight = FontWeight.Normal))
                                     }
                                 }
-                                null -> {}
+
                             }
 
                         }
                     }
                 }
                 Resources.idle -> {}
-                null -> {}
+                else -> {}
             }
 
 

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.movies.R
+import com.example.movies.ui.main.tabs.saved.FavEvents
 import com.example.movies.ui.main.tabs.saved.sharedSavedViewModel
 import com.example.movies.ui.theme.AppTypography
 
@@ -47,6 +48,7 @@ fun RatedView(
 ){
     var index by rememberSaveable{ mutableIntStateOf(0) }
     val colorScheme = MaterialTheme.colorScheme
+    val viewModel = sharedSavedViewModel()
     val state = sharedSavedViewModel().state.collectAsState().value.allRatedState
     val list = listOf("All" , "Movie" , "Tv")
     Column(
@@ -146,9 +148,15 @@ fun RatedView(
 
             }
             when(index){
-                0 -> AllRated(state,navController)
-                1->RatedMovies(state,navController)
-                2-> RatedTvShows(state,navController)
+                0 -> AllRated(state,navController){
+                    viewModel.doAction(FavEvents.onGetAllRated)
+                }
+                1->RatedMovies(state,navController){
+                    viewModel.doAction(FavEvents.onGetAllRated)
+                }
+                2-> RatedTvShows(state,navController){
+                    viewModel.doAction(FavEvents.onGetAllRated)
+                }
 
             }
 

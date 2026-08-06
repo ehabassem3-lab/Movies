@@ -14,15 +14,20 @@ import com.example.movies.network.response.FavItem
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.main.search.MovieItem
+import com.example.utilities.ErrorView
 import com.example.utilities.LoadingView
 
 @Composable
 fun RatedTvShows(
     state   : Resources<List<FavItem>> ,
     navController: NavController ,
+    onRetry : () -> Unit
+
 ){
     when(state){
-        is Resources.Error -> {}
+        is Resources.Error -> {
+            ErrorView { onRetry() }
+        }
         Resources.Loading -> {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2)

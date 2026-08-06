@@ -45,7 +45,9 @@ import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.theme.AppTypography
+import com.example.utilities.ErrorView
 import com.example.utilities.ExpandableText
+import com.example.utilities.LoadingScreen
 import com.example.utilities.SeparationLine
 import io.ktor.sse.SPACE
 
@@ -166,7 +168,6 @@ fun ActorDetails(
                         }
                     }
                 }
-
                 else -> {}
             }
 

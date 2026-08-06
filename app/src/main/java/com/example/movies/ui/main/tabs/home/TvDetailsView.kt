@@ -86,6 +86,8 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlin.time.Duration.Companion.minutes
 import androidx.core.net.toUri
 import com.example.movies.network.response.details.DetailsItem
+import com.example.utilities.ErrorView
+import com.example.utilities.LoadingScreen
 import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.doubleOrNull
 
@@ -191,45 +193,45 @@ fun TvDetailsView(
           }
 
       }
+
      LaunchedEffect(Unit) {
          when(type){
-             "Movie" -> viewModel.doAction(TvEvents.getDetails(id,"Movie"))
-             "TV" -> viewModel.doAction(TvEvents.getDetails(id,"Tv"))
+             "Movie" -> {
+                 viewModel.doAction(TvEvents.getDetails(id, "Movie"))
+                 viewModel.doAction(TvEvents.getMoviesCast(id))
+                 viewModel.doAction(TvEvents.GetMovie(id))
+
+             }
+             "TV" -> {
+                 viewModel.doAction(TvEvents.getDetails(id, "Tv"))
+                 viewModel.doAction(TvEvents.getTvCast(id))
+                 viewModel.doAction(TvEvents.GetTv(id))
+             }
          }
 
      }
 
-    LaunchedEffect(Unit) {
-        when(type){
-            "Movie" -> viewModel.doAction(TvEvents.getMoviesCast(id))
-            "TV" -> viewModel.doAction(TvEvents.getTvCast(id))
-        }
-
-    }
-
-    LaunchedEffect(Unit) {
-        when(type){
-            "Movie" -> viewModel.doAction(TvEvents.GetMovie(id))
-            "TV" -> viewModel.doAction(TvEvents.GetTv(id))
-        }
-
-    }
 
     when(state.favState){
-        is Resources.Error -> {}
-        Resources.Loading -> {
-            Box(
-                contentAlignment = Alignment.Center ,
-                modifier = Modifier.fillMaxSize().background(colorScheme.background)
-            ){
-                Icon(
-                    painter = painterResource(R.drawable.ic_aap_logo) ,
-                    contentDescription = "" ,
-                    tint = colorScheme.onBackground
-                )
+        is Resources.Error -> {
+            ErrorView{
+                when(type){
+                    "Movie" -> {
+                        viewModel.doAction(TvEvents.getDetails(id, "Movie"))
+                        viewModel.doAction(TvEvents.getMoviesCast(id))
+                        viewModel.doAction(TvEvents.GetMovie(id))
 
+                    }
+                    "TV" -> {
+                        viewModel.doAction(TvEvents.getDetails(id, "Tv"))
+                        viewModel.doAction(TvEvents.getTvCast(id))
+                        viewModel.doAction(TvEvents.GetTv(id))
+                    }
+                }
             }
+
         }
+        Resources.Loading -> { LoadingScreen(false) }
         is Resources.Success<DetailsItem> -> {
             Scaffold (
                 modifier = Modifier
@@ -310,7 +312,10 @@ fun TvDetailsView(
                                     modifier = Modifier
                                         .size(30.dp)
                                         .offset(x = -330.dp, y = 30.dp)
-                                        .background(colorScheme.onBackground, RoundedCornerShape(12.dp)),
+                                        .background(
+                                            colorScheme.onBackground,
+                                            RoundedCornerShape(12.dp)
+                                        ),
                                     contentAlignment = Alignment.Center
                                 ){
                                     Icon(
@@ -401,13 +406,17 @@ fun TvDetailsView(
                                         modifier = Modifier
                                             .offset(x = 30.dp)
                                             .size(50.dp)
-                                            .background(colorScheme.onBackground, RoundedCornerShape(12.dp))
+                                            .background(
+                                                colorScheme.onBackground,
+                                                RoundedCornerShape(12.dp)
+                                            )
                                             .clickable {
                                                 val youtubeUrl = videoLink?.key?.let {
                                                     "https://www.youtube.com/watch?v=$it"
                                                 }
                                                 youtubeUrl?.let { url ->
-                                                    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+                                                    val intent =
+                                                        Intent(Intent.ACTION_VIEW, url.toUri())
                                                     context.startActivity(intent)
                                                 }
                                             },
@@ -603,7 +612,7 @@ fun TvDetailsView(
                                                             RoundedCornerShape(10.dp)
                                                         )
                                                         .clickable {
-                                                          rate =   (rate + 0.5).coerceAtMost(10.0)
+                                                            rate = (rate + 0.5).coerceAtMost(10.0)
                                                         },
                                                     contentAlignment = Alignment.Center
                                                 ) {
@@ -628,7 +637,7 @@ fun TvDetailsView(
                                                             RoundedCornerShape(10.dp)
                                                         )
                                                         .clickable {
-                                                            rate =   (rate - 0.5).coerceAtLeast(.5)
+                                                            rate = (rate - 0.5).coerceAtLeast(.5)
                                                         },
                                                     contentAlignment = Alignment.Center
                                                 ) {
