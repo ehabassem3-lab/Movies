@@ -52,6 +52,8 @@ import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.AlertDialogExample
 import com.example.movies.ui.main.Resources
 import com.example.movies.ui.theme.AppTypography
+import com.example.utilities.ErrorView
+import com.example.utilities.LoadingScreen
 import io.ktor.sse.SPACE
 
 @Composable
@@ -60,19 +62,15 @@ fun ProfileView(
 ){
 
 
-    Log.d("ProfileView", "Composed")
     val colorScheme = MaterialTheme.colorScheme
     val viewModel = hiltViewModel<ProfileViewModel>()
     val state = viewModel.state.collectAsState().value
     val user =  (state.localState as? Resources.Success)?.data
-    Log.d("user","$user")
     LaunchedEffect(state.apiState)
     {
         when(state.apiState){
-            is Resources.Error -> {}
-            Resources.Loading -> {}
-            is Resources.Success<*> -> navController.navigate(AppRoutes.CreateSessionRoute)
-            Resources.idle -> { }
+            is Resources.Success<Unit> -> navController.navigate(AppRoutes.CreateSessionRoute)
+           else ->{}
         }
 
     }
@@ -83,42 +81,60 @@ fun ProfileView(
                 .fillMaxSize()
                 .background(colorScheme.background) ,
         ) {
-            when{
-                state.openAlertDialog -> AlertDialogExample(
-                    onDismissRequest = { viewModel.doAction(ProfileEvents.OnDismissRequest) },
-                    onConfirmation = {  viewModel.doAction(ProfileEvents.OnLogOutClick) },
-                    dialogTitle = stringResource(R.string.log_out),
-                    dialogText = stringResource(R.string.are_you_sure_of_login_out),
-                    icon = painterResource(R.drawable.ic_profile)
-                )
+
+            when (state.apiState) {
+                is Resources.Error -> {
+                    ErrorView{
+                        viewModel.doAction(ProfileEvents.OnOpenRequest)
+                    }
+                }
+
+                Resources.Loading -> {
+                    LoadingScreen(isGrid = false)
+                }
+
+
+                Resources.idle -> {
+                    when{
+                        state.openAlertDialog -> AlertDialogExample(
+                            onDismissRequest = { viewModel.doAction(ProfileEvents.OnDismissRequest) },
+                            onConfirmation = {  viewModel.doAction(ProfileEvents.OnLogOutClick) },
+                            dialogTitle = stringResource(R.string.log_out),
+                            dialogText = stringResource(R.string.are_you_sure_of_login_out),
+                            icon = painterResource(R.drawable.ic_profile)
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp) ,
+                        verticalAlignment = Alignment.CenterVertically ,
+
+                        ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_logout),
+                            contentDescription = ""  ,
+                            tint =  colorScheme.onBackground ,
+
+                            modifier = Modifier
+                                .padding(start = 20.dp, top = 10.dp)
+                                .size(24.dp)
+                                .clickable {
+                                    viewModel.doAction(ProfileEvents.OnOpenRequest)
+                                }
+                        )
+                        Text(
+                            stringResource(R.string.profile),
+                            modifier = Modifier.padding(start = 120.dp),
+                            style = AppTypography.titleLarge.copy(fontSize = 30.sp , fontWeight = FontWeight.Normal)
+                        )
+
+                    }
+                }
+                else -> {}
             }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp) ,
-                verticalAlignment = Alignment.CenterVertically ,
-
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_logout),
-                    contentDescription = ""  ,
-                    tint =  colorScheme.onBackground ,
-
-                    modifier = Modifier
-                        .padding(start = 20.dp, top = 10.dp)
-                        .size(24.dp)
-                        .clickable {
-                            viewModel.doAction(ProfileEvents.OnOpenRequest)
-                        }
-                )
-                Text(
-                    stringResource(R.string.profile),
-                    modifier = Modifier.padding(start = 120.dp),
-                    style = AppTypography.titleLarge.copy(fontSize = 30.sp , fontWeight = FontWeight.Normal)
-                )
-
-            }
 
 
 

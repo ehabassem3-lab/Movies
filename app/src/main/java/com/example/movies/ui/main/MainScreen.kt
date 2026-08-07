@@ -71,7 +71,7 @@ import kotlinx.coroutines.launch
 fun MainScreen(navController: NavController){
 
 
-    var drawerState = rememberDrawerState(DrawerValue.Closed)
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
     val colorScheme = MaterialTheme.colorScheme
     val scope = rememberCoroutineScope()
     data class navigationItem (val index : Int , val icon : Int )

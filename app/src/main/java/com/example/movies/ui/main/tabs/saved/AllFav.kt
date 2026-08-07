@@ -38,12 +38,13 @@ import io.ktor.sse.COLON
 fun Allfav(
     state: Resources<List<FavItem>> ,
     navController: NavController ,
+     onRetry : () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         when (state) {
-            is Resources.Error -> {}
+            is Resources.Error -> { onRetry() }
             Resources.Loading -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2)

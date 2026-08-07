@@ -22,7 +22,7 @@ fun TvFav(
     onRetry: () -> Unit
 ) {
     when(state){
-        is Resources.Error -> { ErrorView{onRetry()} }
+        is Resources.Error -> { onRetry() }
         Resources.Loading -> {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2)

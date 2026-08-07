@@ -37,6 +37,8 @@ import androidx.navigation.NavController
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
+import com.example.movies.ui.main.tabs.saved.FavEvents
+import com.example.movies.ui.main.tabs.saved.sharedSavedViewModel
 import com.example.movies.ui.theme.AppTypography
 import kotlinx.coroutines.launch
 
@@ -47,6 +49,7 @@ fun HomeView(
 ){
     val colorScheme = MaterialTheme.colorScheme
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var savedViewModel = sharedSavedViewModel()
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val genres = listOf(
         stringResource(com.example.movies.R.string.movies),
@@ -105,8 +108,19 @@ fun HomeView(
         Spacer(modifier = Modifier.size(10.dp))
         Column(modifier = Modifier.fillMaxSize()) {
             when(selectedTabIndex) {
-                0->  MoviesView(state,navController){ viewModel.doAction(HomeEvents.LoadMovies) }
-                1->TvView(state ,navController){viewModel.doAction(HomeEvents.LoadHomeSections)}
+                0->  MoviesView(state,navController){
+                    viewModel.doAction(HomeEvents.LoadMovies)
+                    savedViewModel.doAction(FavEvents.onGetAllRated)
+                    savedViewModel.doAction(FavEvents.onGetAllFav)
+                    savedViewModel.doAction(FavEvents.onGetAllWatchList)
+
+                }
+                1->TvView(state ,navController){
+                    viewModel.doAction(HomeEvents.LoadHomeSections)
+                    savedViewModel.doAction(FavEvents.onGetAllRated)
+                    savedViewModel.doAction(FavEvents.onGetAllFav)
+                    savedViewModel.doAction(FavEvents.onGetAllWatchList)
+                }
 
 
 

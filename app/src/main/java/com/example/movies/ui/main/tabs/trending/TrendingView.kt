@@ -16,27 +16,34 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.utilities.SeparationLine
+import javax.annotation.meta.When
 
 @Composable
 fun TrendingView(
     navController: NavController
 ){
-    val colorScheme = MaterialTheme.colorScheme
     val viewModel = hiltViewModel<TrendingViewModel>()
     val state = viewModel.state.collectAsState().value
+
 
     LazyColumn (
         modifier = Modifier.fillMaxSize()
     ) {
         item {
-            MoviesTrending(state.MoviesapiState, navController )
+            MoviesTrending(state.MoviesapiState, navController ){
+                viewModel.doAction(TrendingEvents.getMovies)
+            }
+
 
         }
         item{
             SeparationLine()
         }
          item {
-             TvTrending(state.TvapiState , navController)
+             TvTrending(state.TvapiState , navController){
+                 viewModel.doAction(TrendingEvents.getTv)
+             }
+
 
          }
     }

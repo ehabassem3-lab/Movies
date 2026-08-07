@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.movies.domain.repositories.home.HomeRepository
 import com.example.movies.ui.main.Resources
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -33,6 +34,7 @@ class TrendingViewModel @Inject constructor(
             state.value = state.value.copy(TvapiState = Resources.Loading)
             val request = repository.getTvTrending()
             if (request.isSuccess){
+                delay(1000)
                 state.value =state.value.copy(TvapiState = Resources.Success(request.getOrNull()))
             }else{
                 state.value = state.value.copy(TvapiState = Resources.Error(Throwable(request.exceptionOrNull())))
@@ -46,6 +48,7 @@ class TrendingViewModel @Inject constructor(
             state.value = state.value.copy(MoviesapiState = Resources.Loading)
             val request = repository.getMoviesTrending()
             if (request.isSuccess){
+                delay(1000)
                 state.value =state.value.copy(MoviesapiState = Resources.Success(request.getOrNull()))
             }else{
                 state.value = state.value.copy(MoviesapiState = Resources.Error(Throwable(request.exceptionOrNull())))

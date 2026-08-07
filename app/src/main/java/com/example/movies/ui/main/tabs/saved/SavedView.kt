@@ -145,9 +145,16 @@ fun SavedView(
                 modifier = Modifier.fillMaxSize()
             ) {
                 when (selecteTab) {
-                    0 -> Allfav(state.allFavState, navController)
-                    1 -> MoviesFav(state.FavMovieState, navController) {}
-                    2 -> TvFav(state.FavTvState, navController) {}
+                    0 -> Allfav(state.allFavState, navController){
+                        viewModel.doAction(FavEvents.onGetAllFav)
+                    }
+                    1 -> MoviesFav(state.FavMovieState, navController) {
+                        viewModel.doAction(FavEvents.OnGetFavouriteMovie)
+                    }
+                    2 -> TvFav(state.FavTvState, navController) {
+                        viewModel.doAction(FavEvents.OnGetFavouriteTv)
+
+                    }
                 }
             }
         }
