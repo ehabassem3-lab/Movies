@@ -34,6 +34,8 @@ class HomeRepositoryImp  @Inject constructor(
     override suspend fun getDiscoveryTv(page: Int?, genre: Int?): Result<DiscoverResponse?> {
       val request = dataSource.getDiscover(page,genre)
         return if (request.isSuccess){
+
+
             Result.success( request.getOrNull())
         }else{
             Result.failure(Throwable(request.exceptionOrNull()))

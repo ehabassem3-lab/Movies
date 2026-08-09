@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.movies.ui.main.tabs.home.MovieSectionUiState
 
 @Dao
 interface Dao {
@@ -13,9 +14,9 @@ interface Dao {
     suspend fun insertMovie(movie: ItemEntity)
 
     @Query("SELECT * FROM item")
-    suspend fun getAllMovies(): List<ItemEntity>
+    suspend fun getAllMovies(): List<MovieSectionUiState>
 
-    @Query("SELECT * FROM item WHERE id = :itemId")
+    @Query("SELECT * FROM item WHERE id = :itemId AND type  = :type" )
     suspend fun getItem(itemId: Int , type : String): ItemEntity?
 
     @Delete

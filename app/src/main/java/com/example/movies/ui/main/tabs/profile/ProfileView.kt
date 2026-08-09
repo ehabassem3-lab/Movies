@@ -2,6 +2,7 @@ package com.example.movies.ui.main.tabs.profile
 
 import android.app.AlertDialog
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.material3.AlertDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Lock
@@ -39,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,11 +49,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.movies.R
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.AlertDialogExample
 import com.example.movies.ui.main.Resources
+import com.example.movies.ui.main.tabs.saved.sharedSavedViewModel
 import com.example.movies.ui.theme.AppTypography
 import com.example.utilities.ErrorView
 import com.example.utilities.LoadingScreen
@@ -65,7 +70,9 @@ fun ProfileView(
     val colorScheme = MaterialTheme.colorScheme
     val viewModel = hiltViewModel<ProfileViewModel>()
     val state = viewModel.state.collectAsState().value
+    val savedState = sharedSavedViewModel().state.collectAsStateWithLifecycle().value
     val user =  (state.localState as? Resources.Success)?.data
+    Log.e("user " , "$user")
     LaunchedEffect(state.apiState)
     {
         when(state.apiState){
@@ -128,6 +135,27 @@ fun ProfileView(
                             stringResource(R.string.profile),
                             modifier = Modifier.padding(start = 120.dp),
                             style = AppTypography.titleLarge.copy(fontSize = 30.sp , fontWeight = FontWeight.Normal)
+                        )
+
+                    }
+                    Column(
+                        Modifier.padding(top = 40.dp).fillMaxSize() ,
+                         horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier.padding(30.dp).size(200.dp).clip(CircleShape)
+                        ){
+                            Icon(
+                                modifier = Modifier.fillMaxSize(),
+                                painter = painterResource(R.drawable.ic_user) ,
+                                contentDescription = "" ,
+                                tint = colorScheme.onBackground
+                            )
+
+                        }
+                        Text(
+                            user?.username?:"" ,
+                             style = AppTypography.titleLarge
                         )
 
                     }

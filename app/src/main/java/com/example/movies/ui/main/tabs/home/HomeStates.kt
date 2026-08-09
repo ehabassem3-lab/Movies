@@ -13,17 +13,17 @@ data class HomeStates(
     val sectionsMovies: List<MovieSectionUiState> = emptyList() ,
 )
 data class TvSectionUiState(
-    @StringRes val title: Int,
+    @param:StringRes val title: Int,
     val genreId: Int?,
-    val state: Resources<DiscoverResponse> = Resources.idle ,
+    val state: Resources<DiscoverResponse> = Resources.idle,
     val page: Int = 1,
     val isLoadingMore: Boolean = false
 )
 data class MovieSectionUiState(
-    @StringRes   val title: Int,
+    @param:StringRes val title: Int,
     val genreId: Int?,
-    val state: Resources<MoviesResponse> = Resources.idle ,
-    val isLoadingMore: Boolean = false ,
+    val state: Resources<MoviesResponse> = Resources.idle,
+    val isLoadingMore: Boolean = false,
     val page: Int = 1,
 )
 sealed class HomeEvents{
