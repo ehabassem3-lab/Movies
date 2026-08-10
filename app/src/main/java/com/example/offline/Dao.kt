@@ -1,27 +1,118 @@
 package com.example.offline
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.movies.ui.main.tabs.home.MovieSectionUiState
+import androidx.room.Transaction
 
 @Dao
 interface Dao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMovie(movie: ItemEntity)
+    suspend fun insertItems(
+        items: List<ItemEntity>
+    )
 
-    @Query("SELECT * FROM item")
-    suspend fun getAllMovies(): List<MovieSectionUiState>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMovieSection(
+        section: MovieSectionEntity
+    )
 
-    @Query("SELECT * FROM item WHERE id = :itemId AND type  = :type" )
-    suspend fun getItem(itemId: Int , type : String): ItemEntity?
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMovieSectionItems(
+        items: List<MovieSectionItemEntity>
+    )
 
-    @Delete
-    suspend fun deleteMovie(movie: ItemEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTvSection(
+        section: TvSectionEntity
+    )
 
-    @Query("DELETE FROM item")
-    suspend fun deleteAllMovies()
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTvSectionItems(
+        items: List<TvSectionItemEntity>
+    )
+
+
+    // =========================
+    // SAVE MOVIE SECTION
+    // =========================
+
+    @Transaction
+    suspend fun saveMovieSection(
+        section: MovieSectionEntity,
+        movies: List<ItemEntity>
+    ) {
+        insertMovieSection(section)
+
+        insertItems(movies)
+
+        val relations = movies.map { movie ->
+            MovieSectionItemEntity(
+                sectionId = section.id,
+                movieId = movie.id
+            )
+        }
+
+        insertMovieSectionItems(relations)
+    }
+
+
+    // =========================
+    // SAVE TV SECTION
+    // =========================
+
+    @Transaction
+    suspend fun saveTvSection(
+        section: TvSectionEntity,
+        tv: List<ItemEntity>
+    ) {
+        insertTvSection(section)
+
+        insertItems(tv)
+
+        val relations = tv.map { item ->
+            TvSectionItemEntity(
+                sectionId = section.id,
+                tvId = item.id
+            )
+        }
+
+        insertTvSectionItems(relations)
+    }
+
+
+    // =========================
+    // GET
+    // =========================
+
+    @Query("SELECT * FROM movie_sections")
+    suspend fun getMovieSections(): List<MovieSectionEntity>
+
+    @Query("SELECT * FROM tv_sections")
+    suspend fun getTvSections(): List<TvSectionEntity>
+
+
+    // =========================
+    // CLEAR
+    // =========================
+
+    @Query("DELETE FROM movie_sections")
+    suspend fun clearMovieSections()
+
+    @Query("DELETE FROM tv_sections")
+    suspend fun clearTvSections()
+
+    @Query("DELETE FROM movie_section_items")
+    suspend fun clearMovieSectionItems()
+
+    @Query("DELETE FROM tv_section_items")
+    suspend fun clearTvSectionItems()
+
+    @Query("DELETE FROM items WHERE type = 'movie'")
+    suspend fun clearMovies()
+
+    @Query("DELETE FROM items WHERE type = 'tv'")
+    suspend fun clearTv()
 }

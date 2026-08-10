@@ -1,5 +1,8 @@
 package com.example.movies.ui.main
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 sealed class Resources< out  T>{
     data object idle : Resources<Nothing>()
     data object Loading  : Resources<Nothing>()

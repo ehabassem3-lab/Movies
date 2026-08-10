@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.movies.R
 import com.example.movies.domain.repositories.home.HomeRepository
 import com.example.movies.ui.main.Resources
+import com.example.offline.ItemEntity
+import com.example.offline.MovieSectionEntity
+import com.example.offline.TvSectionEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.delay
@@ -96,8 +99,12 @@ class HomeViewModel @Inject constructor(
             )
         }
     }
-    private fun getDiscoverMovies(page: Int?, genre: Int? = null) {
+    private fun getDiscoverMovies(
+        page: Int?,
+        genre: Int? = null
+    ) {
         viewModelScope.launch {
+
             val previousResults = state.value.sectionsMovies
                 .firstOrNull { it.genreId == genre }
                 ?.state
@@ -125,15 +132,57 @@ class HomeViewModel @Inject constructor(
             )
 
             val response = repository.getDiscoveryMovies(page, genre)
+
             if (response.isSuccess) {
-                delay(2000)
+
                 val data = response.getOrNull()
                 val newResults = data?.results.orEmpty()
-                val mergedData = if (page != null && page > 1) {
-                    data?.copy(results = (previousResults + newResults).distinctBy { it?.id })
-                } else {
-                    data
+
+                // SAVE TO ROOM
+                if (data != null) {
+
+                    val movies = newResults.mapNotNull { movie ->
+
+                        if (movie == null || movie.id == null) {
+                            null
+                        } else {
+                            ItemEntity(
+                                id = movie.id,
+                                type = "movie",
+                                title = movie.name ?: "",
+                                posterPath = movie.posterPath,
+                                rating = movie.voteAverage ?: 0.0
+                            )
+                        }
+                    }
+
+                    val uiSection = movieSections
+                        .first { it.genreId == genre }
+
+                    val section = MovieSectionEntity(
+                        id = "movie_${genre ?: "recommendations"}",
+                        genreId = genre,
+                        title = uiSection.title,
+                        page = page ?: 1
+                    )
+
+                    repository.saveMovieSection(
+                        section = section,
+                        movies = movies
+                    )
                 }
+
+                // UPDATE UI
+                val mergedData =
+                    if (page != null && page > 1) {
+                        data?.copy(
+                            results = (
+                                    previousResults + newResults
+                                    ).distinctBy { it?.id }
+                        )
+                    } else {
+                        data
+                    }
 
                 state.value = state.value.copy(
                     sectionsMovies = state.value.sectionsMovies.map { section ->
@@ -148,12 +197,18 @@ class HomeViewModel @Inject constructor(
                         }
                     }
                 )
+
             } else {
-                delay(2000)
+
                 state.value = state.value.copy(
                     sectionsMovies = state.value.sectionsMovies.map { section ->
                         if (section.genreId == genre) {
-                            section.copy(state = Resources.Error(response.exceptionOrNull()!!))
+                            section.copy(
+                                state = Resources.Error(
+                                    response.exceptionOrNull()!!
+                                ),
+                                isLoadingMore = false
+                            )
                         } else {
                             section
                         }
@@ -162,8 +217,10 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
-    private fun getDiscoverTv(page: Int?, genre: Int? = null) {
+    private fun getDiscoverTv(
+        page: Int?,
+        genre: Int? = null
+    ) {
         viewModelScope.launch {
 
             val previousResults = state.value.sections
@@ -196,15 +253,57 @@ class HomeViewModel @Inject constructor(
             val response = repository.getDiscoveryTv(page, genre)
 
             if (response.isSuccess) {
-                delay(2000)
 
                 val data = response.getOrNull()
                 val newResults = data?.results.orEmpty()
 
+                // =========================
+                // SAVE TO ROOM
+                // =========================
+
+                if (data != null) {
+
+                    val tvItems = newResults.mapNotNull { tv ->
+
+                        if (tv == null || tv.id == null) {
+                            null
+                        } else {
+                            ItemEntity(
+                                id = tv.id,
+                                type = "tv",
+                                title = tv.name ?: "",
+                                posterPath = tv.posterPath,
+                                rating = tv.voteAverage ?: 0.0
+                            )
+                        }
+                    }
+
+                    val uiSection = sections
+                        .first { it.genreId == genre }
+
+                    val section = TvSectionEntity(
+                        id = "tv_${genre ?: "recommendations"}",
+                        genreId = genre,
+                        title = uiSection.title,
+                        page = page ?: 1
+                    )
+
+                    repository.saveTvSection(
+                        section = section,
+                        tv = tvItems
+                    )
+                }
+
+                // =========================
+                // UPDATE UI
+                // =========================
+
                 val mergedData =
                     if (page != null && page > 1) {
                         data?.copy(
-                            results = previousResults + newResults
+                            results = (
+                                    previousResults + newResults
+                                    ).distinctBy { it?.id }
                         )
                     } else {
                         data
@@ -223,14 +322,16 @@ class HomeViewModel @Inject constructor(
                         }
                     }
                 )
+
             } else {
-                delay(2000)
 
                 state.value = state.value.copy(
                     sections = state.value.sections.map { section ->
                         if (section.genreId == genre) {
                             section.copy(
-                                state = Resources.Error(response.exceptionOrNull()!!),
+                                state = Resources.Error(
+                                    response.exceptionOrNull()!!
+                                ),
                                 isLoadingMore = false
                             )
                         } else {
