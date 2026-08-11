@@ -13,9 +13,7 @@ import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.network.response.search.SearchResponse
-import com.example.offline.ItemEntity
-import com.example.offline.MovieSectionEntity
-import com.example.offline.TvSectionEntity
+
 
 interface HomeRepository {
 
@@ -42,14 +40,8 @@ interface HomeRepository {
 
     suspend fun getRatedMovies() : Result<MoviesResponse>
     suspend fun getRatedTv() : Result<DiscoverResponse>
-    suspend fun saveMovieSection(
-        section: MovieSectionEntity,
-        movies: List<ItemEntity>
-    )
 
-    suspend fun saveTvSection(
-        section: TvSectionEntity,
-        tv: List<ItemEntity>
-    )
+
+
 
 }

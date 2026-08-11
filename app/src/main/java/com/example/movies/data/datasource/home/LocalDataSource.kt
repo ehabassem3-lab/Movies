@@ -1,26 +1,22 @@
 package com.example.movies.data.datasource.home
 
-import com.example.offline.ItemEntity
-import com.example.offline.MovieSectionEntity
-import com.example.offline.TvSectionEntity
+import com.example.movies.network.response.discover.DiscoverResponse
+import com.example.movies.network.response.discover.MoviesResponse
 
 interface LocalDataSource {
 
-    suspend fun saveMovieSection(
-        section: MovieSectionEntity,
-        movies: List<ItemEntity>
-    )
 
-    suspend fun saveTvSection(
-        section: TvSectionEntity,
-        tv: List<ItemEntity>
-    )
 
-    suspend fun getMovies(): List<MovieSectionEntity>
+        suspend fun getMovies(
+            page: Int,
+            genre: Int?
+        ): Result<MoviesResponse>
 
-    suspend fun getTv(): List<TvSectionEntity>
+        suspend fun saveMovies(
+            page: Int,
+            genre: Int?,
+            response: MoviesResponse
+        ): Result<Unit>
 
-    suspend fun clearMovies()
 
-    suspend fun clearTv()
 }

@@ -20,9 +20,6 @@ import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.movies.network.response.search.SearchResponse
-import com.example.offline.ItemEntity
-import com.example.offline.MovieSectionEntity
-import com.example.offline.TvSectionEntity
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -33,29 +30,9 @@ class HomeRepositoryImp  @Inject constructor(
     private  val dataStore : DataStore<Preferences>,
 ) : HomeRepository {
 
-    override suspend fun saveMovieSection(
-        section: MovieSectionEntity,
-        movies: List<ItemEntity>
-    ) {
-        local.saveMovieSection(
-            section = section,
-            movies = movies
-        )
-    }
-
-    override suspend fun saveTvSection(
-        section: TvSectionEntity,
-        tv: List<ItemEntity>
-    ) {
-        local.saveTvSection(
-            section = section,
-            tv = tv
-        )
-    }
     override suspend fun getDiscoveryTv(page: Int?, genre: Int?): Result<DiscoverResponse?> {
       val request = dataSource.getDiscover(page,genre)
         return if (request.isSuccess){
-
             Result.success( request.getOrNull())
         }else{
             Result.failure(Throwable(request.exceptionOrNull()))
@@ -66,12 +43,21 @@ class HomeRepositoryImp  @Inject constructor(
         page: Int?,
         genre: Int?
     ): Result<MoviesResponse?> {
-        val request = dataSource.getDiscoverMovies(page,genre)
-        return if (request.isSuccess){
-            Result.success( request.getOrNull())
-        }else{
-            Result.failure(Throwable(request.exceptionOrNull()))
+        if (false) {
+            val request = dataSource.getDiscoverMovies(page, genre)
+            return if (request.isSuccess) {
+                local.saveMovies(page!!, genre, request.getOrNull()!!)
+                Result.success(request.getOrNull())
+            } else {
+                Result.failure(Throwable(request.exceptionOrNull()))
+            }
+
+        } else {
+             val request = local.getMovies(page!!, genre)
+            return  request
         }
+
+
     }
 
     override suspend fun addToFavorite(
@@ -307,6 +293,8 @@ class HomeRepositoryImp  @Inject constructor(
             Result.failure(Throwable(request.exceptionOrNull()))
         }
     }
+
+
 
 
 }

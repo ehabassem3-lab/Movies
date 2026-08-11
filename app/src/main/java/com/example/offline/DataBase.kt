@@ -2,14 +2,14 @@ package com.example.offline
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.example.movies.network.response.discover.DiscoverResponse
+import com.example.movies.network.response.discover.MoviesResponse
+
+
 
 @Database(
     entities = [
-        ItemEntity::class,
-        MovieSectionEntity::class,
-        TvSectionEntity::class,
-        MovieSectionItemEntity::class,
-        TvSectionItemEntity::class
+        MovieEntity::class
     ],
     version = 1,
     exportSchema = false

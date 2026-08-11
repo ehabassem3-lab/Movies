@@ -10,46 +10,32 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Entity(
-    tableName = "items",
-    primaryKeys = ["id", "type"]
+    tableName = "movies",
+    primaryKeys = ["id", "page", "genreId"]
 )
-data class ItemEntity(
+data class MovieEntity(
+
     val id: Int,
-    val type: String,
-    val title: String,
+
+    val name: String?,
     val posterPath: String?,
-    val rating: Double
-)
-@Entity(tableName = "movie_sections")
-data class MovieSectionEntity(
-    @PrimaryKey
-    val id: String,
-    val genreId: Int?,
-    val title: Int,
-    val page: Int = 1
+    val backdropPath: String?,
+    val overview: String?,
+
+    val voteAverage: Double?,
+    val voteCount: Double?,
+
+    val firstAirDate: String?,
+    val originalLanguage: String?,
+    val originalName: String?,
+    val popularity: Double?,
+
+    val type: String,
+    val fav: Boolean?,
+    val isRated: Boolean?,
+    val rate: Double?,
+
+    val page: Int,
+    val genreId: Int
 )
 
-@Entity(tableName = "tv_sections")
-data class TvSectionEntity(
-    @PrimaryKey
-    val id: String,
-    val genreId: Int?,
-    val title: Int,
-    val page: Int = 1
-)
-@Entity(
-    tableName = "movie_section_items",
-    primaryKeys = ["sectionId", "movieId"]
-)
-data class MovieSectionItemEntity(
-    val sectionId: String,
-    val movieId: Int
-)
-@Entity(
-    tableName = "tv_section_items",
-    primaryKeys = ["sectionId", "tvId"]
-)
-data class TvSectionItemEntity(
-    val sectionId: String,
-    val tvId: Int
-)

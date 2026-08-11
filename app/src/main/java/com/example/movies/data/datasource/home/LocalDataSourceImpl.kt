@@ -1,52 +1,63 @@
 package com.example.movies.data.datasource.home
 
+import com.example.movies.mapper.toEntity
+import com.example.movies.mapper.toMoviesItem
+import com.example.movies.network.response.discover.MoviesResponse
 import com.example.offline.Dao
-import com.example.offline.ItemEntity
-import com.example.offline.MovieSectionEntity
-import com.example.offline.TvSectionEntity
 import javax.inject.Inject
 
 class LocalDataSourceImpl @Inject constructor(
     private val dao: Dao
 ) : LocalDataSource {
 
-    override suspend fun saveMovieSection(
-        section: MovieSectionEntity,
-        movies: List<ItemEntity>
-    ) {
-        dao.saveMovieSection(
-            section = section,
-            movies = movies
-        )
+    override suspend fun getMovies(
+        page: Int,
+        genre: Int?
+    ): Result<MoviesResponse> {
+
+        return try {
+
+            val movies = dao.getMovies(
+                page = page,
+                genreId = genre ?: -1
+            )
+
+            Result.success(
+                MoviesResponse(
+                    page = page,
+                    results = movies.map { it.toMoviesItem() }
+                )
+            )
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
-    override suspend fun saveTvSection(
-        section: TvSectionEntity,
-        tv: List<ItemEntity>
-    ) {
-        dao.saveTvSection(
-            section = section,
-            tv = tv
-        )
-    }
+    override suspend fun saveMovies(
+        page: Int,
+        genre: Int?,
+        response: MoviesResponse
+    ): Result<Unit> {
 
-    override suspend fun getMovies(): List<MovieSectionEntity> {
-        return dao.getMovieSections()
-    }
+        return try {
 
-    override suspend fun getTv(): List<TvSectionEntity> {
-        return dao.getTvSections()
-    }
+            val entities = response.results
+                .orEmpty()
+                .filterNotNull()
+                .map { movie ->
+                    movie.toEntity(
+                        page = page,
+                        genre = genre
+                    )
+                }
 
-    override suspend fun clearMovies() {
-        dao.clearMovieSectionItems()
-        dao.clearMovieSections()
-        dao.clearMovies()
-    }
+            dao.saveMovies(entities)
 
-    override suspend fun clearTv() {
-        dao.clearTvSectionItems()
-        dao.clearTvSections()
-        dao.clearTv()
+            Result.success(Unit)
+
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

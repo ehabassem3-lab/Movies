@@ -18,6 +18,7 @@ fun FavItem.toMovieItem(): MoviesItem {
         name = title,
         id = id,
         voteCount = voteCount,
-        type = "Movie"
+        type = "Movie" ,
+
     )
 }

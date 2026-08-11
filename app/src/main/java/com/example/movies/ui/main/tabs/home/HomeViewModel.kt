@@ -5,9 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.movies.R
 import com.example.movies.domain.repositories.home.HomeRepository
 import com.example.movies.ui.main.Resources
-import com.example.offline.ItemEntity
-import com.example.offline.MovieSectionEntity
-import com.example.offline.TvSectionEntity
+
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.delay
@@ -103,6 +101,8 @@ class HomeViewModel @Inject constructor(
         page: Int?,
         genre: Int? = null
     ) {
+
+
         viewModelScope.launch {
 
             val previousResults = state.value.sectionsMovies
@@ -138,41 +138,6 @@ class HomeViewModel @Inject constructor(
                 val data = response.getOrNull()
                 val newResults = data?.results.orEmpty()
 
-                // SAVE TO ROOM
-                if (data != null) {
-
-                    val movies = newResults.mapNotNull { movie ->
-
-                        if (movie == null || movie.id == null) {
-                            null
-                        } else {
-                            ItemEntity(
-                                id = movie.id,
-                                type = "movie",
-                                title = movie.name ?: "",
-                                posterPath = movie.posterPath,
-                                rating = movie.voteAverage ?: 0.0
-                            )
-                        }
-                    }
-
-                    val uiSection = movieSections
-                        .first { it.genreId == genre }
-
-                    val section = MovieSectionEntity(
-                        id = "movie_${genre ?: "recommendations"}",
-                        genreId = genre,
-                        title = uiSection.title,
-                        page = page ?: 1
-                    )
-
-                    repository.saveMovieSection(
-                        section = section,
-                        movies = movies
-                    )
-                }
-
-                // UPDATE UI
                 val mergedData =
                     if (page != null && page > 1) {
                         data?.copy(
@@ -221,6 +186,7 @@ class HomeViewModel @Inject constructor(
         page: Int?,
         genre: Int? = null
     ) {
+
         viewModelScope.launch {
 
             val previousResults = state.value.sections
@@ -257,46 +223,7 @@ class HomeViewModel @Inject constructor(
                 val data = response.getOrNull()
                 val newResults = data?.results.orEmpty()
 
-                // =========================
-                // SAVE TO ROOM
-                // =========================
 
-                if (data != null) {
-
-                    val tvItems = newResults.mapNotNull { tv ->
-
-                        if (tv == null || tv.id == null) {
-                            null
-                        } else {
-                            ItemEntity(
-                                id = tv.id,
-                                type = "tv",
-                                title = tv.name ?: "",
-                                posterPath = tv.posterPath,
-                                rating = tv.voteAverage ?: 0.0
-                            )
-                        }
-                    }
-
-                    val uiSection = sections
-                        .first { it.genreId == genre }
-
-                    val section = TvSectionEntity(
-                        id = "tv_${genre ?: "recommendations"}",
-                        genreId = genre,
-                        title = uiSection.title,
-                        page = page ?: 1
-                    )
-
-                    repository.saveTvSection(
-                        section = section,
-                        tv = tvItems
-                    )
-                }
-
-                // =========================
-                // UPDATE UI
-                // =========================
 
                 val mergedData =
                     if (page != null && page > 1) {
