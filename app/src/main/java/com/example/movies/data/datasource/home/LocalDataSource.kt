@@ -19,4 +19,16 @@ interface LocalDataSource {
         ): Result<Unit>
 
 
+    suspend fun getTv(
+        page: Int,
+        genre: Int?
+    ): Result<DiscoverResponse>
+
+    suspend fun saveTv(
+        page: Int,
+        genre: Int?,
+        response: DiscoverResponse
+    ): Result<Unit>
+
+
 }

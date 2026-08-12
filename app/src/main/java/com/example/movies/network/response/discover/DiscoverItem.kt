@@ -32,6 +32,7 @@ data class DiscoverItem(
     @SerialName("videos")
 	val videos: VideosResponse? = null,
     val isRated : Boolean? = false,
-    var rate : Double? = .5
+    var rate : Double? = .5 ,
+    val page : Int? = 1 ,
 
 )

@@ -1,9 +1,7 @@
-package com.example.movies.di
+package com.example.offline
 
 import android.content.Context
 import androidx.room.Room
-import com.example.offline.AppDatabase
-import com.example.offline.Dao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,21 +15,20 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(
+    fun provideMovieDatabase(
         @ApplicationContext context: Context
-    ): AppDatabase {
+    ): MovieDatabase {
         return Room.databaseBuilder(
             context,
-            AppDatabase::class.java,
+            MovieDatabase::class.java,
             "movies_database"
         ).build()
     }
 
     @Provides
     fun provideMovieDao(
-        database: AppDatabase
-    ): Dao {
+        database: MovieDatabase
+    ): MovieDao {
         return database.movieDao()
     }
 }
-

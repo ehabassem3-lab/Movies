@@ -31,19 +31,26 @@ class HomeRepositoryImp  @Inject constructor(
 ) : HomeRepository {
 
     override suspend fun getDiscoveryTv(page: Int?, genre: Int?): Result<DiscoverResponse?> {
-      val request = dataSource.getDiscover(page,genre)
-        return if (request.isSuccess){
-            Result.success( request.getOrNull())
+        if (true){
+            val request = dataSource.getDiscover(page,genre)
+            return if (request.isSuccess){
+                local.saveTv(page!!,genre,request.getOrNull()!!)
+                Result.success( request.getOrNull())
+            }else{
+                Result.failure(Throwable(request.exceptionOrNull()))
+            }
         }else{
-            Result.failure(Throwable(request.exceptionOrNull()))
+            val request = local.getTv(page!!, genre)
+            return  request
         }
+
     }
 
     override suspend fun getDiscoveryMovies(
         page: Int?,
         genre: Int?
     ): Result<MoviesResponse?> {
-        if (false) {
+        if (true) {
             val request = dataSource.getDiscoverMovies(page, genre)
             return if (request.isSuccess) {
                 local.saveMovies(page!!, genre, request.getOrNull()!!)
