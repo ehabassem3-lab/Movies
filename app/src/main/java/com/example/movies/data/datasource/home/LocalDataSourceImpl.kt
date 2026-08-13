@@ -4,6 +4,7 @@ import com.example.movies.mapper.toEntity
 import com.example.movies.mapper.toMoviesItem
 import com.example.movies.mapper.toTvItem
 import com.example.movies.network.response.discover.DiscoverResponse
+import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.discover.MoviesResponse
 import com.example.offline.MovieDao
 import com.example.offline.TvDao
@@ -111,4 +112,13 @@ class LocalDataSourceImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }    }
+
+    override suspend fun getMovie(id: Int): Result<MoviesItem> {
+        return try {
+            val movie = MovieDao.getMovie(id)
+            Result.success(movie.toMoviesItem())
+        }catch (e : Throwable){
+            Result.failure(e)
+        }
+    }
 }

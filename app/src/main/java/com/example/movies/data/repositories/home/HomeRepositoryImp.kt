@@ -116,12 +116,18 @@ class HomeRepositoryImp  @Inject constructor(
     }
 
     override suspend fun getMovieById(id: Int): Result<MoviesItem> {
-        val request = dataSource.getMovieById(id)
-        return if (request.isSuccess){
-            Result.success( request.getOrNull()!!)
-        }else{
-            Result.failure(Throwable(request.exceptionOrNull()))
+        return    if (false){
+            val request = dataSource.getMovieById(id)
+             if (request.isSuccess){
+                Result.success( request.getOrNull()!!)
+            }else{
+                Result.failure(Throwable(request.exceptionOrNull()))
+            }
+        } else{
+            val movie = local.getMovie(id)
+                  movie
         }
+
     }
 
     override suspend fun getTvById(id: Int): Result<DiscoverItem> {
