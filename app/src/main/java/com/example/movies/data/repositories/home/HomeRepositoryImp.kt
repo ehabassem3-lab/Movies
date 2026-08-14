@@ -50,9 +50,9 @@ class HomeRepositoryImp  @Inject constructor(
         page: Int?,
         genre: Int?
     ): Result<MoviesResponse?> {
-        if (true) {
+        return  if (true) {
             val request = dataSource.getDiscoverMovies(page, genre)
-            return if (request.isSuccess) {
+             if (request.isSuccess) {
                 local.saveMovies(page!!, genre, request.getOrNull()!!)
                 Result.success(request.getOrNull())
             } else {
@@ -61,7 +61,12 @@ class HomeRepositoryImp  @Inject constructor(
 
         } else {
              val request = local.getMovies(page!!, genre)
-            return  request
+            if (request.isSuccess){
+                  request
+            } else{
+                Result.failure(request.exceptionOrNull()!!)
+            }
+
         }
 
 
@@ -116,7 +121,7 @@ class HomeRepositoryImp  @Inject constructor(
     }
 
     override suspend fun getMovieById(id: Int): Result<MoviesItem> {
-        return    if (false){
+        return    if (true){
             val request = dataSource.getMovieById(id)
              if (request.isSuccess){
                 Result.success( request.getOrNull()!!)
@@ -125,18 +130,29 @@ class HomeRepositoryImp  @Inject constructor(
             }
         } else{
             val movie = local.getMovie(id)
-                  movie
+            if(movie.isSuccess){
+                movie
+            }else{
+                Result.failure(movie.exceptionOrNull()!!)
+            }
+
         }
 
     }
 
     override suspend fun getTvById(id: Int): Result<DiscoverItem> {
-        val request = dataSource.getTvById(id)
-        return if (request.isSuccess){
-            Result.success( request.getOrNull()!!)
+        return   if(true){
+            val request = dataSource.getTvById(id)
+            if (request.isSuccess){
+                Result.success( request.getOrNull()!!)
+            }else{
+                Result.failure(Throwable(request.exceptionOrNull()))
+            }
         }else{
-            Result.failure(Throwable(request.exceptionOrNull()))
+            local.getTv(id)
+
         }
+
     }
 
     override suspend fun getMovieCrew(id: Int): Result<Cast> {

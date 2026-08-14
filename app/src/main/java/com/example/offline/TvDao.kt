@@ -23,4 +23,6 @@ interface TvDao {
         page: Int,
         genreId: Int
     ): List<TvEntity>
+    @Query("SELECT * FROM tv WHERE id =  :id  ")
+    suspend fun getMovie(id : Int) : TvEntity
 }

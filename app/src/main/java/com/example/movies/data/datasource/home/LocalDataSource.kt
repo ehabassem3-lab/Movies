@@ -1,5 +1,6 @@
 package com.example.movies.data.datasource.home
 
+import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.discover.MoviesResponse
@@ -32,6 +33,7 @@ interface LocalDataSource {
     ): Result<Unit>
 
     suspend fun getMovie(id : Int) : Result<MoviesItem>
+    suspend fun getTv(id : Int) : Result<DiscoverItem>
 
 
 }
