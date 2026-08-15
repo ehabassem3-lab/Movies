@@ -1,5 +1,7 @@
 package com.example.movies.data.datasource.home
 
+import com.example.movies.network.response.cast.Cast
+import com.example.movies.network.response.cast.CastItem
 import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesItem
@@ -34,6 +36,8 @@ interface LocalDataSource {
 
     suspend fun getMovie(id : Int) : Result<MoviesItem>
     suspend fun getTv(id : Int) : Result<DiscoverItem>
+    suspend fun getCast() : Result<Cast>
+    suspend fun saveCast (cast : List<CastItem>) : Unit
 
 
 }

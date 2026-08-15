@@ -3,6 +3,9 @@ package com.example.movies.data.datasource.home
 import com.example.movies.mapper.toEntity
 import com.example.movies.mapper.toMoviesItem
 import com.example.movies.mapper.toTvItem
+import com.example.movies.network.response.cast.Cast
+import com.example.movies.network.response.cast.CastItem
+import com.example.movies.network.response.discover.DiscoverItem
 import com.example.movies.network.response.discover.DiscoverResponse
 import com.example.movies.network.response.discover.MoviesItem
 import com.example.movies.network.response.discover.MoviesResponse
@@ -120,5 +123,24 @@ class LocalDataSourceImpl @Inject constructor(
         }catch (e : Throwable){
             Result.failure(e)
         }
+    }
+
+    override suspend fun getTv(id: Int): Result<DiscoverItem> {
+        return try {
+            val tv = TvDao.getTv(id)
+            Result.success(tv.toTvItem())
+        }catch (e : Throwable){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getCast(): Result<Cast> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun saveCast(cast: List<CastItem>) {
+      val cast = TvDao.saveCast(cast)
+
+
     }
 }
