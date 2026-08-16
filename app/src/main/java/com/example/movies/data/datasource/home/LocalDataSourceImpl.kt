@@ -3,6 +3,8 @@ package com.example.movies.data.datasource.home
 import com.example.movies.mapper.toEntity
 import com.example.movies.mapper.toMoviesItem
 import com.example.movies.mapper.toTvItem
+import com.example.movies.network.response.cast.Actor
+import com.example.movies.network.response.cast.ActorWork
 import com.example.movies.network.response.cast.Cast
 import com.example.movies.network.response.cast.CastItem
 import com.example.movies.network.response.discover.DiscoverItem
@@ -142,5 +144,35 @@ class LocalDataSourceImpl @Inject constructor(
       val cast = TvDao.saveCast(cast)
 
 
+    }
+
+    override suspend fun savePerson(actor: Actor): Result<Unit> {
+       val person  =TvDao.savePerson(actor)
+
+        return Result.success(Unit)
+
+    }
+
+    override suspend fun savePersonWork(actor: ActorWork): Result<Unit> {
+        val person  =TvDao.savePersonWork(actor)
+        return Result.success(Unit)
+    }
+
+    override suspend fun getPerson(id: Int): Result<Actor> {
+         val request = TvDao.getPerson(id)
+        return if (request.isSuccess){
+            Result.success(request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
+    }
+
+    override suspend fun getPersonWork(id: Int): Result<ActorWork> {
+       val request = TvDao.getPersonWork(id)
+        return if (request.isSuccess){
+            Result.success(request.getOrNull()!!)
+        }else{
+            Result.failure(Throwable(request.exceptionOrNull()))
+        }
     }
 }
