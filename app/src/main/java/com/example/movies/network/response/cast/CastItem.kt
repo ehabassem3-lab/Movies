@@ -1,9 +1,10 @@
 package com.example.movies.network.response.cast
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-@Entity(tableName = "cast")
+@Entity(tableName = "castItem")
 @Serializable
 data class CastItem(
     val character: String? = null,

@@ -141,38 +141,41 @@ class LocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun saveCast(cast: List<CastItem>) {
-      val cast = TvDao.saveCast(cast)
+//      val cast = TvDao.saveCast(cast)
 
 
     }
 
     override suspend fun savePerson(actor: Actor): Result<Unit> {
-       val person  =TvDao.savePerson(actor)
+//       val person  =TvDao.savePerson(actor)
 
         return Result.success(Unit)
 
     }
 
     override suspend fun savePersonWork(actor: ActorWork): Result<Unit> {
-        val person  =TvDao.savePersonWork(actor)
+//        val person  =TvDao.savePersonWork(actor)
         return Result.success(Unit)
     }
 
     override suspend fun getPerson(id: Int): Result<Actor> {
-         val request = TvDao.getPerson(id)
-        return if (request.isSuccess){
-            Result.success(request.getOrNull()!!)
-        }else{
-            Result.failure(Throwable(request.exceptionOrNull()))
-        }
+////         val request = TvDao.getPerson(id)
+//        return if (request.isSuccess){
+//            Result.success(request.getOrNull()!!)
+//        }else{
+//            Result.failure(Throwable(request.exceptionOrNull()))
+//        }
+         return  Result.failure(Throwable(""))
     }
 
     override suspend fun getPersonWork(id: Int): Result<ActorWork> {
-       val request = TvDao.getPersonWork(id)
-        return if (request.isSuccess){
-            Result.success(request.getOrNull()!!)
-        }else{
-            Result.failure(Throwable(request.exceptionOrNull()))
-        }
+//       val request = TvDao.getPersonWork(id)
+//        return if (request.isSuccess){
+//            Result.success(request.getOrNull()!!)
+//        }else{
+//            Result.failure(Throwable(request.exceptionOrNull()))
+//        }
+        return  Result.failure(Throwable(""))
+
     }
 }
