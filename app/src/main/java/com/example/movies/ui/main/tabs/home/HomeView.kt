@@ -108,14 +108,24 @@ fun HomeView(
         Spacer(modifier = Modifier.size(10.dp))
         Column(modifier = Modifier.fillMaxSize()) {
             when(selectedTabIndex) {
-                0->  MoviesView(state,navController){
+                0->  MoviesView(state,navController , onRefresh ={
                     viewModel.doAction(HomeEvents.LoadMovies)
+                    savedViewModel.doAction(FavEvents.onGetAllRated)
+                    savedViewModel.doAction(FavEvents.onGetAllFav)
+                    savedViewModel.doAction(FavEvents.onGetAllWatchList)
+                }){
+                    viewModel.doAction(HomeEvents.LoadMovies , )
                     savedViewModel.doAction(FavEvents.onGetAllRated)
                     savedViewModel.doAction(FavEvents.onGetAllFav)
                     savedViewModel.doAction(FavEvents.onGetAllWatchList)
 
                 }
-                1->TvView(state ,navController){
+                1->TvView(state ,navController , onRefresh ={
+                    viewModel.doAction(HomeEvents.LoadHomeSections)
+                    savedViewModel.doAction(FavEvents.onGetAllRated)
+                    savedViewModel.doAction(FavEvents.onGetAllFav)
+                    savedViewModel.doAction(FavEvents.onGetAllWatchList)
+                }){
                     viewModel.doAction(HomeEvents.LoadHomeSections)
                     savedViewModel.doAction(FavEvents.onGetAllRated)
                     savedViewModel.doAction(FavEvents.onGetAllFav)

@@ -18,10 +18,17 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,6 +47,7 @@ import coil3.compose.AsyncImage
 import com.example.movies.R
 import com.example.movies.routes.AppRoutes
 import com.example.movies.ui.main.Resources
+import com.example.movies.ui.main.tabs.saved.FavEvents
 import com.example.movies.ui.theme.AppTypography
 import com.example.utilities.ErrorView
 import com.example.utilities.LoadingView
@@ -47,62 +55,77 @@ import com.example.utilities.SeparationLine
 import io.github.suwasto.kmmcomposeshimmer.ShimmerContainer
 import kotlin.collections.orEmpty
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoviesView(
     state  : HomeStates ,
     navController: NavController ,
-    onRetry : () -> Unit
+    onRefresh : () -> Unit ,
+    onRetry : () -> Unit ,
 ){
-    Column(
+    var pullState  = rememberPullToRefreshState()
+    val isRefreshing = state.sectionsMovies.any {
+        it.state is Resources.Loading
+    }
+
+    PullToRefreshBox(
+        state = pullState,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
         modifier = Modifier.fillMaxSize()
     ) {
-        when {
-            state.sectionsMovies.all { it.state is Resources.Success } -> {
-                LazyColumn {
-                    items(state.sectionsMovies) { sectionsMovies ->
-                        val movies = (sectionsMovies.state as? Resources.Success)
-                            ?.data
-                            ?.results
-                            .orEmpty()
-                        TvSection(
-                            genre = sectionsMovies.genreId ,
-                            title = stringResource(sectionsMovies.title),
-                            movies = movies,
-                            navController = navController,
-                            onViewAll = {
-                                navController.navigate(
-                                    AppRoutes.MovieFullRoute(sectionsMovies.genreId)
-                                )
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            when {
+                state.sectionsMovies.all { it.state is Resources.Success } -> {
+                     LazyColumn {
+                        items(state.sectionsMovies) { sectionsMovies ->
+                            val movies = (sectionsMovies.state as? Resources.Success)
+                                ?.data
+                                ?.results
+                                .orEmpty()
+                            TvSection(
+                                genre = sectionsMovies.genreId ,
+                                title = stringResource(sectionsMovies.title),
+                                movies = movies,
+                                navController = navController,
+                                onViewAll = {
+                                    navController.navigate(
+                                        AppRoutes.MovieFullRoute(sectionsMovies.genreId)
+                                    )
+                                }
+                            )
+                            SeparationLine()
+                        }
+                    }
+                }
+
+                state.sectionsMovies.any { it.state is Resources.Loading } -> {
+
+                    LazyColumn {
+                        items(10) {
+                            LazyRow() {
+                                items(10){
+                                    LoadingView()
+                                }
                             }
-                        )
-                        SeparationLine()
+                        }
                     }
                 }
-            }
 
-            state.sectionsMovies.any { it.state is Resources.Loading } -> {
+                state.sectionsMovies.any { it.state is Resources.Error } -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize() ,
+                        verticalArrangement = Arrangement.Center ,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) { ErrorView { onRetry() } }
 
-                LazyColumn {
-                    items(10) {
-                     LazyRow() {
-                         items(10){
-                             LoadingView()
-                         }
-                     }
-                    }
                 }
-            }
-
-            state.sectionsMovies.any { it.state is Resources.Error } -> {
-                Column(
-                    modifier = Modifier.fillMaxSize() ,
-                     verticalArrangement = Arrangement.Center ,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) { ErrorView { onRetry() } }
-
             }
         }
     }
+
 
 
 

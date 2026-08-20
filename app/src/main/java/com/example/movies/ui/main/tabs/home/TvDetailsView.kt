@@ -519,7 +519,7 @@ fun TvDetailsView(
                                                         savedViewModel.doAction(
                                                             FavEvents.onRateMovie(
                                                                 id = itemMovie?.id!!,
-                                                                rate = rate,
+                                                                rate = .5,
                                                                 item = itemMovie.toDiscoverItem(),
                                                                 rated = false,
                                                                 mediaType = "movie"
@@ -529,7 +529,7 @@ fun TvDetailsView(
                                                         savedViewModel.doAction(
                                                             FavEvents.onRateTv(
                                                                 id = itemTv.id!!,
-                                                                rate = rate,
+                                                                rate = .5,
                                                                 item = itemTv,
                                                                 rated = false,
                                                                 mediaType = "tv"

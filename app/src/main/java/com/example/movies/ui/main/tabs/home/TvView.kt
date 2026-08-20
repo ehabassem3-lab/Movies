@@ -18,6 +18,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,60 +38,74 @@ import com.example.utilities.SeparationLine
 import io.github.suwasto.kmmcomposeshimmer.ShimmerContainer
 import kotlin.collections.orEmpty
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TvView(state : HomeStates , navController: NavController , onRetry : () -> Unit  ){
-    Column(
-        modifier =  Modifier.fillMaxSize()
+fun TvView(state : HomeStates , navController: NavController ,onRefresh : () -> Unit, onRetry : () -> Unit  ){
+       val pullState = PullToRefreshState()
+    val isRefreshing = state.sectionsMovies.any {
+        it.state is Resources.Loading
+    }
+    PullToRefreshBox(
+        state = pullState,
+        isRefreshing = isRefreshing,
+        onRefresh = onRefresh,
+        modifier = Modifier.fillMaxSize()
     ) {
+        Column(
+            modifier =  Modifier.fillMaxSize()
+        ) {
 
-        when {
-            state.sections.all { it.state is Resources.Success } -> {
-                LazyColumn {
-                    items(state.sections) { section ->
+            when {
+                state.sections.all { it.state is Resources.Success } -> {
+                    LazyColumn {
+                        items(state.sections) { section ->
 
-                        val tvList = (section.state as? Resources.Success)
-                            ?.data
-                            ?.results
-                            .orEmpty()
+                            val tvList = (section.state as? Resources.Success)
+                                ?.data
+                                ?.results
+                                .orEmpty()
 
-                        TvSection(
-                            genre = section.genreId ,
-                            title = stringResource(section.title),
-                            tvList = tvList,
-                            navController = navController,
-                            onViewAll = {
-                                navController.navigate(
-                                    AppRoutes.TvFullRoute( section.genreId)
-                                )
-                            }
-                        )
-                        SeparationLine()
+                            TvSection(
+                                genre = section.genreId ,
+                                title = stringResource(section.title),
+                                tvList = tvList,
+                                navController = navController,
+                                onViewAll = {
+                                    navController.navigate(
+                                        AppRoutes.TvFullRoute( section.genreId)
+                                    )
+                                }
+                            )
+                            SeparationLine()
 
+                        }
                     }
                 }
-            }
 
-            state.sections.any { it.state is Resources.Loading } -> {
-                LazyColumn {
-                    items(10) {
-                        LazyRow() {
-                            items(10){
-                                LoadingView()
+                state.sections.any { it.state is Resources.Loading } -> {
+                    LazyColumn {
+                        items(10) {
+                            LazyRow() {
+                                items(10){
+                                    LoadingView()
 
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            state.sections.any { it.state is Resources.Error } -> {
-                Column(
-                    modifier = Modifier.fillMaxSize() ,
-                    verticalArrangement = Arrangement.Center ,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) { ErrorView { onRetry() } }
+                state.sections.any { it.state is Resources.Error } -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize() ,
+                        verticalArrangement = Arrangement.Center ,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) { ErrorView { onRetry() } }
+                }
             }
         }
     }
+
+
 
 }
