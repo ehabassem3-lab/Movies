@@ -148,7 +148,7 @@ fun CreateSession(navController: NavController , deepLink : Uri?){
 
                     }
                     AuthUiState.Success -> {
-                        navController.navigate(AppRoutes.MainRoute)
+                        navController.navigate(AppRoutes.MainRoute())
                     }
                     AuthUiState.WaitingForApproval -> {
                         Text(stringResource(R.string.approve_browser) , style = AppTypography.titleLarge.copy(color = colorScheme.onBackground  , fontSize =  50.sp))

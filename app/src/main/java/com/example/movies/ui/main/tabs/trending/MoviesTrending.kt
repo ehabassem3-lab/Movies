@@ -38,7 +38,9 @@ fun MoviesTrending(
                      genre = null,
                      movies = movies,
                      navController = navController
-                 ) { }
+                 ) {
+
+                 }
              }
              Resources.idle -> {}
          }

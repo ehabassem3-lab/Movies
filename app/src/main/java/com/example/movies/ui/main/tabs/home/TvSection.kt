@@ -125,6 +125,7 @@ fun TvSection(
                             .size(40.dp)
                             .background(colorScheme.onBackground, shape = CircleShape)
                             .clickable {
+
                                 if (tvList != null){
                                     navController.navigate(AppRoutes.TvFullRoute(genre))
                                 }else{

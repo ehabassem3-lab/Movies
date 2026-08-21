@@ -127,7 +127,8 @@ fun App(    deepLink: Uri?) {
         }
 
         composable<AppRoutes.MainRoute> {
-            MainScreen(navController)
+            val data = it.toRoute<AppRoutes.MainRoute>()
+            MainScreen(navController,data.index)
         }
         composable<AppRoutes.SearchRoute> {
             SearchView(navController)

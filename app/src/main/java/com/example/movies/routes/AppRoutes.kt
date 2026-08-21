@@ -40,5 +40,6 @@ sealed class AppRoutes {
     @Serializable
     object SearchRoute : AppRoutes()
     @Serializable
-    object MainRoute : AppRoutes()
+    data class MainRoute(    val index: Int = 0
+    ) : AppRoutes()
 }

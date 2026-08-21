@@ -76,7 +76,7 @@ fun SplashView  (navController: NavController) {
         if (!state.isLoading) {
             if (state.isLoggedIn ) {
                 delay(2000)
-                navController.navigate(AppRoutes.MainRoute)
+                navController.navigate(AppRoutes.MainRoute())
             } else {
                 navController.navigate(AppRoutes.CreateSessionRoute)
             }

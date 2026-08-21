@@ -90,7 +90,7 @@ fun SearchView(
                 modifier = Modifier
                     .size(20.dp)
                     .clickable {
-                        navController.navigate(AppRoutes.MainRoute)
+                        navController.navigate(AppRoutes.MainRoute())
                     },
                 tint = colorScheme.onBackground
             )

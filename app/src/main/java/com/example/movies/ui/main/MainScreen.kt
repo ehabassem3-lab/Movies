@@ -68,14 +68,14 @@ import kotlinx.coroutines.launch
 @SuppressLint("LocalContextConfigurationRead")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(navController: NavController){
+fun MainScreen(navController: NavController , index : Int){
 
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val colorScheme = MaterialTheme.colorScheme
     val scope = rememberCoroutineScope()
     data class navigationItem (val index : Int , val icon : Int )
-    var selectedIndex  by  rememberSaveable { mutableIntStateOf(0) }
+    var selectedIndex by rememberSaveable { mutableIntStateOf(index) }
     val colors = NavigationBarItemColors(
         selectedIconColor = colorScheme.background,
         selectedTextColor = Color.Transparent,

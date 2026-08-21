@@ -53,6 +53,7 @@ fun SideNavigationDrawer(
     val state = savedViewModel.state.collectAsState().value
     val number = (state.allWatchListState as? Resources.Success)?.data?.size
     val rated = (state.allRatedState as?  Resources.Success)?.data?.size
+    val fav = (state.allFavState as? Resources.Success)?.data?.size
     Column (
         modifier = Modifier
             .fillMaxHeight()
@@ -238,6 +239,79 @@ fun SideNavigationDrawer(
                     .background(colorScheme.background)
                     .fillMaxWidth()
             )
+
+            Row(
+                modifier = Modifier
+                    .padding(14.dp)
+                    .clickable {
+                        navController.navigate(AppRoutes.MainRoute(2))
+                    },
+                verticalAlignment = Alignment.CenterVertically ,
+                horizontalArrangement = Arrangement.Center
+            ) {
+
+
+                Text(
+                    "Go To Favourtes ",
+                    style = AppTypography.titleLarge.copy(
+                        color = colorScheme.background,
+                        fontSize = 24.sp,
+                    )
+                )
+                Box(
+                    modifier = Modifier
+                        .size(30.dp)
+                        .background(colorScheme.background, CircleShape)
+                        .clickable {
+
+                        } ,
+                    contentAlignment = Alignment.Center
+                ){
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward ,
+                        contentDescription = "" ,
+                        tint = colorScheme.onBackground,
+                        modifier = Modifier
+                            .size(15.dp)
+                            .clickable {
+
+                            }
+                    )
+                }
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically ,
+                horizontalArrangement = Arrangement.Center ,
+                modifier = Modifier.padding(10.dp)
+            ){
+                Text(
+                  "Favourite Count" ,
+                    modifier = Modifier.padding(5.dp) ,
+                    style = AppTypography.titleMedium.copy(
+                        color = colorScheme.background
+                    )
+                )
+                Text(
+                    fav.toString() ,
+                    modifier = Modifier.padding(5.dp) ,
+                    style = AppTypography.titleMedium.copy(
+                        color = colorScheme.background
+                    )
+
+                )
+                Icon(
+                    painterResource(R.drawable.ic_fav_filled) ,
+                    contentDescription = ""  ,
+                    tint = colorScheme.background ,
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .size(24.dp)
+                        .background(colorScheme.onBackground)
+                    ,
+                )
+            }
+
+
 
         }
 

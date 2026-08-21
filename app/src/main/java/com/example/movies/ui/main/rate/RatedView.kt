@@ -46,6 +46,7 @@ import com.example.movies.ui.theme.AppTypography
 fun RatedView(
     navController: NavController
 ){
+
     var index by rememberSaveable{ mutableIntStateOf(0) }
     val colorScheme = MaterialTheme.colorScheme
     val viewModel = sharedSavedViewModel()
